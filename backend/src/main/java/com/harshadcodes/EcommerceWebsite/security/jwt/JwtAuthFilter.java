@@ -35,7 +35,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         logger.debug("Auth filter called for URI: {}",request.getRequestURI());
 
         try{
-            String token=jwtUtils.getJwtFromCookie(request);
+            String token=parseJwtToken(request);
 
             if(token!=null){
                 String username=jwtUtils.extractUsernameFromToken(token);
@@ -64,5 +64,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             logger.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
+    }
+
+    private String parseJwtToken(HttpServletRequest request){
+        String token=jwtUtils.getJwtFromCookie(request);
+        if(token!=null){
+            logger.debug("Jwt from cookie:{}",token);
+            return token;
+        }
+        token=jwtUtils.getJwtFromHeader(request);
+        logger.debug("Jwt from header (can be null if not exist): {}",token);
+        return token;
     }
 }
