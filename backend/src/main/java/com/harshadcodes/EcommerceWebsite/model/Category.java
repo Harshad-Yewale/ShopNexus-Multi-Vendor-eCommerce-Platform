@@ -23,7 +23,7 @@ public class Category {
     private String categoryName;
 
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     List<Product> products;
