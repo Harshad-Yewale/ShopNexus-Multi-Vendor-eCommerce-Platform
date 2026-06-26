@@ -12,11 +12,13 @@ import com.harshadcodes.EcommerceWebsite.repositories.CartRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.CategoryRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.ProductRepository;
 import com.harshadcodes.EcommerceWebsite.utils.PaginationUtility;
+import com.harshadcodes.EcommerceWebsite.utils.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,14 +62,44 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category) {
 
         Pageable pageDetails= PaginationUtility.createPageable(pageNumber,pageSize,sortBy,sortOrder);
-        Page<Product> productPage=productRepository.findAll(pageDetails);
+        Specification<Product> spec=Specification.unrestricted();
+
+        if(keyword!=null && !keyword.isEmpty()){
+            keyword = keyword
+                    .replaceAll("[^a-zA-Z0-9 ]", "")
+                    .toLowerCase()
+                    .trim();
+
+            String[] words = keyword.split("\\s+");
+
+            for(String word:words){
+
+                if(!word.isEmpty()) {
+                    spec = spec.and(ProductSpecifications.productSpecificationByName(word));
+                }
+            }
+
+        }
+        if(category!=null && !category.isEmpty()){
+          spec=  spec.and(ProductSpecifications.productSpecificationByCategory(category));
+        }
+
+
+        Page<Product> productPage;
+        if (spec == null) {
+            productPage = productRepository.findAll(pageDetails);
+        } else {
+            productPage = productRepository.findAll(spec, pageDetails);
+        }
+        //Page<Product> productPage;
+       // productPage = productRepository.findAll(pageDetails);
         return buildProductResponse(productPage);
     }
 
-    @Override
+   /* @Override
     public ProductResponse getProductsByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
         categoryRepository.findById(categoryId).orElseThrow(() ->
@@ -80,14 +112,14 @@ public class ProductServiceImpl implements ProductService{
 
         return buildProductResponse(productPage);
     }
-
-    @Override
+*/
+   /* @Override
     public ProductResponse getProductsByKeywords(String keywords,Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
         Pageable pageable=PaginationUtility.createPageable(pageNumber,pageSize,sortBy,sortOrder);
         Page<Product> productPage =productRepository.findByProductNameContainingIgnoreCase(keywords,pageable );
         return buildProductResponse(productPage);
-    }
+    }*/
 
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {

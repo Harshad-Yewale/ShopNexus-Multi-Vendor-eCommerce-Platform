@@ -31,13 +31,15 @@ public class ProductController {
             @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
             @RequestParam(name = "pageSize",defaultValue = AppConstants.PAGE_SIZE,required = false)Integer pageSize,
             @RequestParam(name = "sortBy",defaultValue = AppConstants.SORT_PRODUCT_BY,required = false)String sortBy,
-            @RequestParam(name = "sortOrder",defaultValue = AppConstants.SORT_ORDER,required = false)String sortOrder
+            @RequestParam(name = "sortOrder",defaultValue = AppConstants.SORT_ORDER,required = false)String sortOrder,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "keyword", required = false) String keyword
     ){
-        ProductResponse productResponse=productService.getAllProducts(pageNumber,pageSize,sortBy,sortOrder);
+        ProductResponse productResponse=productService.getAllProducts(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
     }
 
-    @GetMapping("/public/category/{categoryId}/products")
+    /*@GetMapping("/public/category/{categoryId}/products")
     public ResponseEntity<ProductResponse> getProductsByCategory(
             @PathVariable  Long categoryId,
             @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
@@ -47,9 +49,9 @@ public class ProductController {
     ){
         ProductResponse productResponse=productService.getProductsByCategory(categoryId,pageNumber,pageSize,sortBy,sortOrder);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
-    }
+    }*/
 
-    @GetMapping("/public/product/search/{keywords}")
+    /*@GetMapping("/public/product/search/{keywords}")
     public ResponseEntity<ProductResponse> getProductsByKeywords(
             @PathVariable  String  keywords,
             @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
@@ -61,7 +63,7 @@ public class ProductController {
     ){
         ProductResponse productResponse=productService.getProductsByKeywords(keywords,pageNumber,pageSize,sortBy,sortOrder);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
-    }
+    }*/
 
     @PutMapping("/admin/product/{productId}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId,@Valid @RequestBody ProductDTO productDTO){

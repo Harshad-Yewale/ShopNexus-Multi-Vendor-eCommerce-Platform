@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Table(name = "cart_item`")
+@Table(name = "cart_item")
 public class CartItem {
 
     @Id
