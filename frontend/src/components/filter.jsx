@@ -150,7 +150,9 @@ const Filter = () => {
   );
 
   return (
+     
     <div className="space-y-4">
+      
       {/* Desktop */}
       <div className="hidden lg:grid lg:grid-cols-4 gap-4 items-end">
         {/* Search - 3/4 */}
