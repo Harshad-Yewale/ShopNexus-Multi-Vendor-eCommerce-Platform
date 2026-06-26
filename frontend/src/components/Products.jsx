@@ -3,6 +3,8 @@ import ProductCard from "./ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchProducts } from "../store/actions";
+import Filter from "./filter";
+import useProductFilter from "./useProductFilter";
 
 const Products = () => {
     const isLoading = false;
@@ -11,14 +13,18 @@ const Products = () => {
         (state) => state.products
     )
     const dispatch = useDispatch();
+    useProductFilter();
 
-    useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(fetchProducts());
+    // }, [dispatch]);
+
+    console.log("Products:", products);
 
 
     return (
         <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
+            <Filter/>
             {isLoading ? (
                 <p>It is loading...</p>
             ) : errorMessage ? (
@@ -31,9 +37,12 @@ const Products = () => {
             ) : (
                 <div className="min-h-175">
                     <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
-                       {products && 
+                       {products?.length>0? 
                         products.map((item, i) => <ProductCard key={i} {...item} />
-                        )}
+                        ):
+                        <div className="col-span-full flex items-center justify-center min-h-[60vh]">
+                        <h1 className="text-5xl md:text-7xl font-bold text-gray-500 text-center">no products available</h1>
+                        </div>}
                     </div>
                 </div>
             )}
