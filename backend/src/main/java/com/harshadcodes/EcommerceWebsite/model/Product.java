@@ -29,7 +29,11 @@ public class Product {
 
     @NotBlank
     private String productName;
+
+    @Column(length = 2000)
     private String productDescription;
+
+    @Column(length = 2000)
     private String productImage;
 
     @NotNull
