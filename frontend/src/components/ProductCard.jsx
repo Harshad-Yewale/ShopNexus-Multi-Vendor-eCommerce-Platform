@@ -57,7 +57,7 @@ const ProductCard = ({
                         productDiscountedPrice
                 })
             }}
-                    className="text-lg font-semibold mb-2 cursor-pointer">
+                    className="text-lg font-semibold mb-2 cursor-pointer line-clamp-1">
                     {productName}
                 </h2>
                 

@@ -2,7 +2,6 @@ const getErrorMessage = (error, defaultMessage = "Something went wrong.") => {
     if (!error.response) {
         return "Unable to connect to the server. Please try again later.";
     }
-
     switch (error.response.status) {
         case 400:
             return error.response.data?.message || "Invalid request.";

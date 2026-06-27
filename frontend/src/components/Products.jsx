@@ -8,11 +8,12 @@ import Filter from "./filter";
 import useProductFilter from "./useProductFilter";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import ProductSkeletonCardLoader from "../utils/ProductSkeletonCardLoader";
+import Paginations from "./pagination";
 
 const Products = () => {
 
 
-    const { products, categories, isLoading, errorMessage } = useSelector((state) => state.products);
+    const { products, categories, pagination, isLoading, errorMessage } = useSelector((state) => state.products);
 
     const dispatch = useDispatch();
 
@@ -61,8 +62,8 @@ const Products = () => {
                                     key={item.productId}
                                     {...item}
                                 />
-                            ))
-                        ) : (
+                            )))
+                             : (
                             <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh] gap-5">
                                <DotLottieReact
                                src="\animations\empty.json"
@@ -80,8 +81,15 @@ const Products = () => {
                                 </p>
                             </div>
                         )}
+                       
                     </div>
+                     <div className ="flex justify-center pt-10">
+                                <Paginations 
+                                    numberOfPage = {pagination?.totalPages}
+                                    totalProducts = {pagination?.totalElements}/>
+                            </div>
                 </div>
+                
             )}
         </div>
     );
