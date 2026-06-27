@@ -22,15 +22,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-const Filter = () => {
-  const categories = [
-    { categoryId: 1, categoryName: "Electronics" },
-    { categoryId: 2, categoryName: "Clothing" },
-    { categoryId: 3, categoryName: "Furniture" },
-    { categoryId: 4, categoryName: "Books" },
-    { categoryId: 5, categoryName: "Toys" },
-  ];
-
+const Filter = ({ categories }) => {
   const [searchParams] = useSearchParams();
   const pathname = useLocation().pathname;
   const navigate = useNavigate();
@@ -49,45 +41,33 @@ const Filter = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
-
       if (searchTerm.trim()) {
         params.set("keyword", searchTerm);
       } else {
         params.delete("keyword");
       }
-
-      navigate(`${pathname}?${params.toString()}`, {
-        replace: true,
-      });
+      navigate(`${pathname}?${params.toString()}`, { replace: true });
     }, 700);
-
     return () => clearTimeout(handler);
   }, [searchTerm, pathname, navigate, searchParams]);
 
   const handleCategoryChange = (event) => {
     const selectedCategory = event.target.value;
-
     setCategory(selectedCategory);
-
     const params = new URLSearchParams(searchParams);
-
     if (selectedCategory === "all") {
       params.delete("category");
     } else {
       params.set("category", selectedCategory);
     }
-
     navigate(`${pathname}?${params.toString()}`);
   };
 
   const toggleSortOrder = () => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
-
     setSortOrder(newOrder);
-
     const params = new URLSearchParams(searchParams);
     params.set("sortby", newOrder);
-
     navigate(`${pathname}?${params.toString()}`);
   };
 
@@ -95,67 +75,16 @@ const Filter = () => {
     setCategory("all");
     setSortOrder("asc");
     setSearchTerm("");
-
     navigate(pathname);
   };
 
-  const FilterControls = (
-    <div className="col-span-2 flex items-end gap-3">
-      <FormControl size="small" className="w-45">
-        <InputLabel>Category</InputLabel>
-
-        <Select
-          value={category}
-          label="Category"
-          onChange={handleCategoryChange}
-        >
-          <MenuItem value="all">All</MenuItem>
-
-          {categories.map((item) => (
-            <MenuItem
-              key={item.categoryId}
-              value={item.categoryName}
-            >
-              {item.categoryName}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <Tooltip title={`Sorted by price: ${sortOrder}`}>
-        <Button
-          variant="contained"
-          onClick={toggleSortOrder}
-          className="whitespace-nowrap h-10"
-        >
-          Sort By&nbsp;
-          {sortOrder === "asc" ? (
-            <FiArrowUp />
-          ) : (
-            <FiArrowDown />
-          )}
-        </Button>
-      </Tooltip>
-
-      <Button
-        variant="contained"
-        color="error"
-        startIcon={<FiRefreshCw />}
-        onClick={handleClearFilters}
-        className="whitespace-nowrap h-10"
-      >
-        Clear
-      </Button>
-    </div>
-  );
-
   return (
-     
     <div className="space-y-4">
-      
+
       {/* Desktop */}
       <div className="hidden lg:grid lg:grid-cols-4 gap-4 items-end">
-        {/* Search - 3/4 */}
+        
+        {/* Search */}
         <div className="col-span-2">
           <div className="relative">
             <input
@@ -165,7 +94,6 @@ const Filter = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full border border-gray-400 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-[#1976d2]"
             />
-
             <FiSearch
               size={20}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700"
@@ -173,9 +101,47 @@ const Filter = () => {
           </div>
         </div>
 
-        {/* Filters - 1/4 */}
-        <div className="col-span-1 flex items-end gap-2">
-          {FilterControls}
+        {/* Filters */}
+        <div className="col-span-2 flex items-end gap-3">
+          <FormControl size="small" className="w-45">
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={category}
+              label="Category"
+              onChange={handleCategoryChange}
+            >
+              <MenuItem value="all">All</MenuItem>
+              {categories.map((item) => (
+                <MenuItem
+                  key={`desktop-${item.categoryId}`}
+                  value={item.categoryName}
+                >
+                  {item.categoryName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Tooltip title={`Sorted by price: ${sortOrder}`}>
+            <Button
+              variant="contained"
+              onClick={toggleSortOrder}
+              className="whitespace-nowrap h-10"
+            >
+              Sort By&nbsp;
+              {sortOrder === "asc" ? <FiArrowUp /> : <FiArrowDown />}
+            </Button>
+          </Tooltip>
+
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<FiRefreshCw />}
+            onClick={handleClearFilters}
+            className="whitespace-nowrap h-10"
+          >
+            Clear
+          </Button>
         </div>
       </div>
 
@@ -190,7 +156,6 @@ const Filter = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full border border-gray-400 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-[#1976d2]"
             />
-
             <FiSearch
               size={20}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-700"
@@ -202,11 +167,7 @@ const Filter = () => {
             className="flex items-center gap-2 bg-blue-600 text-white px-3 py-2 rounded-md"
           >
             Filters
-            {showFilters ? (
-              <FiChevronUp />
-            ) : (
-              <FiChevronDown />
-            )}
+            {showFilters ? <FiChevronUp /> : <FiChevronDown />}
           </button>
         </div>
 
@@ -215,17 +176,15 @@ const Filter = () => {
             <div className="flex flex-col gap-4">
               <FormControl fullWidth size="small">
                 <InputLabel>Category</InputLabel>
-
                 <Select
                   value={category}
                   label="Category"
                   onChange={handleCategoryChange}
                 >
                   <MenuItem value="all">All</MenuItem>
-
                   {categories.map((item) => (
                     <MenuItem
-                      key={item.categoryId}
+                      key={`mobile-${item.categoryId}`}
                       value={item.categoryName}
                     >
                       {item.categoryName}
@@ -235,16 +194,9 @@ const Filter = () => {
               </FormControl>
 
               <Tooltip title={`Sorted by price: ${sortOrder}`}>
-                <Button
-                  variant="contained"
-                  onClick={toggleSortOrder}
-                >
+                <Button variant="contained" onClick={toggleSortOrder}>
                   Sort By&nbsp;
-                  {sortOrder === "asc" ? (
-                    <FiArrowUp />
-                  ) : (
-                    <FiArrowDown />
-                  )}
+                  {sortOrder === "asc" ? <FiArrowUp /> : <FiArrowDown />}
                 </Button>
               </Tooltip>
 

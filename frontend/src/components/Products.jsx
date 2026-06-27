@@ -3,15 +3,16 @@ import { TbMoodEmptyFilled } from "react-icons/tb";
 import ProductCard from "./ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchProducts } from "../store/actions";
+import { fetchCategories, fetchProducts } from "../store/actions";
 import Filter from "./filter";
 import useProductFilter from "./useProductFilter";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import ProductSkeletonCardLoader from "../utils/ProductSkeletonCardLoader";
 
 const Products = () => {
-    const isLoading = false;
-    const errorMessage = "";
 
-    const { products } = useSelector((state) => state.products);
+
+    const { products, categories, isLoading, errorMessage } = useSelector((state) => state.products);
 
     const dispatch = useDispatch();
 
@@ -21,22 +22,35 @@ const Products = () => {
     //     dispatch(fetchProducts());
     // }, [dispatch]);
 
-    console.log("Products:", products);
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
 
     return (
        
         <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
-            <Filter />
+            <Filter  categories={categories? categories:[]}/>
 
             {isLoading ? (
-                <p>It is loading...</p>
+                <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                        <ProductSkeletonCardLoader key={i} />
+                    ))}
+                </div>
             ) : errorMessage ? (
-                <div className="flex justify-center items-center h-50">
-                    <FaExclamationTriangle className="text-slate-800 text-3xl mr-2" />
-
-                    <span className="text-slate-800 text-lg font-medium">
+                <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                    <DotLottieReact
+                    src="\animations\error.json"
+                    loop
+                    autoplay
+                    style={{ width: '280px', height: '280px' }}
+                    />
+                    <h2 className="text-2xl font-semibold mt-4">
+                        Oops!
+                    </h2>
+                    <p className="text-gray-500 mt-2">
                         {errorMessage}
-                    </span>
+                    </p>
                 </div>
             ) : (
                 <div className="min-h-175">
@@ -50,7 +64,12 @@ const Products = () => {
                             ))
                         ) : (
                             <div className="col-span-full flex flex-col items-center justify-center min-h-[60vh] gap-5">
-                                <TbMoodEmptyFilled className="text-[130px] md:text-[170px] text-gray-400" />
+                               <DotLottieReact
+                               src="\animations\empty.json"
+                               loop
+                               autoplay
+                               style={{ width: '280px', height: '280px' }}/>
+
 
                                 <h1 className="text-4xl md:text-6xl font-bold text-gray-500 text-center">
                                     No Products Available
