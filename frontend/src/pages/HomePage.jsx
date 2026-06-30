@@ -20,13 +20,12 @@ const HomePage=()=> {
         dispatch(fetchProducts());
         dispatch(fetchCategories());
     }, [dispatch]);
-
-    console.log(categories);
   return (
       <div className="lg:px-14 sm:px-8 px-4">
             <div className="py-6">
                 <HeroBanner />
             </div>
+            <CategoryCardSlider/>
             
             <div className="py-5">
                 <div className="flex flex-col justify-center items-center space-y-2">
@@ -59,7 +58,7 @@ const HomePage=()=> {
                     </div>
                     )}
             </div>
-            <CategoryCardSlider/>
+            
       
     </div>
   )
