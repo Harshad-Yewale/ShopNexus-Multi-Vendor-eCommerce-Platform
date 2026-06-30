@@ -1,5 +1,5 @@
 import api from "../../api/api";
-import getErrorMessage from "../../utils/getErrorMessage";
+import getErrorMessage from "../../components/ErrorMessages/getErrorMessage";
 
 export const fetchProducts = (queryString = "") => async (dispatch) => {
     dispatch({ type: "IS_FETCHING" });

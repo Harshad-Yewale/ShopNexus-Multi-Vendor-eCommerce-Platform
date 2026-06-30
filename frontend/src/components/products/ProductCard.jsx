@@ -91,7 +91,7 @@ const ProductCard = ({
                     {isAvailable ? "Add to Cart" : "Stock Out"}
                 </button>
                 </div>
-                 <ProductViewModal 
+                 <ProductViewModal
                 open={openProductViewModal}
                 setOpen={setOpenProductViewModal}
                 product={selectedViewProduct}

@@ -1,14 +1,17 @@
 import { FaExclamationTriangle } from "react-icons/fa";
 import { TbMoodEmptyFilled } from "react-icons/tb";
-import ProductCard from "./ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategories, fetchProducts } from "../store/actions";
-import Filter from "./filter";
-import useProductFilter from "./useProductFilter";
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import ProductSkeletonCardLoader from "../utils/ProductSkeletonCardLoader";
-import Paginations from "./pagination";
+
+import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import ProductSkeletonCardLoader from "../components/loaders/ProductSkeletonCardLoader";
+import Paginations from "../components/filter and pagination/pagination";
+import useProductFilter from "../components/filter and pagination/useProductFilter";
+import ProductCard from "../components/products/ProductCard";
+import Filter from "../components/filter and pagination/filter";
+
+
 
 const Products = () => {
 

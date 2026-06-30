@@ -3,7 +3,7 @@ import { productReducer } from "./ProductReducer";
 
 export const store = configureStore({
     reducer: {
-        products: productReducer,
+        products: productReducer
     },
     preloadedState: {},
 });
