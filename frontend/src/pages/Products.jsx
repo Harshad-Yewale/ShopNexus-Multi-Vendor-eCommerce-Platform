@@ -22,10 +22,6 @@ const Products = () => {
 
     useProductFilter();
 
-    // useEffect(() => {
-    //     dispatch(fetchProducts());
-    // }, [dispatch]);
-
     useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);

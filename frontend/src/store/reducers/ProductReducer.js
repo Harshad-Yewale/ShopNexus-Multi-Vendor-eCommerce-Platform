@@ -1,5 +1,6 @@
 const initialState = {
     products: null,
+    cartProducts: [],
     categories: null,
     pagination: {},
     isLoading: false,
@@ -37,15 +38,28 @@ export const productReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 categories: action.payload,
-                 pagination: {
-                    pageNumber: action.pageNumber,
-                    pageSize: action.pageSize,
-                    totalElements: action.totalElements,
-                    totalPages: action.totalPages,
-                    lastPage: action.lastPage,
-                },
+                //  pagination: {
+                //     pageNumber: action.pageNumber,
+                //     pageSize: action.pageSize,
+                //     totalElements: action.totalElements,
+                //     totalPages: action.totalPages,
+                //     lastPage: action.lastPage,
+                // },
+            };
+        case "FETCH_CART_PRODUCTS":
+            return {
+                ...state,
+                isLoading:false,
+                cartProducts: action.payload,
             };
         
+        case "REMOVE_CART_PRODUCT":
+            return {
+                ...state,
+                cartProducts: state.cartProducts.filter(
+                    p => p.productId !== action.payload
+                ),
+            };
         case "IS_SUCCESS":
             return {
                 ...state,
