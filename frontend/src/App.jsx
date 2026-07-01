@@ -8,6 +8,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ScrollToTop from './utils/ScrollToTop'
 import Navbar from './components/shared/Navbar'
+import About from './pages/About'
+import Contact from './pages/Contact'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +21,8 @@ function App() {
       <Routes>
         <Route path='/' element={ <HomePage />}/>
         <Route path='/products' element={ <Products />}/>
+        <Route path='/about' element={ <About />}/>
+        <Route path='/contact' element={ <Contact />}/>
       </Routes>
     </Router>
   )

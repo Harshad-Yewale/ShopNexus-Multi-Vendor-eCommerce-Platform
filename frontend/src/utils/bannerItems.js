@@ -9,57 +9,57 @@ export const bannerLists = [
   {
     id: 1,
     image: furnitureBanner,
-    badge: "New Collection",
-    title: "Modern Living Starts Here",
-    subtitle: "Premium Furniture Collection",
+    badge: "Featured Collection",
+    title: "Premium\nFurniture",
+    subtitle: "Timeless Comfort. Modern Design.",
     description:
-      "Discover elegant sofas, dining sets, and home décor crafted for comfort and style.",
+      "Sofas, dining sets & décor crafted to elevate every space.",
     buttonText: "Shop Furniture",
-    Path:{
-      name:"category",
-      value:"Furniture"
+    Path: {
+      name: "category",
+      value: "Furniture",
     },
   },
   {
     id: 2,
     image: electronicsBanner,
-    badge: "Best Sellers",
-    title: "Smarter Technology, Better Living",
-    subtitle: "Latest Electronics",
+    badge: "Latest Tech",
+    title: "Next-Gen\nElectronics",
+    subtitle: "Power. Performance. Innovation.",
     description:
-      "Upgrade with smartphones, laptops, smart TVs, and accessories at unbeatable prices.",
-    buttonText: "Explore Electronics",
-    Path:{
-      name:"category",
-      value:"Electronics"
+      "Smartphones, laptops, gaming gear and accessories at amazing prices.",
+    buttonText: "Explore Tech",
+    Path: {
+      name: "category",
+      value: "Electronics",
     },
   },
   {
     id: 3,
     image: toysBanner,
-    badge: "Limited Time Offer",
-    title: "Fun for Every Little Adventure",
-    subtitle: "Kids & Toys",
+    badge: "Kids' Favorites",
+    title: "Play.\nLearn.\nImagine.",
+    subtitle: "Toys That Inspire Creativity",
     description:
-      "Discover educational games, creative toys, and exciting gifts that spark imagination.",
+      "Educational games, fun adventures and gifts kids will love.",
     buttonText: "Shop Toys",
-    Path:{
-      name:"category",
-      value:"Kids"
+    Path: {
+      name: "category",
+      value: "Kids",
     },
   },
   {
     id: 4,
     image: clothingBanner,
-    badge: "Limited Time Offer",
-    title: "Move in Style",
-    subtitle: "clothing and fashion",
+    badge: "Trending Fashion",
+    title: "Style\nWithout Limits",
+    subtitle: "Fresh Looks for Every Season",
     description:
-      "Discover educational games, creative toys, and exciting gifts that spark imagination.",
-    buttonText: "Shop clothes",
-    Path:{
-      name:"category",
-      value:"Clothing"
+      "Discover fashion essentials, everyday wear and statement pieces.",
+    buttonText: "Shop Fashion",
+    Path: {
+      name: "category",
+      value: "Clothing",
     },
   },
 ];
