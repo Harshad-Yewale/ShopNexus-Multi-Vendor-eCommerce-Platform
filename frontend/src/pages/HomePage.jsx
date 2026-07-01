@@ -6,6 +6,8 @@ import ProductCard from '../components/products/ProductCard';
 import ProductSkeletonCardLoader from '../components/loaders/ProductSkeletonCardLoader';
 import { fetchCategories, fetchProducts } from '../store/actions';
 import CategoryCardSlider from '../components/Home/CategoryCardSlider';
+import { FaExclamationTriangle } from 'react-icons/fa';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
 const HomePage=()=> {
@@ -43,12 +45,20 @@ const HomePage=()=> {
                     ))}
                 </div>
                 ) : errorMessage ? (
-                    <div className="flex justify-center items-center h-50">
-                        <FaExclamationTriangle className="text-slate-800 text-3xl mr-2"/>
-                        <span className="text-slate-800 text-lg font-medium">
-                            {errorMessage}
-                        </span>
-                    </div>
+                    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                    <DotLottieReact
+                    src="\animations\error.json"
+                    loop
+                    autoplay
+                    style={{ width: '280px', height: '280px' }}
+                    />
+                    <h2 className="text-2xl font-semibold mt-4">
+                        Oops!
+                    </h2>
+                    <p className="text-gray-500 mt-2">
+                        {errorMessage}
+                    </p>
+                </div>
                 ) : (
             <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
                        {products && 
