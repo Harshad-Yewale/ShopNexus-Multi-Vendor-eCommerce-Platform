@@ -5,6 +5,7 @@ import com.harshadcodes.EcommerceWebsite.payload.ProductResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ProductService {
 
@@ -23,4 +24,5 @@ public interface ProductService {
 
     ProductDTO uploadFiles(Long productId, MultipartFile image) throws IOException;
 
+    List<ProductDTO> getProductsByIds(List<Long> productIds);
 }

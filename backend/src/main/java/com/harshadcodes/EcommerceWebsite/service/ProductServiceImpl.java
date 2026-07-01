@@ -188,6 +188,15 @@ public class ProductServiceImpl implements ProductService{
         Product savedProduct=productRepository.save(productFromDb);
         return modelMapper.map(savedProduct,ProductDTO.class);
     }
+
+    @Override
+    public List<ProductDTO> getProductsByIds(List<Long> productIds) {
+        List<Product> products = productRepository.findAllById(productIds);
+        return products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+    }
+
     private String constructImageUrl(String imageName) {
         return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
     }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -37,6 +38,15 @@ public class ProductController {
     ){
         ProductResponse productResponse=productService.getAllProducts(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
+    }
+
+    @PostMapping("/public/products/cart")
+    public ResponseEntity<List<ProductDTO>> getCartProducts(
+            @RequestBody List<Long> productIds) {
+
+        List<ProductDTO> products = productService.getProductsByIds(productIds);
+
+        return ResponseEntity.ok(products);
     }
 
     /*@GetMapping("/public/category/{categoryId}/products")
