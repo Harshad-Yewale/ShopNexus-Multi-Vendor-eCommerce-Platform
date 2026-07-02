@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressDTO {
 
+    private String addressId;
     private String roomNo;
     private String building;
     private String street;
