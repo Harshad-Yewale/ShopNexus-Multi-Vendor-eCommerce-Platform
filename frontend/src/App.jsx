@@ -15,6 +15,7 @@ import { Toaster } from 'react-hot-toast'
 import LogInPage from './pages/LogInPage'
 import PrivateRoute from './components/shared/PrivateRoute'
 import RegisterPage from './pages/RegisterPage'
+import CheckoutPage from './pages/CheckoutPage'
 
 function App() {
 
@@ -28,10 +29,17 @@ function App() {
           <Route path='/about' element={ <About />}/>
           <Route path='/contact' element={ <Contact />}/>
           <Route path='/cart' element={ <Cart />}/>
+
+
+          <Route path='/' element={<PrivateRoute />}>
+            <Route path='/checkout' element={ <CheckoutPage />}/>
+          </Route> 
+
           <Route path='/' element={<PrivateRoute publicPage />}>
             <Route path='/login' element={ <LogInPage />}/>
             <Route path='/register' element={ <RegisterPage />}/>
           </Route>
+
         </Routes>
       </Router>
       <Toaster position='bottom-center'/>
