@@ -69,7 +69,7 @@ const ItemContent = ({
         <div className="col-span-2 flex gap-4 items-center">
           <div className="w-24 h-24 shrink-0 rounded-lg overflow-hidden border bg-white">
             <img
-              src={productImage}
+              src={`${import.meta.env.VITE_BACK_END_URL}/images/${ productImage }`}
               alt={productName}
               className="w-full h-full object-contain"
             />

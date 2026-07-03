@@ -224,7 +224,6 @@ export const addUpdateUserAddress =
     // const { user } = getState().auth;
     dispatch({ type:"IS_FETCHING" });
     try {
-        console.log(addressId);
        if (!addressId) {
             const { data } = await api.post("/addresses", sendData);
         } else {
@@ -316,7 +315,6 @@ export const getUserCart = () => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
         const { data } = await api.get('/carts/users/cart');
-        console.log(data);
         dispatch({
             type: "GET_USER_CART_PRODUCTS",
             payload: data.productDTOs,

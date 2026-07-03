@@ -2,7 +2,7 @@ import { Button, Step, StepLabel, Stepper } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import AddressInfo from '../components/Checkout/AddressInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserAddresses } from '../store/actions';
+import { createUserCart, getUserAddresses } from '../store/actions';
 import AddressSkeletonLoader from '../components/Checkout/AddressSkeletonLoader';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import PaymentMethod from '../components/Checkout/PaymentMethod';
@@ -19,6 +19,19 @@ const CheckoutPage = () => {
     const { address , selectedUserCheckoutAddress} = useSelector(
         (state) => state.auth
     )
+
+    useEffect(() => {
+    if (activeStep !== 1) return;
+
+    if (cart.length === 0) return;
+
+    const sendCartItems = cart.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+    }));
+
+    dispatch(createUserCart(sendCartItems));
+}, [activeStep]);
 
     const  { paymentMethod } = useSelector((state) => state.payment);
 

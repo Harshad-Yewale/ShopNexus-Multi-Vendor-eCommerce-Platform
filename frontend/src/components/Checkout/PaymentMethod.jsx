@@ -11,16 +11,17 @@ const PaymentMethod = () => {
         (state) => state.cart
     );
 
-    useEffect(() => {
-        if (cart.length > 0 && !cartId && !errorMessage) {
-            const sendCartItems = cart.map((item) => ({
-                productId: item.productId,
-                quantity: item.productQuantity,
-            }));
-
-            dispatch(createUserCart(sendCartItems));
-        }
-    }, [dispatch, cart, cartId, errorMessage]);
+    // useEffect(() => {
+    //     if (cart.length == 0) return;
+    //         const sendCartItems = cart.map((item) => ({
+             
+    //             productId: item.productId,
+    //             quantity: item.quantity,
+    //         }));
+    
+    //         dispatch(createUserCart(sendCartItems));
+    //     }
+    // , [dispatch, cart, cartId, errorMessage]);
 
     const paymentMethodHandler = (method) => {
         dispatch(addPaymentMethod(method));

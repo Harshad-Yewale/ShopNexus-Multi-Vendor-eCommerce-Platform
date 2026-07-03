@@ -43,9 +43,9 @@ const OrderSummary = ({ totalPrice, cart, address, paymentMethod }) => {
                                 >
                                     <div className="flex items-center gap-4">
                                         <img
-                                            src={item.productImage}
+                                            src={`${import.meta.env.VITE_BACK_END_URL}/images/${ item?.productImage }`}
                                             alt={item.productName}
-                                            className="w-16 h-16 rounded-lg object-cover"
+                                            className="w-16 h-16 rounded-lg object-contain"
                                         />
 
                                         <div>
