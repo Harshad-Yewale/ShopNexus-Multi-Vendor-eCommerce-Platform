@@ -81,9 +81,6 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setOrderItemQuantity(cartItem.getQuantity());
             orderItem.setDiscount(cartItem.getDiscount());
-            System.out.println("CartItem Product Price : " + cartItem.getProductPrice());
-            System.out.println("CartItem Discount      : " + cartItem.getDiscount());
-            System.out.println("CartItem Discounted    : " + cartItem.getDiscountedPrice());
             orderItem.setDiscountedPrice(cartItem.getDiscountedPrice());
             orderItems.add(orderItem);
         }

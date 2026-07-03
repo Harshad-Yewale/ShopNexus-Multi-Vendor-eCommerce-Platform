@@ -17,6 +17,7 @@ import PrivateRoute from './components/shared/PrivateRoute'
 import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
 import { useSelector } from 'react-redux'
+import OrderPlacedPage from './pages/orderPlacedPage'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
           <Route path='/about' element={ <About />}/>
           <Route path='/contact' element={ <Contact />}/>
           <Route path='/cart' element={ <Cart />}/>
+          <Route path='/order-confirmation' element={<OrderPlacedPage/>}/>
 
 
           <Route path='/' element={<PrivateRoute />}>

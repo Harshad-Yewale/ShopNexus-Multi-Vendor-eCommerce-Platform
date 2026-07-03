@@ -48,9 +48,9 @@ const PaymentMethod = () => {
                     >
                         <div className="border rounded-lg px-4 py-3 mb-3 hover:border-blue-500 transition">
                             <FormControlLabel
-                                value="Stripe"
+                                value="RAZORPAY"
                                 control={<Radio />}
-                                label="Stripe"
+                                label="Razorpay"
                             />
                         </div>
 

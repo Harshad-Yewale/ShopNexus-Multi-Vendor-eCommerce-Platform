@@ -244,7 +244,7 @@ export const addUpdateUserAddress =
 export const getUserAddresses = () => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get(`/addresses`);
+        const { data } = await api.get(`/users/addresses`);
         dispatch({type: "USER_ADDRESS", payload: data});
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
@@ -331,3 +331,60 @@ export const getUserCart = () => async (dispatch, getState) => {
          });
     }
 };
+
+export const clearUserCart = () => (dispatch) => {
+    localStorage.removeItem("cartItems");
+    dispatch({
+        type: "CLEAR_CART",
+    });
+};
+export const createPendingOrder = (addressId, toast) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+
+        const { data } = await api.post("/orders/create", { addressId,});
+        dispatch({ type: "IS_SUCCESS" });
+        return data;
+    } catch (error) {
+        dispatch({
+            type: "IS_ERROR",
+            payload: getErrorMessage(error, "Failed to create order"),
+        });
+        toast?.error(getErrorMessage(error, "Failed to create order"));
+        return null;
+    }
+};
+
+export const createRazorpayOrder = (orderId, toast) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.post(`/payments/create-order/${orderId}`);
+        dispatch({ type: "IS_SUCCESS" });
+        return data;
+    } catch (error) {
+        dispatch({
+            type: "IS_ERROR",
+            payload: getErrorMessage(error, "Failed to create Razorpay order"),
+        });
+        toast?.error(
+            getErrorMessage(error, "Failed to create Razorpay order")
+        );
+        return null;
+    }
+};
+
+export const verifyPayment =
+    (paymentData, toast) => async (dispatch) => {
+        try {
+            const { data } = await api.post("/payments/verify",paymentData );
+            toast.success("Payment Verified Successfully");
+            return data;
+
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                "Payment verification failed."
+            );
+            return null;
+        }
+    };

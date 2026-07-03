@@ -20,10 +20,4 @@ public class RazorpayConfig {
     public RazorpayClient razorpayClient() throws RazorpayException {
         return new RazorpayClient(key, secret);
     }
-
-    @PostConstruct
-    public void init() {
-        System.out.println(key);
-        System.out.println(secret);
-    }
 }

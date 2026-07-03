@@ -72,7 +72,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return token;
         }
         token=jwtUtils.getJwtFromHeader(request);
-        logger.debug("Jwt from header (can be null if not exist): {}",token);
         return token;
     }
 }

@@ -8,7 +8,7 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import PaymentMethod from '../components/Checkout/PaymentMethod';
 import OrderSummary from '../components/Checkout/OrderSummary';
 import PaypalPayment from '../components/Checkout/PaypalPayment';
-import StripePayment from '../components/Checkout/StripePayment';
+import RazorpayPayment from '../components/Checkout/RazorpayPayment';
 
 const CheckoutPage = () => {
     const [activeStep, setActiveStep] = useState(0);
@@ -130,8 +130,8 @@ const CheckoutPage = () => {
                                         paymentMethod={paymentMethod}/>}
                         {activeStep === 3 && 
                                 <>
-                                    {paymentMethod === "Stripe" ? (
-                                        <StripePayment />
+                                    {paymentMethod === "RAZORPAY" ? (
+                                        <RazorpayPayment />
                                     ) : (
                                         <PaypalPayment />
                                     )}
