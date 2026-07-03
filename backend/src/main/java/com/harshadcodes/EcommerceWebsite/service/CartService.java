@@ -1,6 +1,7 @@
 package com.harshadcodes.EcommerceWebsite.service;
 
 import com.harshadcodes.EcommerceWebsite.payload.CartDTO;
+import com.harshadcodes.EcommerceWebsite.payload.CartItemDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
@@ -21,4 +22,6 @@ public interface CartService {
 
     @Transactional
     boolean updateProductInSideCart(@Valid Long productId, @Valid Long cartId) throws Exception;
+
+    String createOrUpdateCartWithItems(List<CartItemDTO> cartItems);
 }

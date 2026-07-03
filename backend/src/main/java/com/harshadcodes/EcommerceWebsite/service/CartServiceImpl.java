@@ -4,6 +4,7 @@ import com.harshadcodes.EcommerceWebsite.model.Cart;
 import com.harshadcodes.EcommerceWebsite.model.CartItem;
 import com.harshadcodes.EcommerceWebsite.model.Product;
 import com.harshadcodes.EcommerceWebsite.payload.CartDTO;
+import com.harshadcodes.EcommerceWebsite.payload.CartItemDTO;
 import com.harshadcodes.EcommerceWebsite.payload.ProductDTO;
 import com.harshadcodes.EcommerceWebsite.repositories.CartItemRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.CartRepository;
@@ -123,7 +124,7 @@ public class CartServiceImpl implements CartService{
         List<ProductDTO> productDTOs = cart.getCartItems().stream()
                 .map(item -> {
                     ProductDTO dto = modelMapper.map(item.getProduct(), ProductDTO.class);
-                    dto.setProductQuantity(item.getQuantity()); // cart quantity, not stock quantity
+                    dto.setQuantity(item.getQuantity()); // cart quantity, not stock quantity
                     return dto;
                 })
                 .toList();
@@ -241,6 +242,56 @@ public class CartServiceImpl implements CartService{
 
         cartItemRepository.save(cartItem);
         return true;
+    }
+
+    @Transactional
+    @Override
+    public String createOrUpdateCartWithItems(List<CartItemDTO> cartItems) {
+        // Get user's email
+        String emailId = authUtils.getLoggedinEmail();
+
+        // Check if an existing cart is available or create a new one
+        Cart existingCart = cartRepository.findCartByEmail(emailId);
+        if (existingCart == null) {
+            existingCart = new Cart();
+            existingCart.setTotalPrice(0.00);
+            existingCart.setUser(authUtils.getLoggedinUser());
+            existingCart = cartRepository.save(existingCart);
+        } else {
+            // Clear all current items in the existing cart
+            cartItemRepository.deleteAllByCartId(existingCart.getCartId());
+
+        }
+
+        double totalPrice = 0.00;
+
+        // Process each item in the request to add to the cart
+        for (CartItemDTO cartItemDTO : cartItems) {
+            Long productId = cartItemDTO.productId();
+            Integer quantity = cartItemDTO.quantity();
+
+            // Find the product by ID
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+            // Directly update product stock and total price
+            // product.setQuantity(product.getQuantity() - quantity);
+            totalPrice += product.getProductDiscountedPrice()* quantity;
+            // Create and save cart item
+            CartItem cartItem = new CartItem();
+            cartItem.setProduct(product);
+            cartItem.setCart(existingCart);
+            cartItem.setQuantity(cartItemDTO.quantity());
+            cartItem.setProductPrice(product.getProductPrice());
+            cartItem.setDiscount(product.getProductDiscount());
+            cartItem.setDiscountedPrice(product.getProductPrice());
+            cartItemRepository.save(cartItem);
+        }
+
+        // Update the cart's total price and save
+        existingCart.setTotalPrice(totalPrice);
+        cartRepository.save(existingCart);
+        return "Cart created/updated with the new items successfully";
     }
 
 

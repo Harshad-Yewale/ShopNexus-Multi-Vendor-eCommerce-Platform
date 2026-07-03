@@ -3,17 +3,24 @@ import React, { useEffect, useState } from 'react'
 import AddressInfo from '../components/Checkout/AddressInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserAddresses } from '../store/actions';
+import AddressSkeletonLoader from '../components/Checkout/AddressSkeletonLoader';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import PaymentMethod from '../components/Checkout/PaymentMethod';
+import OrderSummary from '../components/Checkout/OrderSummary';
+import PaypalPayment from '../components/Checkout/PaypalPayment';
+import StripePayment from '../components/Checkout/StripePayment';
 
 const CheckoutPage = () => {
     const [activeStep, setActiveStep] = useState(0);
     const dispatch = useDispatch();
     const { isLoading, errorMessage } = useSelector((state) => state.auth);
+    const{ cart, totalPrice } =useSelector((state) =>state.cart);
 
     const { address , selectedUserCheckoutAddress} = useSelector(
         (state) => state.auth
     )
 
-    const paymentMethod = false;
+    const  { paymentMethod } = useSelector((state) => state.payment);
 
     const handleBack = () => {
         setActiveStep((prevStep) => prevStep - 1);
@@ -70,11 +77,57 @@ const CheckoutPage = () => {
                 </div>
 
                 {/* Step Content */}
-                <div className="mt-6 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                    {activeStep === 0 && (
-                        <AddressInfo address={address} />
-                    )}
-                </div>
+                {isLoading?( <div className='lg:w-[80%] mx-auto py-5'>
+                       <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                            <DotLottieReact
+                            src="\animations\checkout.json"
+                            loop
+                            autoplay
+                            style={{ width: '280px', height: '280px' }}
+                            />
+                            <h2 className="text-2xl font-semibold mt-4">
+                                Hold On....
+                            </h2>
+                            <p className="text-gray-500 mt-2">
+                                Getting steps for checkout
+                            </p>
+                        </div>
+                    </div>):(errorMessage?(
+                        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                            <DotLottieReact
+                            src="\animations\error.json"
+                            loop
+                            autoplay
+                            style={{ width: '280px', height: '280px' }}
+                            />
+                            <h2 className="text-2xl font-semibold mt-4">
+                                oops
+                            </h2>
+                            <p className="text-gray-500 mt-2">
+                                {errorMessage}
+                            </p>
+                        </div>
+                    ):(<div className="mt-6 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        {activeStep === 0 && (<AddressInfo address={address} />)}
+                        {activeStep === 1 && <PaymentMethod />}
+                        {activeStep === 2 && <OrderSummary 
+                                        totalPrice={totalPrice}
+                                        cart={cart}
+                                        address={selectedUserCheckoutAddress}
+                                        paymentMethod={paymentMethod}/>}
+                        {activeStep === 3 && 
+                                <>
+                                    {paymentMethod === "Stripe" ? (
+                                        <StripePayment />
+                                    ) : (
+                                        <PaypalPayment />
+                                    )}
+                                </>
+                        }
+                    </div>)
+                     
+                )}
+               
 
             </div>
 

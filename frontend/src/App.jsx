@@ -4,7 +4,7 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import Products from './pages/Products'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ScrollToTop from './utils/ScrollToTop'
 import Navbar from './components/shared/Navbar'
@@ -16,8 +16,11 @@ import LogInPage from './pages/LogInPage'
 import PrivateRoute from './components/shared/PrivateRoute'
 import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
+import { useSelector } from 'react-redux'
 
 function App() {
+
+  const cart = useSelector((state)=>state.cart.cart);
 
   return (
       <React.Fragment>
@@ -32,7 +35,7 @@ function App() {
 
 
           <Route path='/' element={<PrivateRoute />}>
-            <Route path='/checkout' element={ <CheckoutPage />}/>
+            <Route path='/checkout' element={ cart.length > 0 ? <CheckoutPage />: <Navigate to='/cart' replace/>}/>
           </Route> 
 
           <Route path='/' element={<PrivateRoute publicPage />}>

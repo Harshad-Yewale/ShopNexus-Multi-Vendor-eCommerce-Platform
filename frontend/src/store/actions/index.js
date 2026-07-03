@@ -252,7 +252,7 @@ export const getUserAddresses = () => async (dispatch, getState) => {
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Failed to fetch user addresses",
+            payload: error?.response?.error?.message || "Failed to fetch user addresses",
          });
     }
 };
@@ -288,5 +288,48 @@ export const deleteUserAddress =
 export const clearCheckoutAddress = () => {
     return {
         type: "REMOVE_CHECKOUT_ADDRESS",
+    }
+};
+
+export const addPaymentMethod = (method) => {
+    return {
+        type: "ADD_PAYMENT_METHOD",
+        payload: method,
+    }
+};
+
+export const createUserCart = (sendCartItems) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        await api.post('carts/cart/create', sendCartItems);
+        await dispatch(getUserCart());
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to create cart items",
+         });
+    }
+};
+
+export const getUserCart = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get('/carts/users/cart');
+        console.log(data);
+        dispatch({
+            type: "GET_USER_CART_PRODUCTS",
+            payload: data.productDTOs,
+            totalPrice: data.totalPrice,
+            cartId: data.cartId
+        })
+        localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart));
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch cart items",
+         });
     }
 };

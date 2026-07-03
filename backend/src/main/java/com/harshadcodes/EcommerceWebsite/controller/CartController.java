@@ -3,6 +3,7 @@ package com.harshadcodes.EcommerceWebsite.controller;
 
 import com.harshadcodes.EcommerceWebsite.payload.CartDTO;
 
+import com.harshadcodes.EcommerceWebsite.payload.CartItemDTO;
 import com.harshadcodes.EcommerceWebsite.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,13 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+
+    @PostMapping("/cart/create")
+    public ResponseEntity<String> createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems){
+        String response = cartService.createOrUpdateCartWithItems(cartItems);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
 
     @PostMapping("/products/{productId}/quantity/{quantity}")
     public ResponseEntity<CartDTO> addProductToCart(@PathVariable Long productId,

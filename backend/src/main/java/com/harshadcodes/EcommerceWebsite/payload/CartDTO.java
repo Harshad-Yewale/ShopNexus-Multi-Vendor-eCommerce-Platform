@@ -8,7 +8,7 @@ import java.util.List;
 public class CartDTO {
      Long cartId;
 
-     Double totalPrice;
+     Double totalPrice=0.0;
 
      List<ProductDTO> productDTOs;
 }
