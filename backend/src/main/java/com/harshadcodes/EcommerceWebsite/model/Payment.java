@@ -1,40 +1,44 @@
 package com.harshadcodes.EcommerceWebsite.model;
 
+import com.harshadcodes.EcommerceWebsite.model.Order;
+import com.harshadcodes.EcommerceWebsite.model.PaymentStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
 @Table(name = "payments_tbl")
 public class Payment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    @OneToOne(mappedBy = "payment", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToOne(mappedBy = "payment")
     private Order order;
 
-    @NotBlank
-    @Size(min = 4, message = "Payment method must contain at least 4 characters")
+    private String gatewayName;
+
     private String paymentMethod;
 
-    private String pgPaymentId;
-    private String pgStatus;
-    private String pgResponseMessage;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
 
-    private String pgName;
+    private Double amount;
 
-    public Payment(String paymentMethod, String pgPaymentId, String pgStatus, String pgResponseMessage, String pgName) {
-        this.paymentMethod = paymentMethod;
-        this.pgPaymentId = pgPaymentId;
-        this.pgStatus = pgStatus;
-        this.pgResponseMessage = pgResponseMessage;
-        this.pgName = pgName;
-    }
+    private String gatewayOrderId;
+
+    private String gatewayPaymentId;
+
+    private String gatewaySignature;
+
+    private String responseMessage;
+
+    private LocalDateTime paymentDate;
 }

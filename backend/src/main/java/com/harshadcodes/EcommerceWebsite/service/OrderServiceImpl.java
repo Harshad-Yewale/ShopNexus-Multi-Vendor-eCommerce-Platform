@@ -30,67 +30,76 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderDTO placeOrder(String email, Long addressId, String paymentMethod, String pgPaymentId, String pgName, String pgStatus, String pgResponseMessage) throws Exception {
-        Cart cart=cartRepository.findCartByEmail(email);
+    public OrderDTO createPendingOrder(String email, Long addressId) throws Exception {
 
-        if(cart==null){
-            throw new ResourceNotFoundException("Cart","email",email);
-        }
-        if(!cart.getUser().getEmail().equals(email)){
-            throw new Exception("unauthorized access!!");
+        Cart cart = cartRepository.findCartByEmail(email);
+
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart", "email", email);
         }
 
-        Address address=addressRepository.findById(addressId)
-                .orElseThrow(()->new ResourceNotFoundException("Address","addressId",addressId));
+        if (!cart.getUser().getEmail().equals(email)) {
+            throw new Exception("Unauthorized Access");
+        }
 
-        Order order=new Order();
+        if (cart.getCartItems().isEmpty()) {
+            throw new Exception("Cart is empty");
+        }
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Address", "addressId", addressId));
+
+
+        Payment payment = new Payment();
+        payment.setGatewayName("RAZORPAY");
+        payment.setPaymentMethod("ONLINE");
+        payment.setPaymentStatus(PaymentStatus.PENDING);
+        payment.setAmount(cart.getTotalPrice());
+
+        Payment savedPayment = paymentRepository.save(payment);
+
+        Order order = new Order();
+
         order.setEmail(email);
         order.setAddress(address);
         order.setOrderDate(LocalDate.now());
         order.setTotalAmount(cart.getTotalPrice());
-        order.setOrderStatus("Accepted");
+        order.setOrderStatus(OrderStatus.PENDING_PAYMENT);
+        order.setPayment(savedPayment);
 
-        Payment payment=new Payment(paymentMethod,pgPaymentId,pgStatus,pgResponseMessage,pgName);
-        payment.setOrder(order);
-        payment=paymentRepository.save(payment);
-        order.setPayment(payment);
+        Order savedOrder = orderRepository.save(order);
 
-        Order savedOrder=orderRepository.save(order);
+        savedPayment.setOrder(savedOrder);
+        paymentRepository.save(savedPayment);
 
-        List<CartItem>cartItems=cart.getCartItems();
+        List<OrderItem> orderItems = new ArrayList<>();
 
-        if(cartItems.isEmpty()){
-            throw new Exception("cart is empty");
-        }
-
-        List<OrderItem> orderItems=new ArrayList<>();
-
-        for (CartItem cartItem : cartItems){
-            OrderItem orderItem=new OrderItem();
-            orderItem.setProduct(cartItem.getProduct());
+        for (CartItem cartItem : cart.getCartItems()) {
+            OrderItem orderItem = new OrderItem();
             orderItem.setOrder(savedOrder);
+            orderItem.setProduct(cartItem.getProduct());
             orderItem.setOrderItemQuantity(cartItem.getQuantity());
             orderItem.setDiscount(cartItem.getDiscount());
+            System.out.println("CartItem Product Price : " + cartItem.getProductPrice());
+            System.out.println("CartItem Discount      : " + cartItem.getDiscount());
+            System.out.println("CartItem Discounted    : " + cartItem.getDiscountedPrice());
             orderItem.setDiscountedPrice(cartItem.getDiscountedPrice());
             orderItems.add(orderItem);
         }
 
-        orderItems=orderItemRepository.saveAll(orderItems);
+        orderItems = orderItemRepository.saveAll(orderItems);
+        savedOrder.setOrderItems(orderItems);
 
-        cart.getCartItems().forEach(cartItem -> {
-            int quantity=cartItem.getQuantity();
-            Product product=cartItem.getProduct();
-
-            product.setProductQuantity(product.getProductQuantity()-quantity);
-            productRepository.save(product);
-
-            cartService.deleteCartItem(product.getProductId(),cart.getCartId());
-
-        });
-
-        OrderDTO orderDTO=modelMapper.map(order,OrderDTO.class);
-        orderItems
-                .forEach(orderItem -> orderDTO.getOrderItems().add(modelMapper.map(orderItem, OrderItemDTO.class)));
+        OrderDTO orderDTO = modelMapper.map(savedOrder, OrderDTO.class);
+        orderDTO.setOrderItems(new ArrayList<>());
+        orderItems.forEach(orderItem ->{
+            OrderItemDTO orderItemDTO = modelMapper.map(orderItem, OrderItemDTO.class);
+            orderItemDTO.setOrderedProductPrice(orderItem.getDiscountedPrice());
+            orderItemDTO.setOrderedProductPrice(orderItem.getDiscountedPrice());
+            orderDTO.getOrderItems().add(orderItemDTO);
+            return;
+                });
 
         orderDTO.setAddressId(addressId);
         return orderDTO;

@@ -29,7 +29,11 @@ public class Order {
 
 
     private Double totalAmount;
-    private String orderStatus;
+
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
     private LocalDate orderDate;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
