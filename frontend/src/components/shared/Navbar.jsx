@@ -14,9 +14,6 @@ const Navbar = () => {
   const {cart}=useSelector((state=>state.cart));
   const { user } = useSelector((state) => state.auth);
 
-  // Replace this with your Redux auth state later
-  const isAuthenticated = false;
-
   return (
     <nav className="sticky top-0 z-50 h-17.5  bg-slate-950 text-white">
       <div className="max-w-9xl mx-auto h-full px-4 sm:px-8 lg:px-14 flex items-center justify-between">

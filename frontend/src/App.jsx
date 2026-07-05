@@ -18,6 +18,11 @@ import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
 import { useSelector } from 'react-redux'
 import OrderPlacedPage from './pages/orderPlacedPage'
+import AdminPanel from './pages/AdminPanel'
+import Dashboard from './components/admin/Dashboard'
+import AdminProducts from './components/admin/AdminProducts'
+import Sellers from './components/admin/Sellers'
+import Category from './components/admin/Category'
 
 function App() {
 
@@ -39,6 +44,15 @@ function App() {
           <Route path='/' element={<PrivateRoute />}>
             <Route path='/checkout' element={ cart.length > 0 ? <CheckoutPage />: <Navigate to='/cart' replace/>}/>
           </Route> 
+
+          <Route path='/' element={<PrivateRoute adminOnly/>}>
+              <Route path='/admin' element={ <AdminPanel />}>
+              <Route path='' element={<Dashboard />} />
+              <Route path='products' element={<AdminProducts />} />
+              <Route path='sellers' element={<Sellers />} />
+              <Route path='categories' element={<Category />} />
+              </Route>
+          </Route>
 
           <Route path='/' element={<PrivateRoute publicPage />}>
             <Route path='/login' element={ <LogInPage />}/>
