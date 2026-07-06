@@ -1,10 +1,14 @@
 package com.harshadcodes.EcommerceWebsite.repositories;
 
 import com.harshadcodes.EcommerceWebsite.model.User;
+import com.harshadcodes.EcommerceWebsite.payload.MonthlyAnalyticsDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +20,15 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByUsername(String username);
 
     boolean existsByUsername(@NotBlank String username);
+
+            @Query("""
+        SELECT new com.harshadcodes.EcommerceWebsite.payload.MonthlyAnalyticsDTO(
+               MONTH(u.createdAt),
+               COUNT(u)
+        )
+        FROM User u
+        GROUP BY MONTH(u.createdAt)
+        ORDER BY MONTH(u.createdAt)
+        """)
+    List<MonthlyAnalyticsDTO> getUsersPerMonth();
 }

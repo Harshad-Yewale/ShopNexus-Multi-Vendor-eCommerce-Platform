@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,10 @@ public class OrderServiceImpl implements OrderService {
         order.setEmail(email);
         order.setAddress(address);
         order.setOrderDate(LocalDate.now());
-        order.setTotalAmount(cart.getTotalPrice());
+         Double totalOrderAmount = BigDecimal.valueOf(cart.getTotalPrice())
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
+        order.setTotalAmount(totalOrderAmount);
         order.setOrderStatus(OrderStatus.PENDING_PAYMENT);
         order.setPayment(savedPayment);
 

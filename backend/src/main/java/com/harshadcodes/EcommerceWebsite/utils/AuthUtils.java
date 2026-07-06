@@ -1,5 +1,6 @@
 package com.harshadcodes.EcommerceWebsite.utils;
 
+import com.harshadcodes.EcommerceWebsite.constants.AppRole;
 import com.harshadcodes.EcommerceWebsite.exceptions.ResourceNotFoundException;
 import com.harshadcodes.EcommerceWebsite.model.User;
 import com.harshadcodes.EcommerceWebsite.repositories.UserRepository;
@@ -44,5 +45,13 @@ public class AuthUtils {
             return new ResourceNotFoundException("User","username", authentication.getName());
         });
         return user;
+    }
+
+    public boolean isAdmin() {
+        User user = getLoggedinUser();
+
+        return user.getUserRoles()
+                .stream()
+                .anyMatch(role -> role.getRole() == AppRole.ROLE_ADMIN);
     }
 }
