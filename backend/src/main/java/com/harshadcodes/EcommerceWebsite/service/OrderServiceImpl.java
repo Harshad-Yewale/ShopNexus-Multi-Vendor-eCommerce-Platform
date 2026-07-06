@@ -4,10 +4,15 @@ import com.harshadcodes.EcommerceWebsite.exceptions.ResourceNotFoundException;
 import com.harshadcodes.EcommerceWebsite.model.*;
 import com.harshadcodes.EcommerceWebsite.payload.OrderDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderItemDTO;
+import com.harshadcodes.EcommerceWebsite.payload.OrderResponse;
 import com.harshadcodes.EcommerceWebsite.repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -105,5 +110,38 @@ public class OrderServiceImpl implements OrderService {
 
         orderDTO.setAddressId(addressId);
         return orderDTO;
+    }
+
+    @Override
+    public OrderResponse findAllOrders(Integer pageNumber, Integer pageSize, String sortOrder, String sortBy) {
+
+        Sort sortByAndOrder =sortOrder.equalsIgnoreCase("asc")
+                ?Sort.by(sortBy).ascending()
+                :Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber,pageSize,sortByAndOrder);
+        Page<Order> pageOrders=orderRepository.findAll(pageDetails);
+        List<Order> orders=pageOrders.getContent();
+
+        List<OrderDTO> orderDTOs = orders.stream().map(
+                order-> modelMapper.map(order,OrderDTO.class))
+                .toList();
+        return new OrderResponse(
+                orderDTOs,
+                pageOrders.getNumber(),
+                pageOrders.getSize(),
+                pageOrders.getTotalPages(),
+                pageOrders.getTotalElements(),
+                pageOrders.isLast()
+        );
+    }
+
+    @Override
+    public OrderDTO updateOrder(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order","orderId",orderId));
+        order.setOrderStatus(status);
+        orderRepository.save(order);
+        return modelMapper.map(order, OrderDTO.class);
     }
 }
