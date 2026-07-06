@@ -5,13 +5,27 @@ import RevenueLineChart from "./RevenueLineChart";
 import OrdersBarChart from "./OrdersBarChart";
 import UsersBarChart from "./UsersBarChart";
 import OrderStatusPieChart from "./OrderStatusPieChart";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const DashboardOverview = ({ analytics, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-[70vh]">
-        Loading...
-      </div>
+      <div className='lg:w-[80%] mx-auto py-5'>
+          <div className="flex flex-col items-center justify-center min-h-[60vh]">
+              <DotLottieReact
+              src="\animations\analyticsLoading.json"
+              loop
+              autoplay
+              style={{ width: '280px', height: '280px' }}
+              />
+              <h2 className="text-2xl font-semibold mt-4">
+                  Hold On....
+              </h2>
+              <p className="text-gray-500 mt-2">
+                  Analysis in Progress...
+              </p>
+          </div>
+    </div>
     );
   }
   return(

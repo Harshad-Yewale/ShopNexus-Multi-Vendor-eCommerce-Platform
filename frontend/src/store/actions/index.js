@@ -412,3 +412,41 @@ export const verifyPayment =
             });
         }
 };
+
+export const getOrdersForDashboard = (queryString) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get(`/admin/orders?${queryString}`);
+        dispatch({
+            type: "GET_ADMIN_ORDERS",
+            payload: data.content,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            totalElements: data.totalElements,
+            totalPages: data.totalPages,
+            lastPage: data.lastPage,
+        });
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch orders data",
+         });
+    }
+};
+
+export const updateOrderStatusFromDashboard =
+     (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
+    try {
+        setLoader(true);
+        const { data } = await api.put(`/admin/orders/${orderId}/status`, { status: orderStatus});
+        toast.success(data.message || "Order updated successfully");
+        await dispatch(getOrdersForDashboard());
+    } catch (error) {
+        console.log(error);
+        toast.error(error?.response?.data?.message || "Internal Server Error");
+    } finally {
+        setLoader(false)
+    }
+};

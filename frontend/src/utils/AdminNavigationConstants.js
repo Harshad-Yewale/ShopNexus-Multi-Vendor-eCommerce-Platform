@@ -1,10 +1,16 @@
-import { FaBoxOpen, FaHome, FaStore, FaThList } from "react-icons/fa";
+import { FaBoxOpen, FaHome, FaStore, FaThList,FaShoppingCart } from "react-icons/fa";
 
 export const adminNavigation = [
   {
     name: "Dashboard", 
     href: "/admin", 
     icon: FaHome, 
+    current: true 
+  },
+  {
+    name: "Orders", 
+    href: "/admin/orders", 
+    icon: FaShoppingCart, 
     current: true 
   }, {
     name: "Products", 
