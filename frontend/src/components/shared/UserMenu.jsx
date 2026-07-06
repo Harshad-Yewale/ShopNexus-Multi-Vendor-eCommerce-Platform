@@ -14,9 +14,10 @@ const UserMenu = () => {
     const open = Boolean(anchorEl);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const { user } = useSelector((state) => state.auth);
+    const isAdmin = user?.roles?.includes("ROLE_ADMIN");
 
+    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -73,6 +74,29 @@ const UserMenu = () => {
                     vertical: "bottom",
                 }}
             >
+                {isAdmin &&
+                        <Link
+                        to="/admin"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                        onClick={handleClose}
+                    >
+                        <MenuItem
+                            sx={{
+                                py: 1.5,
+                                mx: 1,
+                                my: 0.5,
+                                borderRadius: 2,
+                            }}
+                        >
+                            <ListItemIcon>
+                                <BiUser size={20} />
+                            </ListItemIcon>
+
+                            Admin Panel
+                        </MenuItem>
+                    </Link>
+                }
+              
               <Link
                     to="/profile"
                     style={{ textDecoration: "none", color: "inherit" }}

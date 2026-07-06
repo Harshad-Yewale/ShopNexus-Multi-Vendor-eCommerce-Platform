@@ -388,3 +388,27 @@ export const verifyPayment =
             return null;
         }
     };
+
+    export const getAdminDashboardAnalytics = () => async (dispatch) => {
+    try {
+
+            dispatch({type: "IS_ANALYTICS_REQUEST",});
+
+            const { data } = await api.get("/admin/dashboard/analytics");
+
+            dispatch({
+                type: "IS_ANALYTICS_SUCCESS",
+                payload: data,
+              
+            });
+        } catch (error) {
+
+            dispatch({
+                type: "IS_ANALYTICS_FAIL",
+                payload:
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Something went wrong",
+            });
+        }
+};
