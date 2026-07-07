@@ -1,12 +1,12 @@
-import { DataGrid} from '@mui/x-data-grid';
-import { useMemo, useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { adminOrderTableColumn } from '../../../utils/TableColumns';
-import {formatPrice} from "../../../utils/FormatPrice";
-import Modal from '../../shared/Modal';
-import UpdateOrderForm from './UpdateOrderForm';
+import { DataGrid } from "@mui/x-data-grid";
+import { useMemo, useState } from "react";
+import {useLocation,useNavigate,useSearchParams,} from "react-router-dom";
+import { adminOrderTableColumn } from "../../../utils/TableColumns";
+import { formatPrice } from "../../../utils/FormatPrice";
+import Modal from "../../shared/Modal";
+import UpdateOrderForm from "./UpdateOrderForm";
 
-export const OrderTable = ({ adminOrder, pagination}) => {
+export const OrderTable = ({ adminOrder, pagination }) => {
   const [updateOpenModal, setUpdateOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loader, setLoader] = useState(false);
@@ -14,7 +14,8 @@ export const OrderTable = ({ adminOrder, pagination}) => {
   const [currentPage, setCurrentPage] = useState(
     pagination?.pageNumber + 1 || 1
   );
-   const navigate = useNavigate();
+
+  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
@@ -23,37 +24,42 @@ export const OrderTable = ({ adminOrder, pagination}) => {
   const handleEdit = (order) => {
     setSelectedItem(order);
     setUpdateOpenModal(true);
-  }
+  };
 
+  const tableRecords = useMemo(
+    () =>
+      adminOrder?.map((item) => ({
+        id: item.orderId,
+        email: item.email,
+        totalAmount: formatPrice(item.totalAmount),
+        status: item.orderStatus,
+        date: item.orderDate,
+      })),
+    [adminOrder]
+  );
 
-const tableRecords = useMemo(() =>adminOrder?.map((item) => {
-  return {
-    id: item.orderId,
-    email: item.email,
-    totalAmount: formatPrice(item.totalAmount),
-    status: item.orderStatus,
-    date: item.orderDate,
-  }}));
-
-const handlePaginationChange = (paginationModel) => {
-  const page = paginationModel.page + 1;
-  setCurrentPage(page);
-  params.set("page", page.toString());
-  navigate(`${pathname}?${params}`)
-}
+  const handlePaginationChange = (paginationModel) => {
+    const page = paginationModel.page + 1;
+    setCurrentPage(page);
+    params.set("page", page.toString());
+    navigate(`${pathname}?${params}`);
+  };
 
   return (
-    <div>
-      <h1 className='text-slate-800 text-3xl text-center font-bold pb-6 uppercase'>
-        All Orders
-      </h1>
+    <div className="space-y-6 px-4 py-4">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold uppercase tracking-wide text-slate-800 md:text-3xl">
+          All Orders
+        </h1>
+      </div>
 
-      <div className="mx-auto max-w-7xl rounded-2xl bg-white shadow-lg border border-gray-200 overflow-hidden">
-         <DataGrid
-         className='w-full'
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="w-full">
+          <DataGrid
             rows={tableRecords}
             columns={adminOrderTableColumn(handleEdit)}
-            paginationMode='server'
+            autoHeight
+            paginationMode="server"
             rowCount={pagination?.totalElements || 0}
             initialState={{
               pagination: {
@@ -73,23 +79,39 @@ const handlePaginationChange = (paginationModel) => {
               showLastButton: true,
               hideNextButton: currentPage === pagination?.totalPages,
             }}
+            sx={{
+              border: 0,
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#f8fafc",
+                fontWeight: 600,
+              },
+              "& .MuiDataGrid-cell": {
+                display: "flex",
+                alignItems: "center",
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "1px solid #e5e7eb",
+              },
+            }}
           />
+        </div>
       </div>
+
       <Modal
         open={updateOpenModal}
         setOpen={setUpdateOpenModal}
-        title='Update Order Status'>
-          {selectedItem && (
-            <UpdateOrderForm
-              setOpen={setUpdateOpenModal}
-              loader={loader}
-              setLoader={setLoader}
-              selectedId={selectedItem.id}
-              selectedItem={selectedItem}
-            />
-          )}
+        title="Update Order Status"
+      >
+        {selectedItem && (
+          <UpdateOrderForm
+            setOpen={setUpdateOpenModal}
+            loader={loader}
+            setLoader={setLoader}
+            selectedId={selectedItem.id}
+            selectedItem={selectedItem}
+          />
+        )}
       </Modal>
     </div>
-  )
-}
-
+  );
+};

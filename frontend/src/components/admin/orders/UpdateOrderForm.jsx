@@ -30,6 +30,7 @@ const UpdateOrderForm = ({ setOpen, selectedId, selectedItem, loader, setLoader}
             toast,
             setLoader
         ));
+        setOpen(false)
     };
 
     useEffect(() => {

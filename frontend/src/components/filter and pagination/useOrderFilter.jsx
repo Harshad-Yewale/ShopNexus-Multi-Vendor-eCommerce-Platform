@@ -7,20 +7,26 @@ const useOrderFilter = () => {
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const params = new URLSearchParams();
+   useEffect(() => {
+    const params = new URLSearchParams();
 
-        const currentPage = searchParams.get("page")
-            ? Number(searchParams.get("page"))
-            : 1;
+    const currentPage = searchParams.get("page")
+        ? Number(searchParams.get("page"))
+        : 1;
 
-        params.set("pageNumber", currentPage - 1);
+    const sortOrder = searchParams.get("sortby") || "asc";
+    const keyword = searchParams.get("keyword");
 
-        const queryString = params.toString();
-        
-        dispatch(getOrdersForDashboard(queryString));
+    params.set("sortBy", "orderDate");
+    params.set("sortOrder", sortOrder);
+    params.set("pageNumber", currentPage - 1);
 
-    }, [dispatch, searchParams]);
+    if (keyword && keyword.trim()) {
+        params.set("keyword", keyword.trim());
+    }
+
+    dispatch(getOrdersForDashboard(params.toString()));
+}, [dispatch, searchParams]);
 };
 
 export default useOrderFilter;

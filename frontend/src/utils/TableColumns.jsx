@@ -2,13 +2,14 @@ import { FaEdit } from "react-icons/fa";
 
 export const adminOrderTableColumn = (handleEdit) => [
   {
-    sortable: false,
-    disableColumnMenu: true,
     field: "id",
     headerName: "Order ID",
-    minWidth: 180,
-    headerAlign: "center",
+    flex: 0.8,
+    minWidth: 120,
+    sortable: false,
+    disableColumnMenu: true,
     align: "center",
+    headerAlign: "center",
     editable: false,
     headerClassName:
       "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
@@ -18,16 +19,17 @@ export const adminOrderTableColumn = (handleEdit) => [
       <span className="font-semibold tracking-wide">Order ID</span>
     ),
   },
+
   {
-    disableColumnMenu: true,
     field: "email",
     headerName: "Email",
-    align: "center",
-    flex: 1,
-    minWidth: 250,
-    editable: false,
+    flex: 2,
+    minWidth: 220,
     sortable: false,
+    disableColumnMenu: true,
+    align: "center",
     headerAlign: "center",
+    editable: false,
     headerClassName:
       "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
     cellClassName:
@@ -36,32 +38,38 @@ export const adminOrderTableColumn = (handleEdit) => [
       <span className="font-semibold tracking-wide">Email</span>
     ),
   },
+
   {
-    disableColumnMenu: true,
     field: "totalAmount",
     headerName: "Total Amount",
-    align: "center",
-    width: 180,
-    editable: false,
+    flex: 1,
+    minWidth: 150,
     sortable: false,
+    disableColumnMenu: true,
+    align: "center",
     headerAlign: "center",
+    editable: false,
     headerClassName:
       "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
     cellClassName:
       "text-gray-700 border border-gray-200",
     renderHeader: () => (
-      <span className="font-semibold tracking-wide">Total Amount</span>
+      <span className="font-semibold tracking-wide">
+        Total Amount
+      </span>
     ),
   },
+
   {
-    disableColumnMenu: true,
     field: "status",
     headerName: "Status",
-    align: "center",
-    width: 180,
-    editable: false,
+    flex: 1,
+    minWidth: 150,
     sortable: false,
+    disableColumnMenu: true,
+    align: "center",
     headerAlign: "center",
+    editable: false,
     headerClassName:
       "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
     cellClassName:
@@ -70,32 +78,38 @@ export const adminOrderTableColumn = (handleEdit) => [
       <span className="font-semibold tracking-wide">Status</span>
     ),
   },
+
   {
-    disableColumnMenu: true,
     field: "date",
     headerName: "Order Date",
-    align: "center",
-    width: 180,
-    editable: false,
+    flex: 1.2,
+    minWidth: 170,
     sortable: false,
+    disableColumnMenu: true,
+    align: "center",
     headerAlign: "center",
+    editable: false,
     headerClassName:
       "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
     cellClassName:
       "text-gray-700 border border-gray-200",
     renderHeader: () => (
-      <span className="font-semibold tracking-wide">Order Date</span>
+      <span className="font-semibold tracking-wide">
+        Order Date
+      </span>
     ),
   },
+
   {
     field: "action",
     headerName: "Action",
-    align: "center",
-    headerAlign: "center",
-    width: 180,
-    editable: false,
+    flex: 0.8,
+    minWidth: 120,
     sortable: false,
     disableColumnMenu: true,
+    align: "center",
+    headerAlign: "center",
+    editable: false,
     headerClassName:
       "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
     cellClassName:
@@ -104,14 +118,14 @@ export const adminOrderTableColumn = (handleEdit) => [
       <span className="font-semibold tracking-wide">Action</span>
     ),
     renderCell: (params) => (
-      <div className="flex justify-center items-center h-full">
-       <button
-  onClick={() => handleEdit(params.row)}
-  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white cursor-pointer rounded-md text-sm transition"
->
-  <FaEdit className="text-xs" />
-  Edit
-</button>
+      <div className="flex h-full items-center justify-center">
+        <button
+          onClick={() => handleEdit(params.row)}
+          className="flex items-center gap-1 rounded-md border border-blue-700 bg-white px-2.5 py-1 text-xs font-medium text-blue-700 transition-all duration-200 hover:bg-blue-700 hover:text-white"
+        >
+          <FaEdit className="text-[11px]" />
+          Edit
+        </button>
       </div>
     ),
   },
