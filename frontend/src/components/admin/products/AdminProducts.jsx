@@ -12,6 +12,8 @@ import AdminProductFilter from '../../filter and pagination/AdminProductFilter';
 import { DeleteModal } from '../../shared/DeleteModal';
 import toast from 'react-hot-toast';
 import ImageUploadForm from './ImageUploadForm';
+import ProductViewModal from '../../products/ProductViewModal';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const AdminProducts = () => {  
   const {products, categories, pagination, isLoading , errorMessage} = useSelector((state) => state.products);
@@ -31,7 +33,13 @@ const AdminProducts = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openImageUploadModal, setOpenImageUploadModal] = useState(false);
+  const [openProductViewModal, setOpenProductViewModal] = useState(false);
   const [loader, setLoader] = useState(false);
+
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const pathname = useLocation().pathname;
 
   useProductFilter();
 
@@ -65,12 +73,27 @@ const AdminProducts = () => {
   };
 
   const handleProductView = (product) => {
+    const viewProduct ={
+      productId : product.id,
+      productName : product.productName,
+       productDescription: product.description,
+      productDiscount: product.discount,
+      productImage: product.image,
+      productPrice: product.price,
+      productQuantity: product.quantity,
+      productDiscountedPrice: product.DiscountedPrice,
+    }
+      setSelectedProduct(viewProduct);
+      setOpenProductViewModal(true);
 
   };
 
 
   const handlePaginationChange = (paginationModel) => {
-
+    const page = paginationModel.page + 1;
+    setCurrentPage(page);
+    params.set("page", page.toString());
+    navigate(`${pathname}?${params}`)
   };
 
   const onDeleteHandler = () => {
@@ -215,8 +238,14 @@ const AdminProducts = () => {
           setOpen={setOpenImageUploadModal}
           product={selectedProduct}
           />
-    </Modal>
+      </Modal>
 
+      <ProductViewModal 
+        open={openProductViewModal}
+        setOpen={setOpenProductViewModal}
+        product={selectedProduct}
+        isAdmin={true}
+      />
 
        <DeleteModal
           open={openDeleteModal}
