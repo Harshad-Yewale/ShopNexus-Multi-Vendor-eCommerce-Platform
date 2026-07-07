@@ -528,3 +528,18 @@ export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal) =
         setLoader(false)
     }
 };
+
+export const updateProductImageFromDashboard =  (formData, productId, toast, setLoader, setOpen) => async (dispatch) => {
+    try {
+        setLoader(true);
+        await api.put(`/admin/product/${productId}/upload`, formData);
+        toast.success("Image upload successful");
+        setLoader(false);
+        setOpen(false);
+        await dispatch(dashboardProductsAction());
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "Product Image upload failed");
+        setLoader(false)
+     
+    }
+};
