@@ -29,7 +29,7 @@ const DashboardOverview = ({ analytics, isLoading }) => {
     );
   }
   return(
-    <>
+    <div className="min-h-screen bg-slate-50 p-6">
     <StatsCard analytics={analytics}/>
     <RevenueLineChart  revenueChart={analytics?.revenueChart}/>
     
@@ -41,7 +41,7 @@ const DashboardOverview = ({ analytics, isLoading }) => {
         <OrderStatusPieChart
             orderStatusChart={analytics?.orderStatusChart} />
     </div>
-    </>
+    </div>
   )
 };
 
