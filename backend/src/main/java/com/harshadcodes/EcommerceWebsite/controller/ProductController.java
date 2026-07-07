@@ -100,7 +100,7 @@ public class ProductController {
         return new ResponseEntity<>(deletedProduct,HttpStatus.OK);
     }
 
-    @PutMapping("/public/product/{productId}/upload")
+    @PutMapping("/admin/product/{productId}/upload")
     public ResponseEntity<ProductDTO> uploadFiles(@PathVariable Long productId,
                                                   @RequestBody MultipartFile image) throws IOException {
         ProductDTO updatedProduct=productService.uploadFiles(productId,image);
