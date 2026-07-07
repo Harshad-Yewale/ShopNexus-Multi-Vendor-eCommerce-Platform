@@ -481,7 +481,7 @@ export const updateProductFromDashboard =
     (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
     try {
         setLoader(true);
-        await api.put(`/admin/products/${sendData.id}`, sendData);
+        await api.put(`/admin/product/${sendData.id}`, sendData);
         toast.success("Product update successful");
         reset();
         setLoader(false);
@@ -489,6 +489,23 @@ export const updateProductFromDashboard =
         await dispatch(dashboardProductsAction());
     } catch (error) {
         toast.error(error?.response?.data?.description || "Product update failed");
+     
+    }
+};
+export const addProductFromDashboard = 
+    (categoryId,sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+    try {
+        setLoader(true);
+        console.log(categoryId);
+        await api.post(`/admin/categories/${categoryId}/product`, sendData);
+        toast.success("Product added successfully");
+        reset();
+        setLoader(false);
+        setOpen(false);
+        await dispatch(dashboardProductsAction());
+    } catch (error) {
+        toast.error(error?.response?.data?.description || "add product failed");
+        setLoader(false);
      
     }
 };

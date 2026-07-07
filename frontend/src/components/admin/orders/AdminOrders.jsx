@@ -34,14 +34,6 @@ function AdminOrders() {
 
       {/* Orders Card */}
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        {!emptyOrder && (
-          <div className="border-b border-slate-200 px-6 py-4">
-            <h2 className="text-xl font-semibold text-slate-800">
-              All Orders
-            </h2>
-          </div>
-        )}
-
         {isLoading ? (
           <div className="flex h-80 items-center justify-center">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>

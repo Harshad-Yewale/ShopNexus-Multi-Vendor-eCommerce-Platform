@@ -25,6 +25,7 @@ const AdminProducts = () => {
   
   const [selectedProduct, setSelectedProduct] = useState('');
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   useProductFilter();
 
@@ -80,6 +81,7 @@ const AdminProducts = () => {
 
       <button
         className="flex items-center gap-2 rounded-lg bg-custom-blue px-5 py-3 text-white font-semibold shadow hover:bg-blue-800 transition-all duration-200"
+         onClick={() => setOpenAddModal(true)}
       >
         <MdAddShoppingCart size={20} />
         Add Product
@@ -179,14 +181,15 @@ const AdminProducts = () => {
       </div>
 
       <Modal
-        open={openUpdateModal}
-        setOpen={setOpenUpdateModal}
-        title="Update Product"
+        open={openUpdateModal || openAddModal}
+        setOpen={openUpdateModal ? setOpenUpdateModal : setOpenAddModal}
+        title={openUpdateModal ? "Update Product" : "Add Product"}
       >
         <AddProductForm
-          setOpen={setOpenUpdateModal}
+          setOpen={openUpdateModal ? setOpenUpdateModal : setOpenAddModal}
           product={selectedProduct}
           update={openUpdateModal}
+          buttonName={openUpdateModal? "Update":"Add"}
         />
       </Modal>
     </div>
