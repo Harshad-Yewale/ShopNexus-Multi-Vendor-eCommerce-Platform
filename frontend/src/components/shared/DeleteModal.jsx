@@ -52,7 +52,7 @@ export const DeleteModal = ({
                         {/* Message */}
                         <p className="mt-3 text-center text-sm text-slate-500">
                             This action cannot be undone. Are you sure you want
-                            to permanently delete this address?
+                            to permanently delete this ?
                         </p>
 
                         {/* Buttons */}

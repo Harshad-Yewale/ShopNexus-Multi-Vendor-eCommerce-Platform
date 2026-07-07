@@ -7,7 +7,7 @@ import AddressSkeletonLoader from "./AddressSkeletonLoader";
 import AddressInfoModal from "./AddressInfoModal";
 import AddAddressForm from "./AddAddressForm";
 import AddressList from "./AddressList";
-import { DeleteModal } from "./DeleteModal";
+import { DeleteModal } from "../shared/DeleteModal";
 
 import { deleteUserAddress } from "../../store/actions";
 

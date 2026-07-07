@@ -48,7 +48,7 @@ useEffect(() => {
 
     const saveProductHandler = (data) => {
       const categoryId=Number(selectedCategory.categoryId);
-        if(buttonName!="update") {
+        if(!update) {
             const sendData ={
               ...data,
             };

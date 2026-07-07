@@ -7,8 +7,10 @@ import { adminProductTableColumn } from '../../../utils/TableColumns';
 import useProductFilter from '../../filter and pagination/useProductFilter';
 import Modal from '../../shared/Modal';
 import AddProductForm from './AddProductForm';
-import { fetchCategories } from '../../../store/actions';
+import { deleteProduct, fetchCategories } from '../../../store/actions';
 import AdminProductFilter from '../../filter and pagination/AdminProductFilter';
+import { DeleteModal } from '../../shared/DeleteModal';
+import toast from 'react-hot-toast';
 
 const AdminProducts = () => {  
   const {products, categories, pagination, isLoading , errorMessage} = useSelector((state) => state.products);
@@ -26,6 +28,8 @@ const AdminProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState('');
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   useProductFilter();
 
@@ -48,7 +52,8 @@ const AdminProducts = () => {
   };
 
   const handleDelete = (product) => {
-
+    setSelectedProduct(product);
+    setOpenDeleteModal(true);
   };
 
   const handleImageUpload = (product) => {
@@ -63,6 +68,11 @@ const AdminProducts = () => {
   const handlePaginationChange = (paginationModel) => {
 
   };
+
+  const onDeleteHandler = () => {
+  dispatch(deleteProduct(setLoader, selectedProduct?.id, toast, setOpenDeleteModal));
+  };
+
 
 
     const emptyProduct = !products || products?.length ===0;
@@ -192,6 +202,14 @@ const AdminProducts = () => {
           buttonName={openUpdateModal? "Update":"Add"}
         />
       </Modal>
+
+       <DeleteModal
+          open={openDeleteModal}
+          setOpen={setOpenDeleteModal}
+          title="Delete Product"
+          onDeleteHandler={onDeleteHandler}
+          loader={loader}
+         />
     </div>
   )
 }
