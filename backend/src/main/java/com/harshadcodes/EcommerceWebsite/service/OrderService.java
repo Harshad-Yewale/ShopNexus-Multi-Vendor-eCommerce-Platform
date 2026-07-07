@@ -9,7 +9,7 @@ public interface OrderService {
 
     OrderDTO createPendingOrder(String email, Long addressId) throws Exception;
 
-    OrderResponse findAllOrders(Integer pageNumber, Integer pageSize, String sortOrder, String sortBy);
+    OrderResponse findAllOrders(Integer pageNumber, Integer pageSize, String sortOrder, String sortBy, String keyword);
 
     OrderDTO updateOrder(Long orderId, OrderStatus status);
 }

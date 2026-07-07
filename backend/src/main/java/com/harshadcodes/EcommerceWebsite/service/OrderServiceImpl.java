@@ -6,6 +6,8 @@ import com.harshadcodes.EcommerceWebsite.payload.OrderDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderItemDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderResponse;
 import com.harshadcodes.EcommerceWebsite.repositories.*;
+import com.harshadcodes.EcommerceWebsite.utils.specifications.OrderSpecifications;
+import com.harshadcodes.EcommerceWebsite.utils.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -113,18 +116,33 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse findAllOrders(Integer pageNumber, Integer pageSize, String sortOrder, String sortBy) {
+    public OrderResponse findAllOrders(Integer pageNumber, Integer pageSize, String sortOrder, String sortBy, String keyword) {
 
-        Sort sortByAndOrder =sortOrder.equalsIgnoreCase("asc")
-                ?Sort.by(sortBy).ascending()
-                :Sort.by(sortBy).descending();
+        Sort sort = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        Pageable pageDetails = PageRequest.of(pageNumber,pageSize,sortByAndOrder);
-        Page<Order> pageOrders=orderRepository.findAll(pageDetails);
-        List<Order> orders=pageOrders.getContent();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sort);
+        Specification<Order> spec = Specification.unrestricted();
 
-        List<OrderDTO> orderDTOs = orders.stream().map(
-                order-> modelMapper.map(order,OrderDTO.class))
+        if (keyword != null && !keyword.trim().isEmpty()) {
+
+            keyword = keyword.toLowerCase().trim();
+            String[] words = keyword.split("\\s+");
+
+            for (String word : words) {
+                spec = spec.and(OrderSpecifications.orderSpecificationByEmail(word));
+            }
+        }
+        Page<Order> pageOrders ;
+        if(spec != null){
+            pageOrders = orderRepository.findAll(spec, pageDetails);
+        }else{
+            pageOrders = orderRepository.findAll(pageDetails);
+        }
+        List<OrderDTO> orderDTOs = pageOrders.getContent()
+                .stream()
+                .map(order -> modelMapper.map(order, OrderDTO.class))
                 .toList();
         return new OrderResponse(
                 orderDTOs,

@@ -3,6 +3,9 @@ package com.harshadcodes.EcommerceWebsite.repositories;
 import com.harshadcodes.EcommerceWebsite.model.Order;
 import com.harshadcodes.EcommerceWebsite.model.OrderStatus;
 import com.harshadcodes.EcommerceWebsite.payload.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -61,4 +64,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
         ORDER BY MONTH(o.orderDate)
         """)
     List<MonthlyAnalyticsDTO> getOrdersPerMonth();
+
+    Page<Order> findAll(Specification<Order> spec, Pageable pageDetails);
 }
