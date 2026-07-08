@@ -22,12 +22,12 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     public ResponseEntity<CategoryResponse> getAllCategories(
-//            @RequestParam(name = "pageNumber",required = false,defaultValue = AppConstants.PAGE_NUMBER)Integer pageNumber,
-//            @RequestParam(name = "pageSize",required = false,defaultValue = AppConstants.PAGE_SIZE)Integer pageSize,
-//            @RequestParam(name = "sortBy",required = false,defaultValue = AppConstants.SORT_CATEGORY_BY)String sortBy,
-//            @RequestParam(name = "sortOrder",required = false,defaultValue = AppConstants.SORT_ORDER)String sortOrder
+            @RequestParam(name = "pageNumber",required = false,defaultValue = AppConstants.PAGE_NUMBER)Integer pageNumber,
+            @RequestParam(name = "pageSize",required = false,defaultValue = AppConstants.PAGE_SIZE)Integer pageSize,
+            @RequestParam(name = "sortBy",required = false,defaultValue = AppConstants.SORT_CATEGORY_BY)String sortBy,
+            @RequestParam(name = "sortOrder",required = false,defaultValue = AppConstants.SORT_ORDER)String sortOrder
                                                              ) {
-       CategoryResponse categoryResponse=categoryService.listAllCategories(/*pageNumber,pageSize,sortBy,sortOrder*/);
+       CategoryResponse categoryResponse=categoryService.listAllCategories(pageNumber,pageSize,sortBy,sortOrder);
 
         return ResponseEntity.ok(categoryResponse);
     }

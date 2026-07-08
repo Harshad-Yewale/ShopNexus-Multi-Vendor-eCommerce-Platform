@@ -25,20 +25,19 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public CategoryResponse listAllCategories(/*Integer pageNumber,Integer pageSize,String sortBy,String sortOrder*/) {
+    public CategoryResponse listAllCategories(Integer pageNumber,Integer pageSize,String sortBy,String sortOrder) {
 
-        //Pageable pageDetails= PaginationUtility.createPageable(pageNumber,pageSize,sortBy,sortOrder);
-       // Page<Category> categoryPage=categoryRepository.findAll(pageDetails);
-        // List<Category> categoryList=categoryPage.getContent();
-        List<Category> categoryList = categoryRepository.findAll();
+        Pageable pageDetails= PaginationUtility.createPageable(pageNumber,pageSize,sortBy,sortOrder);
+        Page<Category> categoryPage=categoryRepository.findAll(pageDetails);
+         List<Category> categoryList=categoryPage.getContent();
         List<CategoryDTO> categoryDTOS= categoryList.stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
         return new CategoryResponse(
-                categoryDTOS
-//                categoryPage.getNumber(),
-//                categoryPage.getSize(),
-//                categoryPage.getTotalElements(),
-//                categoryPage.getTotalPages(),
-//                categoryPage.isLast()
+                categoryDTOS,
+                categoryPage.getNumber(),
+                categoryPage.getSize(),
+                categoryPage.getTotalElements(),
+                categoryPage.getTotalPages(),
+                categoryPage.isLast()
               );
     }
 
