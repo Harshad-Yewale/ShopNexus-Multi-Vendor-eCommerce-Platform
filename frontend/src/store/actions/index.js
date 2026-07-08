@@ -398,19 +398,19 @@ export const verifyPayment =
     export const getAdminDashboardAnalytics = () => async (dispatch) => {
     try {
 
-            dispatch({type: "IS_ANALYTICS_REQUEST",});
+            dispatch({type: "IS_ADMIN_FETCHING",});
 
             const { data } = await api.get("/admin/dashboard/analytics");
 
             dispatch({
-                type: "IS_ANALYTICS_SUCCESS",
+                type: "FETCH_ADMIN_ANALYTICS",
                 payload: data,
-              
             });
+            dispatch({type:"IS_ADMIN_SUCCESS"})
         } catch (error) {
 
             dispatch({
-                type: "IS_ANALYTICS_FAIL",
+                type: "IS_ADMIN_ERROR",
                 payload:
                     error.response?.data?.message ||
                     error.message ||
@@ -597,3 +597,30 @@ export const deleteCategory = (setLoader, categoryId, toast, setOpenDeleteModal)
         setLoader(false)
     }
 };
+
+
+export const getSellersForDashboard = (queryString) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_ADMIN_FETCHING" });
+        const { data } = await api.get("/auth/admin/sellers");
+        dispatch({
+            type: "FETCH_ADMIN_SELLERS",
+            payload: data.content,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            totalElements: data.totalElements,
+            totalPages: data.totalPages,
+            lastPage: data.lastPage,
+        });
+        dispatch({ type: "IS_ADMIN_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ADMIN_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch Sellers data",
+         });
+    }
+};
+
+
+

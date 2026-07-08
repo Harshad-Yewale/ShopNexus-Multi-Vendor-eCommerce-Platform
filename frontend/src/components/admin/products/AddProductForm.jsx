@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addProductFromDashboard, fetchCategories, updateProductFromDashboard } from '../../../store/actions';
 import toast from 'react-hot-toast';
 import SelectTextField from '../../shared/SelectTextField';
+import Category from '../category/Category';
 
 const AddProductForm = ({ setOpen, product, update=false, buttonName}) => {
 const [loader, setLoader] = useState(false);
@@ -97,6 +98,8 @@ useEffect(() => {
                         select={selectedCategory}
                         setSelect={setSelectedCategory}
                         lists={categories}
+                        labelKey="categoryName"
+                        valueKey="categoryID"
                     />
                 )}
 

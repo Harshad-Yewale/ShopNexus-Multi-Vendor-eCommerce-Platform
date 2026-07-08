@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { adminCategoryTableColumn } from '../../../utils/TableColumns'
+import { adminCategoryTableColumn, adminSellerTableColumn } from '../../../utils/TableColumns'
 import { MdAddShoppingCart } from 'react-icons/md';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaBoxOpen } from 'react-icons/fa';
+import { BsShop } from "react-icons/bs";
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Modal from '../../shared/Modal';
-import CategoryForm from './CategoryForm';
 import { DeleteModal } from '../../shared/DeleteModal';
 import { deleteCategory, fetchCategories, getSellersForDashboard } from '../../../store/actions';
 import toast from 'react-hot-toast';
+import SellerForm from './SellerForm';
 
-function Category() {
+function Sellers() {
 
   const [updateOpenModal, setUpdateOpenModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loader, setLoader] = useState(false);
-  const { categories, categoryPagination, isLoading } = useSelector( (state) => state.products);
-  const emptyCategory = !categories || categories.length === 0;
+  const { sellers, sellerPagination, isLoading } = useSelector( (state) => state.adminAnalytics);
+  const emptySellers = !sellers || sellers.length === 0;
   const [currentPage, setCurrentPage] = useState(
-      categoryPagination?.pageNumber + 1 || 1
+      sellerPagination?.pageNumber + 1 || 1
     );
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -36,7 +36,6 @@ function Category() {
   };
 
     useEffect(() => {
-        dispatch(fetchCategories());
         dispatch(getSellersForDashboard(queryString));
     }, [dispatch]);
 
@@ -54,7 +53,7 @@ const handleDelete = (row) => {
   };
 
    const onDeleteHandler = () => {
-    dispatch(deleteCategory(setLoader,selectedItem.categoryId,toast,setOpenDeleteModal));
+    //dispatch(deleteCategory(setLoader,selectedItem.categoryId,toast,setOpenDeleteModal));
   };
 
   return (
@@ -63,10 +62,10 @@ const handleDelete = (row) => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">
-              Categpry Management
+              Seller Management
             </h1>
             <p className="text-slate-500 mt-1">
-              Manage Categories.
+              Manage sellers.
             </p>
           </div>
     
@@ -74,8 +73,8 @@ const handleDelete = (row) => {
             className="flex items-center gap-2 rounded-lg bg-custom-blue px-5 py-3 text-white font-semibold shadow hover:bg-blue-800 transition-all duration-200"
             onClick={() => setOpenAddModal(true)}
           >
-            <MdAddShoppingCart size={20} />
-            Add Category
+            <BsShop  size={20} />
+            Add sellers
           </button>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-6">
@@ -87,46 +86,46 @@ const handleDelete = (row) => {
             </div>
           ) : (
             <>
-              {emptyCategory ? (
+              {emptySellers ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-500">
-                  <FaBoxOpen size={70} className="text-slate-400 mb-5" />
+                  <BsShop size={70} className="text-slate-400 mb-5" />
     
                   <h2 className="text-2xl font-semibold mb-2">
-                    No catgegory Found
+                    No seller Found
                   </h2>
     
                   <p className="text-sm text-slate-400 mb-6">
-                    Create your first Category to add prodcuts.
+                    Add your first seller.
                   </p>
     
                   <button
                     className="flex items-center gap-2 rounded-lg bg-custom-blue px-5 py-3 text-white font-semibold hover:bg-blue-800 transition"
                   >
-                    <MdAddShoppingCart />
-                    Add Category
+                    <BsShop/>
+                    Add Seller
                   </button>
                 </div>
               ) : (
                <div className="space-y-6 px-4 py-4">
                   <div className="text-center">
                     <h1 className="text-2xl font-bold uppercase tracking-wide text-slate-800 md:text-3xl">
-                      All Categories
+                      All Seller
                     </h1>
                   </div>
     
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
                     <div className="w-full">
                       <DataGrid
-                        rows={categories}
-                        columns={adminCategoryTableColumn(handleEdit,handleDelete)}
-                          getRowId={(row) => row.categoryId}
+                        rows={sellers}
+                        columns={adminSellerTableColumn(handleEdit,handleDelete)}
+                        getRowId={(row) => row.id}
                         autoHeight
                         paginationMode="server"
-                        rowCount={categoryPagination?.totalElements ||0}
+                        rowCount={sellerPagination?.totalElements ||0}
                         initialState={{
                           pagination: {
                             paginationModel: {
-                              pageSize:categoryPagination?.pageSize || 10,
+                              pageSize:sellerPagination?.pageSize || 10,
                               page:1,
                             },
                           },
@@ -134,12 +133,12 @@ const handleDelete = (row) => {
                         onPaginationModelChange={handlePaginationChange}
                         disableRowSelectionOnClick
                         disableColumnResize
-                        pageSizeOptions={[[categoryPagination?.pageSize || 10]]}
+                        pageSizeOptions={[[sellerPagination?.pageSize || 10]]}
                         pagination
                         paginationOptions={{
                           showFirstButton: true,
                           showLastButton: true,
-                          hideNextButton:currentPage === categoryPagination?.totalPages,
+                          hideNextButton:currentPage === sellerPagination?.totalPages,
                         }}
                         sx={{
                           border: 0,
@@ -166,9 +165,9 @@ const handleDelete = (row) => {
         <Modal
             open={openAddModal}
             setOpen={setOpenAddModal}
-            title="Add Category"
+            title="Add Seller"
         >
-            <CategoryForm
+            <SellerForm
                 setOpen={setOpenAddModal}
                 loader={loader}
                 setLoader={setLoader}
@@ -179,9 +178,9 @@ const handleDelete = (row) => {
         <Modal
             open={updateOpenModal}
             setOpen={setUpdateOpenModal}
-            title="Update Category"
+            title="Update Seller"
         >
-            <CategoryForm
+            <SellerForm
                 setOpen={setUpdateOpenModal}
                 loader={loader}
                 setLoader={setLoader}
@@ -195,7 +194,7 @@ const handleDelete = (row) => {
         <DeleteModal
             open ={openDeleteModal}
             setOpen={setOpenDeleteModal}
-            title="Delete Category"
+            title="Delete Seller"
             onDeleteHandler={onDeleteHandler}
             loader={loader}
         />
@@ -204,4 +203,4 @@ const handleDelete = (row) => {
   )
 }
 
-export default Category
+export default Sellers

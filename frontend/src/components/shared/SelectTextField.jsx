@@ -5,7 +5,9 @@ const SelectTextField = ({
     label,
     select,
     setSelect,
-    lists
+    lists,
+    labelKey,
+    valueKey,
 }) => {
     return (
         <Listbox value={select} onChange={setSelect}>
@@ -19,16 +21,16 @@ const SelectTextField = ({
             <div className="relative">
                 <ListboxButton 
                 className={`relative text-sm py-2 rounded-md border border-slate-700  w-full cursor-default  bg-white  text-left text-gray-600 sm:text-sm sm:leading-6`}>
-                    <span className="block truncate ps-2">{select?.categoryName}</span>
+                    <span className="block truncate ps-2">{select?.[labelKey]}</span>
                 </ListboxButton>
                 <ListboxOptions
                     transition
                     className="absolute z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-opacity-5 ring-black focus:outline-hidden">
-                    {lists?.map((category) => (
-                    <ListboxOption key={category.categoryId} value={category} 
+                    {lists?.map((item) => (
+                    <ListboxOption key={item[valueKey]} value={item} 
                     className="group relative cursor-default py-2 pl-3 pr-9 text-gray-900 data-focus:bg-indigo-600 data-focus:text-white">
                         <span className="block truncate font-semibold group-data-selected:font-semibold">
-                            {category.categoryName}
+                            {item[labelKey]}
                         </span>
 
                         <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-focus:text-white [.group:not([data-selected])_&]:hidden">
