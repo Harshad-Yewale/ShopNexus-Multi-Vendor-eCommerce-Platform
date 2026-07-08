@@ -78,6 +78,13 @@ public class JwtUtils {
                 .compact();
     }
 
+    public ResponseCookie getCleanJwtCookie() {
+        ResponseCookie cleanCookie = ResponseCookie.from(jwtCookie, null)
+                .path("/api")
+                .build();
+        return cleanCookie;
+    }
+
 
 
     public Claims extractAllClaims(String token){

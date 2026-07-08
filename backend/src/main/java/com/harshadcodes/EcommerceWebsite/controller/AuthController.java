@@ -1,21 +1,20 @@
 package com.harshadcodes.EcommerceWebsite.controller;
 
 
-import com.harshadcodes.EcommerceWebsite.payload.LoginRequest;
-import com.harshadcodes.EcommerceWebsite.payload.SignupRequest;
-import com.harshadcodes.EcommerceWebsite.payload.SignupResponse;
-import com.harshadcodes.EcommerceWebsite.payload.UserInfoResponse;
+import com.harshadcodes.EcommerceWebsite.constants.AppConstants;
+import com.harshadcodes.EcommerceWebsite.payload.*;
 import com.harshadcodes.EcommerceWebsite.security.jwt.JwtUtils;
 import com.harshadcodes.EcommerceWebsite.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,4 +35,24 @@ public class AuthController {
         SignupResponse response= authService.signUp(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PostMapping("/signout")
+    public ResponseEntity<?> signoutUser(){
+        ResponseCookie cookie = authService.logoutUser();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("You've been signed out!");
+    }
+
+    @GetMapping("/admin/sellers")
+    public ResponseEntity<SellerResponse> getAllSellers(
+            @RequestParam(name = "pageNumber",required = false,defaultValue = AppConstants.PAGE_NUMBER)Integer pageNumber,
+            @RequestParam(name = "pageSize",required = false,defaultValue = AppConstants.PAGE_SIZE)Integer pageSize,
+            @RequestParam(name = "sortBy",required = false,defaultValue = AppConstants.SORT_USER_BY)String sortBy,
+            @RequestParam(name = "sortOrder",required = false,defaultValue = AppConstants.SORT_ORDER)String sortOrder
+    ){
+        SellerResponse sellers=authService.getAllSellers(pageNumber,pageSize,sortBy,sortOrder);
+        return  ResponseEntity.status(HttpStatus.OK).body(sellers);
+    }
+
+
 }

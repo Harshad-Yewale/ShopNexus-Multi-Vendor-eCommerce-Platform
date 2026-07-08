@@ -5,15 +5,16 @@ import com.harshadcodes.EcommerceWebsite.exceptions.ResourceAlreadyExistExceptio
 import com.harshadcodes.EcommerceWebsite.exceptions.ResourceNotFoundException;
 import com.harshadcodes.EcommerceWebsite.model.Role;
 import com.harshadcodes.EcommerceWebsite.model.User;
-import com.harshadcodes.EcommerceWebsite.payload.LoginRequest;
-import com.harshadcodes.EcommerceWebsite.payload.SignupRequest;
-import com.harshadcodes.EcommerceWebsite.payload.SignupResponse;
-import com.harshadcodes.EcommerceWebsite.payload.UserInfoResponse;
+import com.harshadcodes.EcommerceWebsite.payload.*;
 import com.harshadcodes.EcommerceWebsite.repositories.RoleRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.UserRepository;
 import com.harshadcodes.EcommerceWebsite.security.jwt.JwtUtils;
 import com.harshadcodes.EcommerceWebsite.security.services.UserDetailsImpl;
+import com.harshadcodes.EcommerceWebsite.utils.PaginationUtility;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,7 @@ public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public UserInfoResponse SignIn(LoginRequest loginRequest) {
@@ -103,5 +105,50 @@ public class AuthServiceImpl implements AuthService{
         String roleMessage="You are : "+savedUser.getUserRoles().toString();
 
        return  new SignupResponse(message,roleMessage);
+    }
+
+    @Override
+    public SellerResponse getAllSellers(Integer pageNumber, Integer pageSize,
+                                        String sortBy, String sortOrder) {
+
+        Pageable pageDetails = PaginationUtility.createPageable(
+                pageNumber, pageSize, sortBy, sortOrder);
+
+        Page<User> sellerPage = userRepository.findByUserRole(AppRole.ROLE_SELLER, pageDetails);
+
+        List<SellerDTO> sellerDTOs = sellerPage.getContent().stream()
+                .map(seller -> {
+
+                    Set<RoleDTO> roles = seller.getUserRoles().stream()
+                            .map(role -> new RoleDTO(role.getRole()))
+                            .collect(Collectors.toSet());
+
+                    Set<ProductDTO> products = seller.getUserProducts().stream()
+                            .map(product -> modelMapper.map(product, ProductDTO.class))
+                            .collect(Collectors.toSet());
+
+                    return new SellerDTO(
+                            seller.getId(),
+                            seller.getUsername(),
+                            seller.getEmail(),
+                            roles,
+                            products);
+                }).toList();
+
+        return new SellerResponse(
+                sellerDTOs,
+                sellerPage.getNumber(),
+                sellerPage.getSize(),
+                sellerPage.getTotalPages(),
+                sellerPage.getTotalElements(),
+                sellerPage.isLast()
+        );
+    }
+
+
+
+    @Override
+    public ResponseCookie logoutUser() {
+        return jwtUtils.getCleanJwtCookie();
     }
 }
