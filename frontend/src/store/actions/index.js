@@ -622,5 +622,42 @@ export const getSellersForDashboard = (queryString) => async (dispatch) => {
     }
 };
 
+export const addUserFromDashboard = 
+    (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+        const isSeller = sendData.role=="ROLE_SELLER"?"seller":"user";
+    try {
+        setLoader(true);
+        await api.post("/auth/admin/add", sendData);
+        toast.success(`${isSeller} added Successfully`);
+        reset();
+        setLoader(false);
+        await dispatch(getSellersForDashboard());
+        setOpen(false);
+    } catch (error) {
+        toast.error(error?.response?.data?.message || `${isSeller} add failed` );
+        setLoader(false);
+     
+    }
+};
+
+export const updateUserFromDashboard = 
+    (userId,sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+        const isSeller = sendData.role=="ROLE_SELLER"?"seller":"user";
+    try {
+        setLoader(true);
+        await api.put(`/auth/admin/update/${userId}`, sendData);
+        toast.success(`${isSeller}updated Successfully`);
+        reset();
+        setLoader(false);
+        await dispatch(getSellersForDashboard());
+        setOpen(false);
+    } catch (error) {
+        console.log(error)
+        toast.error(error?.response?.data?.message || `${isSeller} update failed`);
+        setLoader(false);
+     
+    }
+};
+
 
 

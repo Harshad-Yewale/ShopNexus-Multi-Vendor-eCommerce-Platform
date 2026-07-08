@@ -184,7 +184,7 @@ const handleDelete = (row) => {
                 setOpen={setUpdateOpenModal}
                 loader={loader}
                 setLoader={setLoader}
-                selectedId={selectedItem?.categoryId}
+                selectedId={selectedItem?.id}
                 selectedItem={selectedItem}
                 update
                 buttonName="Update"

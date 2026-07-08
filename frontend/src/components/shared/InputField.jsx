@@ -9,6 +9,8 @@ const InputField = ({
     className,
     min,
     max,
+    minLength,
+    minLengthMessage,
     value,
     placeholder,
     ReadOnly
@@ -27,6 +29,16 @@ const InputField = ({
                 id={id}
                 placeholder={placeholder}
                 readOnly={ReadOnly}
+                 onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+
+                            const form = e.target.form;
+                            const index = [...form.elements].indexOf(e.target);
+
+                            form.elements[index + 1]?.focus();
+                        }
+                    }}
                 className={`${
                     className ? className : ""
                 } px-2 py-2 border outline-none bg-transparent text-slate-800 rounded-md ${
@@ -41,6 +53,12 @@ const InputField = ({
                     max: max !== undefined
                         ? { value: max, message }
                         : undefined,
+                     minLength: minLength !== undefined
+                        ? {
+                            value: minLength,
+                            message: minLengthMessage??`Must be at least ${minLength} characters long`
+                        }
+        : undefined,
                     pattern:
                         type === "email"
                             ? {

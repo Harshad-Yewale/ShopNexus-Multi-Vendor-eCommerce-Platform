@@ -110,7 +110,7 @@ const OrderPlacedPage = () => {
             <div>
               <p className="text-sm text-slate-500">Order Status</p>
               <p className="mt-1 font-semibold text-blue-600">
-                Processing
+                Confirmed
               </p>
             </div>
 
