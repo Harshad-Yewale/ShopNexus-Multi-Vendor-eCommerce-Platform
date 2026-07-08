@@ -21,7 +21,7 @@ function ProductViewModal({ open, setOpen, product, isAvailable, isAdmin = false
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
-      className="relative z-50"
+      className="relative z-95"
     >
       {/* Backdrop */}
       <DialogBackdrop className="fixed inset-0 bg-black/60 backdrop-blur-sm" />

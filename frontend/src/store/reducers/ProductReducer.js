@@ -3,6 +3,7 @@ const initialState = {
     cartProducts: [],
     categories: null,
     pagination: {},
+    categoryPagination:{},
     isLoading: false,
     errorMessage:null
 };
@@ -38,13 +39,13 @@ export const productReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 categories: action.payload,
-                //  pagination: {
-                //     pageNumber: action.pageNumber,
-                //     pageSize: action.pageSize,
-                //     totalElements: action.totalElements,
-                //     totalPages: action.totalPages,
-                //     lastPage: action.lastPage,
-                // },
+                 categoryPagination: {
+                    pageNumber: action.pageNumber,
+                    pageSize: action.pageSize,
+                    totalElements: action.totalElements,
+                    totalPages: action.totalPages,
+                    lastPage: action.lastPage,
+                },
             };
         case "FETCH_CART_PRODUCTS":
             return {

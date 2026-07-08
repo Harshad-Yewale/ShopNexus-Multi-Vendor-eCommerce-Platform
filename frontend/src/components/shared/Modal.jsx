@@ -4,8 +4,8 @@ import { RxCross1 } from 'react-icons/rx';
 function Modal({ open, setOpen, children, title = ""}) {
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)} className="relative z-10">
-        <DialogBackdrop className="fixed inset-0 bg-gray-500/75 transition-opacity duration-500 ease-in-out data-closed:opacity-0" />
+      <Dialog open={open} onClose={() => setOpen(false)} className=" relative z-60">
+        <DialogBackdrop className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" />
         
         <div className="fixed inset-0 overflow-hidden">
             <div className='absolute inset-0 overflow-hidden'>

@@ -8,7 +8,7 @@ import useProductFilter from '../../filter and pagination/useProductFilter';
 import Modal from '../../shared/Modal';
 import AddProductForm from './AddProductForm';
 import { deleteProduct, fetchCategories } from '../../../store/actions';
-import AdminProductFilter from '../../filter and pagination/AdminProductFilter';
+import AdminProductFilter from './AdminProductFilter';
 import { DeleteModal } from '../../shared/DeleteModal';
 import toast from 'react-hot-toast';
 import ImageUploadForm from './ImageUploadForm';

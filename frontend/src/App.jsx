@@ -21,9 +21,9 @@ import OrderPlacedPage from './pages/orderPlacedPage'
 import AdminPanel from './pages/AdminPanel'
 import Dashboard from './components/admin/dashboard/Dashboard'
 import Sellers from './components/admin/Sellers'
-import Category from './components/admin/Category'
 import AdminOrders from './components/admin/orders/AdminOrders'
 import AdminProducts from './components/admin/products/AdminProducts'
+import Category from './components/admin/category/Category'
 
 function App() {
 

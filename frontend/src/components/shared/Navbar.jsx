@@ -15,7 +15,7 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <nav className="sticky top-0 z-50 h-17.5  bg-slate-950 text-white">
+    <nav className="sticky top-0 z-90 h-17.5  bg-slate-950 text-white">
       <div className="max-w-9xl mx-auto h-full px-4 sm:px-8 lg:px-14 flex items-center justify-between">
         {/* ================= Mobile Left ================= */}
         <div className="flex items-center gap-3 sm:hidden">

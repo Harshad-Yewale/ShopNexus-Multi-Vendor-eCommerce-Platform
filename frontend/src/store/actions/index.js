@@ -33,10 +33,16 @@ export const fetchCategories = () => async (dispatch) => {
 
     try {
         const { data } = await api.get("/public/categories");
+        console.log(data);
 
         dispatch({
             type: "FETCH_CATEGORIES",
             payload: data.content,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            totalElements: data.totalElements,
+            totalPages: data.totalPages,
+            lastPage: data.lastPage,
         });
 
         dispatch({
@@ -541,5 +547,53 @@ export const updateProductImageFromDashboard =  (formData, productId, toast, set
         toast.error(error?.response?.data?.message || "Product Image upload failed");
         setLoader(false)
      
+    }
+};
+
+
+export const updateCategoryFromDashboard =  (formData, categoryId, toast, setLoader, setOpen) => async (dispatch) => {
+    try {
+        setLoader(true);
+        await api.put(`/admin/categories/${categoryId}`, formData);
+        toast.success("category updated successfully");
+        setLoader(false);
+        setOpen(false);
+        await dispatch(fetchCategories());
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "category update failed");
+        setLoader(false)
+     
+    }
+};
+
+export const addCategoryFromDashboard =  (formData, toast, setLoader, setOpen) => async (dispatch) => {
+    try {
+        setLoader(true);
+        await api.post("/admin/categories", formData);
+        toast.success("category added successfully");
+        setLoader(false);
+        setOpen(false);
+        await dispatch(fetchCategories());
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "category added failed");
+        setLoader(false)
+     
+    }
+};
+
+export const deleteCategory = (setLoader, categoryId, toast, setOpenDeleteModal) => async (dispatch, getState) => {
+    try {
+        setLoader(true)
+        await api.delete(`/admin/categories/${categoryId}`);
+        toast.success("Category deleted successfully");
+        setLoader(false)
+        await dispatch(fetchCategories());
+        setOpenDeleteModal(false)
+    } catch (error) {
+        console.log(error);
+        toast.error(
+            error?.response?.data?.message || "Some Error Occured"
+        )
+        setLoader(false)
     }
 };
