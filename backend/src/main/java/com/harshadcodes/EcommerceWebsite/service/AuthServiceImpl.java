@@ -85,15 +85,15 @@ public class AuthServiceImpl implements AuthService{
                     switch (role.toUpperCase()){
 
                         case "ADMIN":
-                            Role adminRole=roleRepository.findByRole(AppRole.ROLE_ADMIN).orElseThrow(()->new ResourceNotFoundException("Role","User",role));
+                            Role adminRole=roleRepository.findByRole(AppRole.ROLE_ADMIN).orElseThrow(()->new ResourceNotFoundException("Role","User",AppRole.ROLE_ADMIN.name()));
                             roles.add(adminRole);
                             break;
                         case "SELLER":
-                            Role sellerRole=roleRepository.findByRole(AppRole.ROLE_SELLER).orElseThrow(()->new ResourceNotFoundException("Role","User",role));
+                            Role sellerRole=roleRepository.findByRole(AppRole.ROLE_SELLER).orElseThrow(()->new ResourceNotFoundException("Role","User",AppRole.ROLE_SELLER.name()));
                             roles.add(sellerRole);
                             break;
                         default:
-                            Role userRole=roleRepository.findByRole(AppRole.ROLE_USER).orElseThrow(()->new ResourceNotFoundException("Role","User",role));
+                            Role userRole=roleRepository.findByRole(AppRole.ROLE_USER).orElseThrow(()->new ResourceNotFoundException("Role","User",AppRole.ROLE_USER.name()));
                             roles.add(userRole);
                             break;
                     };
@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService{
         }
         savedUser.setUserRoles(roles);
         userRepository.save(savedUser);
-        String message="welcome "+savedUser.getUsername()+" your registration was successful";
+        String message="registration was successful";
         String roleMessage="You are : "+savedUser.getUserRoles().toString();
 
        return  new SignupResponse(message,roleMessage);
@@ -150,5 +150,66 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public ResponseCookie logoutUser() {
         return jwtUtils.getCleanJwtCookie();
+    }
+
+    @Override
+    public String addUser(addOrUpdateUserRequest userRequest) {
+        if(userRepository.existsByEmail(userRequest.email())){
+            throw new ResourceAlreadyExistException("User","email",userRequest.email());
+        }
+        if(userRepository.existsByUsername(userRequest.username())){
+            throw new ResourceAlreadyExistException("User","username",userRequest.username());
+        }
+        String encodedPassword=passwordEncoder.encode(userRequest.password());
+        User savedUser=new User(userRequest.username(),userRequest.email(),encodedPassword);
+
+        Set<Role> roles=new HashSet<>();
+
+        if(userRequest.role() == AppRole.ROLE_SELLER){
+            Role sellerRole=roleRepository.findByRole(AppRole.ROLE_SELLER).orElseThrow(()->new ResourceNotFoundException("Role","User",AppRole.ROLE_SELLER.name()));
+            roles.add(sellerRole);
+        }
+        Role userRole=roleRepository.findByRole(AppRole.ROLE_USER).orElseThrow(()->new ResourceNotFoundException("Role","User",AppRole.ROLE_USER.name()));
+
+        roles.add(userRole);
+        savedUser.setUserRoles(roles);
+        userRepository.save(savedUser);
+        String message="registration was successful";
+        return  message;
+    }
+
+    @Override
+    public String updateUser(Long userId, addOrUpdateUserRequest userRequest) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        if (!user.getUsername().equals(userRequest.username()) && userRepository.existsByUsername(userRequest.username())) {
+            throw new ResourceAlreadyExistException("User", "username", userRequest.username());
+        }
+
+        if (!user.getEmail().equals(userRequest.email()) && userRepository.existsByEmail(userRequest.email())) {
+            throw new ResourceAlreadyExistException("User", "email", userRequest.email());
+        }
+
+        Set<Role> roles = new HashSet<>();
+
+        Role userRole = roleRepository.findByRole(AppRole.ROLE_USER).orElseThrow(() -> new ResourceNotFoundException("Role", "role", AppRole.ROLE_USER.name()));
+        roles.add(userRole);
+
+        if (userRequest.role() == AppRole.ROLE_SELLER) {
+            Role sellerRole = roleRepository.findByRole(AppRole.ROLE_SELLER).orElseThrow(() -> new ResourceNotFoundException("Role", "role", AppRole.ROLE_SELLER.name()));
+            roles.add(sellerRole);
+        }
+        String password = userRequest.password();
+
+        if (password != null && !password.isBlank() && password.length() >= 6) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+
+        user.setUsername(userRequest.username());
+        user.setEmail(userRequest.email());
+        user.setUserRoles(roles);
+        userRepository.save(user);
+        return "Updated successfully";
     }
 }

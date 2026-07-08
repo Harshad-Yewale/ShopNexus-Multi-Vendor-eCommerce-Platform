@@ -16,6 +16,7 @@ public record SignupRequest(
 
         @NotBlank
         String password,
+
         Set<String> roles
 ) {
 }

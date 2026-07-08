@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,6 +54,21 @@ public class AuthController {
         SellerResponse sellers=authService.getAllSellers(pageNumber,pageSize,sortBy,sortOrder);
         return  ResponseEntity.status(HttpStatus.OK).body(sellers);
     }
+
+    @PostMapping("/admin/add")
+    public ResponseEntity<String> addUser(@Valid @RequestBody addOrUpdateUserRequest userRequest){
+        String response=authService.addUser(userRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @PutMapping("/admin/update/{user_id}")
+    public ResponseEntity<String> updateUser(
+            @PathVariable(name = "user_id")Long userId,
+            @Valid @RequestBody addOrUpdateUserRequest userRequest){
+        String response=authService.updateUser(userId,userRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
 
 
 }

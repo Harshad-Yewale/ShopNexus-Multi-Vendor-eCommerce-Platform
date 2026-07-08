@@ -13,4 +13,8 @@ public interface AuthService {
     SellerResponse getAllSellers(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     ResponseCookie logoutUser();
+
+    String addUser(addOrUpdateUserRequest userRequest);
+
+    String updateUser(Long userId, @Valid addOrUpdateUserRequest userRequest);
 }
