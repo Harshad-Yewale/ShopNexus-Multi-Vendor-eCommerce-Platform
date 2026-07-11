@@ -1,6 +1,24 @@
 const getErrorMessage = (error, defaultMessage = "Something went wrong.") => {
+
     if (!error.response) {
-        return "Unable to connect to the server. Please try again later.";
+        return "Unable to connect to the server.";
+    }
+
+    const { data, status } = error.response;
+
+    // Validation errors
+    if (data?.errors) {
+        return Object.values(data.errors).join(", ");
+    }
+
+    // Custom exception response
+    if (data?.message) {
+        return data.message;
+    }
+
+    // Spring Boot default response
+    if (data?.error) {
+        return data.error;
     }
     switch (error.response.status) {
         case 400:

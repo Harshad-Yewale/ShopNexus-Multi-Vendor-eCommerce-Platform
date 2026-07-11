@@ -197,7 +197,7 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
             toast.success("Login Success");
             navigate("/");
         } catch (error) {
-            toast.error(error?.response?.data?.errors?.message || "Internal Server Error");
+            toast.error(getErrorMessage(error) || "Internal Server Error");
         } finally {
             setLoader(false);
         }
@@ -212,7 +212,7 @@ export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => 
             navigate("/login");
         } catch (error) {
             console.log(error);
-            toast.error(error?.response?.data?.error?.message || error?.response?.data?.password || "Internal Server Error");
+            toast.error(getErrorMessage(error) || error?.response?.data?.password || "Internal Server Error");
         } finally {
             setLoader(false);
         }
@@ -227,7 +227,6 @@ export const logOutUser = (navigate) => (dispatch) => {
 
 export const addUpdateUserAddress =
      (sendData, toast, addressId, setOpenAddressModal) => async (dispatch, getState) => {
-    // const { user } = getState().auth;
     dispatch({ type:"IS_FETCHING" });
     try {
        if (!addressId) {
@@ -240,7 +239,7 @@ export const addUpdateUserAddress =
         dispatch({type:"IS_SUCCESS"});
     } catch (error) {
         console.log(error);
-        toast.error(error?.response?.data?.error?.message || "Internal Server Error");
+        toast.error(getErrorMessage(error) || "Internal Server Error");
         dispatch({ type:"IS_ERROR", payload: null });
     } finally {
         setOpenAddressModal(false);
@@ -257,7 +256,7 @@ export const getUserAddresses = () => async (dispatch, getState) => {
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.error?.message || "Failed to fetch user addresses",
+            payload: getErrorMessage(error) || "Failed to fetch user addresses",
          });
     }
 };
@@ -283,7 +282,7 @@ export const deleteUserAddress =
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Some Error Occured",
+            payload: getErrorMessage(error) || "Some Error Occured",
          });
     } finally {
         setOpenDeleteModal(false);
@@ -312,7 +311,7 @@ export const createUserCart = (sendCartItems) => async (dispatch, getState) => {
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Failed to create cart items",
+            payload: getErrorMessage(error) || "Failed to create cart items",
          });
     }
 };
@@ -333,7 +332,7 @@ export const getUserCart = () => async (dispatch, getState) => {
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Failed to fetch cart items",
+            payload: getErrorMessage(error) || "Failed to fetch cart items",
          });
     }
 };
@@ -412,9 +411,7 @@ export const verifyPayment =
             dispatch({
                 type: "IS_ADMIN_ERROR",
                 payload:
-                    error.response?.data?.message ||
-                    error.message ||
-                    "Something went wrong",
+                   getErrorMessage(error) || "Something went wrong",
             });
         }
 };
@@ -437,7 +434,7 @@ export const getOrdersForDashboard = (queryString) => async (dispatch) => {
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Failed to fetch orders data",
+            payload: getErrorMessage(error) || "Failed to fetch orders data",
          });
     }
 };
@@ -450,8 +447,7 @@ export const updateOrderStatusFromDashboard =
         toast.success(data.message || "Order updated successfully");
         await dispatch(getOrdersForDashboard());
     } catch (error) {
-        console.log(error);
-        toast.error(error?.response?.data?.message || "Internal Server Error");
+        toast.error(getErrorMessage(error) || "Internal Server Error");
     } finally {
         setLoader(false)
     }
@@ -477,7 +473,7 @@ export const dashboardProductsAction = (queryString) => async (dispatch) => {
         console.log(error);
         dispatch({ 
             type: "IS_ERROR",
-            payload: error?.response?.data?.message || "Failed to fetch dashboard products",
+            payload: getErrorMessage(error) || "Failed to fetch dashboard products",
          });
     }
 };
@@ -494,8 +490,7 @@ export const updateProductFromDashboard =
         setOpen(false);
         await dispatch(dashboardProductsAction());
     } catch (error) {
-        console.log(error);
-        toast.error(error?.response?.data?.message || "Product update failed");
+        toast.error(getErrorMessage(error) || "Product update failed");
         setLoader(false)
      
     }
@@ -512,7 +507,7 @@ export const addProductFromDashboard =
         setOpen(false);
         await dispatch(dashboardProductsAction());
     } catch (error) {
-        toast.error(error?.response?.data?.description || "add product failed");
+        toast.error(getErrorMessage(error)|| "add product failed");
         setLoader(false);
      
     }
@@ -528,9 +523,7 @@ export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal) =
         setOpenDeleteModal(false)
     } catch (error) {
         console.log(error);
-        toast.error(
-            error?.response?.data?.message || "Some Error Occured"
-        )
+        toast.error(getErrorMessage(error) || "Some Error Occured" )
         setLoader(false)
     }
 };
@@ -544,7 +537,7 @@ export const updateProductImageFromDashboard =  (formData, productId, toast, set
         setOpen(false);
         await dispatch(dashboardProductsAction());
     } catch (error) {
-        toast.error(error?.response?.data?.message || "Product Image upload failed");
+        toast.error(getErrorMessage(error) || "Product Image upload failed");
         setLoader(false)
      
     }
@@ -560,7 +553,7 @@ export const updateCategoryFromDashboard =  (formData, categoryId, toast, setLoa
         setOpen(false);
         await dispatch(fetchCategories());
     } catch (error) {
-        toast.error(error?.response?.data?.message || "category update failed");
+        toast.error(getErrorMessage(error) || "category update failed");
         setLoader(false)
      
     }
@@ -575,7 +568,7 @@ export const addCategoryFromDashboard =  (formData, toast, setLoader, setOpen) =
         setOpen(false);
         await dispatch(fetchCategories());
     } catch (error) {
-        toast.error(error?.response?.data?.message || "category added failed");
+        toast.error(getErrorMessage(error) || "category added failed");
         setLoader(false)
      
     }
@@ -591,9 +584,7 @@ export const deleteCategory = (setLoader, categoryId, toast, setOpenDeleteModal)
         setOpenDeleteModal(false)
     } catch (error) {
         console.log(error);
-        toast.error(
-            error?.response?.data?.message || "Some Error Occured"
-        )
+        toast.error( getErrorMessage(error) || "Some Error Occured")
         setLoader(false)
     }
 };
@@ -614,10 +605,9 @@ export const getSellersForDashboard = (queryString) => async (dispatch) => {
         });
         dispatch({ type: "IS_ADMIN_SUCCESS" });
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ADMIN_ERROR",
-            payload: error?.response?.data?.message || "Failed to fetch Sellers data",
+            payload: getErrorMessage(error) || "Failed to fetch Sellers data",
          });
     }
 };
@@ -634,7 +624,7 @@ export const addUserFromDashboard =
         await dispatch(getSellersForDashboard());
         setOpen(false);
     } catch (error) {
-        toast.error(error?.response?.data?.message || `${isSeller} add failed` );
+        toast.error(getErrorMessage(error) || `${isSeller} add failed` );
         setLoader(false);
      
     }
@@ -653,7 +643,7 @@ export const updateUserFromDashboard =
         setOpen(false);
     } catch (error) {
         console.log(error)
-        toast.error(error?.response?.data?.message || `${isSeller} update failed`);
+        toast.error(getErrorMessage(error) || `${isSeller} update failed`);
         setLoader(false);
      
     }

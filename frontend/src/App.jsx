@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import Products from './pages/Products'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ScrollToTop from './utils/ScrollToTop'
 import Navbar from './components/shared/Navbar'
@@ -24,14 +24,22 @@ import Sellers from './components/admin/sellers/Sellers'
 import AdminOrders from './components/admin/orders/AdminOrders'
 import AdminProducts from './components/admin/products/AdminProducts'
 import Category from './components/admin/category/Category'
+import { setupInterceptors } from './api/api'
 
 function App() {
 
+  const navigate = useNavigate();
+  const {user} = useSelector((state)=>state.auth)
   const cart = useSelector((state)=>state.cart.cart);
+  const isAdmin = user?.roles?.includes("ROLE_ADMIN");
+
+
+  useEffect(() => {
+        setupInterceptors(navigate);
+    }, [navigate]);
 
   return (
       <React.Fragment>
-      <Router>
         <Navbar />
         <Routes>
           <Route path='/' element={ <HomePage />}/>
@@ -46,13 +54,19 @@ function App() {
             <Route path='/checkout' element={ cart.length > 0 ? <CheckoutPage />: <Navigate to='/cart' replace/>}/>
           </Route> 
 
-          <Route path='/' element={<PrivateRoute adminOnly/>}>
-              <Route path='/admin' element={ <AdminPanel />}>
-              <Route path='' element={<Dashboard />} />
-              <Route path='products' element={<AdminProducts />} />
-              <Route path='orders' element={<AdminOrders />} />
-              <Route path='sellers' element={<Sellers />} />
-              <Route path='categories' element={<Category />} />
+          <Route element={<PrivateRoute adminOnly />}>
+              <Route path="/admin" element={<AdminPanel />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="products" element={<AdminProducts />} />
+              </Route>
+          </Route>
+
+          <Route element={<PrivateRoute sellerOnly />}>
+              <Route path="/seller" element={<AdminPanel />}>
+                  <Route index element={<Navigate to="orders" replace />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="products" element={<AdminProducts />} />
               </Route>
           </Route>
 
@@ -62,7 +76,6 @@ function App() {
           </Route>
 
         </Routes>
-      </Router>
       <Toaster position='bottom-center'/>
     </React.Fragment>
   )

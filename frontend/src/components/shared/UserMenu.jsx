@@ -16,6 +16,7 @@ const UserMenu = () => {
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
     const isAdmin = user?.roles?.includes("ROLE_ADMIN");
+    const isSeller = user && user?.roles.includes("ROLE_SELLER");
 
     
     const handleClick = (event) => {
@@ -74,9 +75,8 @@ const UserMenu = () => {
                     vertical: "bottom",
                 }}
             >
-                {isAdmin &&
-                        <Link
-                        to="/admin"
+                { (isAdmin || isSeller) && (
+                        <Link to={isAdmin ? "/admin" : "/seller/orders"}
                         style={{ textDecoration: "none", color: "inherit" }}
                         onClick={handleClose}
                     >
@@ -91,10 +91,10 @@ const UserMenu = () => {
                             <ListItemIcon>
                                 <BiUser size={20} />
                             </ListItemIcon>
-
-                            Admin Panel
+                           {isAdmin ? "Admin Panel" : "Seller Panel"}
                         </MenuItem>
                     </Link>
+                )
                 }
               
               <Link
