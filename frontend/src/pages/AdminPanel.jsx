@@ -9,9 +9,12 @@ import {
 } from "@headlessui/react";
 import { RxCross1 } from "react-icons/rx";
 import { FaBars } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const AdminPanel = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const {user} = useSelector(state => state.auth);
+  const isAdmin = user?.roles?.includes("IS_ADMIN");
 
   const location = useLocation();
 
@@ -60,12 +63,12 @@ const AdminPanel = () => {
             </button>
 
             <h1 className="text-2xl font-bold text-slate-800">
-              Admin Dashboard
+             { isAdmin ? "Admin Dashboard" : "Seller Dashboard"}
             </h1>
           </div>
 
           <div className="text-sm text-slate-500">
-            Welcome back 👋
+            Welcome back {user?.username}👋
           </div>
         </header>
 
