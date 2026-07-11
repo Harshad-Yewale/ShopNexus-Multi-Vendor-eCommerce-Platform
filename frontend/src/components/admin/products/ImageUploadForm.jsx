@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { updateProductImageFromDashboard } from "../../../store/actions";
 
-const ImageUploadForm = ({ setOpen, product }) => {
+const ImageUploadForm = ({ setOpen, product, isOnlySeller }) => {
   const [loader, setLoader] = useState(false);
   const fileInputRef = useRef();
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const ImageUploadForm = ({ setOpen, product }) => {
         const formData = new FormData();
         formData.append("image", selectedFile);
 
-        dispatch(updateProductImageFromDashboard(formData, product.id, toast, setLoader, setOpen));
+        dispatch(updateProductImageFromDashboard(formData, product.id, toast, setLoader, setOpen,isOnlySeller));
     };
 
   return (

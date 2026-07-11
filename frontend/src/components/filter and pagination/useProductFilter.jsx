@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { fetchProducts } from "../../store/actions";
+import { fetchProducts, fetchProductsForAdminAndSeller } from "../../store/actions";
 
-const useProductFilter = () => {
+const useProductFilter = (user) => {
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
+    const isAdmin = user?.roles?.includes("ROLE_ADMIN");
+    const isSeller = user?.roles?.includes("ROLE_SELLER") && !user?.roles?.includes("ROLE_ADMIN");
 
     useEffect(() => {
         const params = new URLSearchParams();
@@ -32,7 +34,15 @@ const useProductFilter = () => {
 
         const queryString = params.toString();
         
-        dispatch(fetchProducts(queryString));
+            if(isAdmin){
+                dispatch(fetchProductsForAdminAndSeller(queryString, isAdmin));
+            }
+            else if (isSeller){
+                dispatch(fetchProductsForAdminAndSeller(queryString,isAdmin));
+            }
+            else{
+                dispatch(fetchProducts(queryString));
+            }
 
     }, [dispatch, searchParams]);
 };

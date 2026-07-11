@@ -1,3 +1,4 @@
+import { isAction } from "@reduxjs/toolkit";
 import api from "../../api/api";
 import getErrorMessage from "../../components/ErrorMessages/getErrorMessage";
 
@@ -28,12 +29,54 @@ export const fetchProducts = (queryString = "") => async (dispatch) => {
     }
 };
 
+export const fetchProductsForAdminAndSeller = (queryString = "",isAdmin) => async (dispatch) => {
+    dispatch({ type: "IS_FETCHING" });
+
+    try {
+        if(isAdmin){
+            const { data } = await api.get(`/admin/products?${queryString}`);
+
+             dispatch({
+                type: "FETCH_PRODUCTS",
+                payload: data.content,
+                pageNumber: data.pageNumber,
+                pageSize: data.pageSize,
+                totalElements: data.totalElements,
+                totalPages: data.totalPages,
+                lastPage: data.lastPage,
+            });
+
+        }
+        else{
+            const { data } = await api.get(`/seller/products?${queryString}`);
+             dispatch({
+                type: "FETCH_SELLER_PRODUCTS",
+                payload: data.content,
+                pageNumber: data.pageNumber,
+                pageSize: data.pageSize,
+                totalElements: data.totalElements,
+                totalPages: data.totalPages,
+                lastPage: data.lastPage,
+            });
+        }
+
+        dispatch({
+            type: "IS_SUCCESS",
+        });
+    } catch (error) {
+        dispatch({
+            type: "IS_ERROR",
+            payload: getErrorMessage(error,"failed to fetch products")
+        });
+    }
+};
+
+
 export const fetchCategories = () => async (dispatch) => {
     dispatch({ type: "IS_FETCHING" });
 
     try {
         const { data } = await api.get("/public/categories");
-        console.log(data);
 
         dispatch({
             type: "FETCH_CATEGORIES",
@@ -453,42 +496,22 @@ export const updateOrderStatusFromDashboard =
     }
 };
 
-
-
-export const dashboardProductsAction = (queryString) => async (dispatch) => {
-    try {
-        dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get(`/admin/products?${queryString}`);
-        dispatch({
-            type: "FETCH_PRODUCTS",
-            payload: data.content,
-            pageNumber: data.pageNumber,
-            pageSize: data.pageSize,
-            totalElements: data.totalElements,
-            totalPages: data.totalPages,
-            lastPage: data.lastPage,
-        });
-        dispatch({ type: "IS_SUCCESS" });
-    } catch (error) {
-        console.log(error);
-        dispatch({ 
-            type: "IS_ERROR",
-            payload: getErrorMessage(error) || "Failed to fetch dashboard products",
-         });
-    }
-};
-
-
 export const updateProductFromDashboard = 
-    (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+    (sendData, toast, reset, setLoader, setOpen, isOnlySeller) => async (dispatch) => {
     try {
         setLoader(true);
-        await api.put(`/admin/product/${sendData.id}`, sendData);
+        if(isOnlySeller){
+            await api.put(`/seller/product/${sendData.id}`, sendData);
+        }
+        else{
+            await api.put(`/admin/product/${sendData.id}`, sendData);
+        }
+        
         toast.success("Product update successful");
         reset();
         setLoader(false);
         setOpen(false);
-        await dispatch(dashboardProductsAction());
+       dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
     } catch (error) {
         toast.error(getErrorMessage(error) || "Product update failed");
         setLoader(false)
@@ -496,16 +519,22 @@ export const updateProductFromDashboard =
     }
 };
 export const addProductFromDashboard = 
-    (categoryId,sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+    (categoryId,sendData, toast, reset, setLoader, setOpen, isOnlySeller) => async (dispatch) => {
     try {
         setLoader(true);
         console.log(categoryId);
-        await api.post(`/admin/categories/${categoryId}/product`, sendData);
+        if(isOnlySeller){
+            await api.post(`/seller/categories/${categoryId}/product`, sendData);
+        }
+        else{
+            await api.post(`/admin/categories/${categoryId}/product`, sendData);
+        }
+        
         toast.success("Product added successfully");
         reset();
         setLoader(false);
         setOpen(false);
-        await dispatch(dashboardProductsAction());
+        dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
     } catch (error) {
         toast.error(getErrorMessage(error)|| "add product failed");
         setLoader(false);
@@ -513,13 +542,18 @@ export const addProductFromDashboard =
     }
 };
 
-export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal) => async (dispatch, getState) => {
+export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal,isOnlySeller) => async (dispatch, getState) => {
     try {
         setLoader(true)
-        await api.delete(`/admin/product/${productId}`);
+         if(isOnlySeller){
+            await api.delete(`/seller/product/${productId}`);
+        }
+        else{
+            await api.delete(`/admin/product/${productId}`);
+        }
         toast.success("Product deleted successfully");
         setLoader(false)
-        await dispatch(dashboardProductsAction());
+        dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
         setOpenDeleteModal(false)
     } catch (error) {
         console.log(error);
@@ -528,14 +562,20 @@ export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal) =
     }
 };
 
-export const updateProductImageFromDashboard =  (formData, productId, toast, setLoader, setOpen) => async (dispatch) => {
+export const updateProductImageFromDashboard =  (formData, productId, toast, setLoader, setOpen, isOnlySeller) => async (dispatch) => {
     try {
         setLoader(true);
-        await api.put(`/admin/product/${productId}/upload`, formData);
+        if(isOnlySeller){
+            await api.put(`/seller/product/${productId}/upload`, formData);
+        }
+        else{
+            await api.put(`/admin/product/${productId}/upload`, formData);
+        }
+        
         toast.success("Image upload successful");
         setLoader(false);
         setOpen(false);
-        await dispatch(dashboardProductsAction());
+        dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
     } catch (error) {
         toast.error(getErrorMessage(error) || "Product Image upload failed");
         setLoader(false)
@@ -686,6 +726,8 @@ export const updateOrderStatusBySellerFromDashboard =
         setLoader(false)
     }
 };
+
+
 
 
 

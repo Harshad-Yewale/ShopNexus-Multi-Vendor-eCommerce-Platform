@@ -16,7 +16,10 @@ import ProductViewModal from '../../products/ProductViewModal';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const AdminProducts = () => {  
-  const {products, categories, pagination, isLoading , errorMessage} = useSelector((state) => state.products);
+  const {products, sellerProducts, categories, pagination, sellerProductPagination, isLoading , errorMessage} = useSelector((state) => state.products);
+  const {user} = useSelector((state)=>state.auth);
+  const isOnlySeller = user?.roles?.includes("ROLE_SELLER") && !user?.roles?.includes("ROLE_ADMIN");
+
   const dispatch = useDispatch();
  
   const [currentPage, setCurrentPage] = useState(
@@ -41,9 +44,13 @@ const AdminProducts = () => {
   const params = new URLSearchParams(searchParams);
   const pathname = useLocation().pathname;
 
-  useProductFilter();
+  useProductFilter(user);
 
-  const tableRecords = products?.map((item) => {
+  const usedtable = isOnlySeller? sellerProducts : products
+  const usedPagination = isOnlySeller? sellerProductPagination : pagination;
+  
+
+  const tableRecords = usedtable?.map((item) => {
     return {
       id: item.productId,
       productName: item.productName,
@@ -102,7 +109,8 @@ const AdminProducts = () => {
 
 
 
-    const emptyProduct = !products || products?.length ===0;
+    const emptyProduct = isOnlySeller?( !sellerProducts || sellerProducts?.length ===0) :
+                                       ( !products || products?.length ===0);
 
   return (
   <div className="min-h-screen bg-slate-50 p-6">
@@ -159,7 +167,7 @@ const AdminProducts = () => {
            <div className="space-y-6 px-4 py-4">
               <div className="text-center">
                 <h1 className="text-2xl font-bold uppercase tracking-wide text-slate-800 md:text-3xl">
-                  All Products
+                  {isOnlySeller? "Your Products": "All Products"}
                 </h1>
               </div>
 
@@ -175,11 +183,11 @@ const AdminProducts = () => {
                     )}
                     autoHeight
                     paginationMode="server"
-                    rowCount={pagination?.totalElements || 0}
+                    rowCount={ usedPagination?.totalElements || 0}
                     initialState={{
                       pagination: {
                         paginationModel: {
-                          pageSize: pagination?.pageSize || 10,
+                          pageSize: usedPagination?.pageSize || 10,
                           page: currentPage - 1,
                         },
                       },
@@ -187,12 +195,12 @@ const AdminProducts = () => {
                     onPaginationModelChange={handlePaginationChange}
                     disableRowSelectionOnClick
                     disableColumnResize
-                    pageSizeOptions={[pagination?.pageSize || 10]}
+                    pageSizeOptions={[usedPagination?.pageSize || 10]}
                     pagination
                     paginationOptions={{
                       showFirstButton: true,
                       showLastButton: true,
-                      hideNextButton: currentPage === pagination?.totalPages,
+                      hideNextButton: currentPage === usedPagination?.totalPages,
                     }}
                     sx={{
                       border: 0,
@@ -227,6 +235,7 @@ const AdminProducts = () => {
           product={selectedProduct}
           update={openUpdateModal}
           buttonName={openUpdateModal? "Update":"Add"}
+          isOnlySeller
         />
       </Modal>
 
@@ -237,6 +246,7 @@ const AdminProducts = () => {
         <ImageUploadForm 
           setOpen={setOpenImageUploadModal}
           product={selectedProduct}
+          isOnlySeller
           />
       </Modal>
 

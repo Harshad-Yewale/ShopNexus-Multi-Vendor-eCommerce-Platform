@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import SelectTextField from '../../shared/SelectTextField';
 import Category from '../category/Category';
 
-const AddProductForm = ({ setOpen, product, update=false, buttonName}) => {
+const AddProductForm = ({ setOpen, product, update=false, buttonName,isOnlySeller}) => {
 const [loader, setLoader] = useState(false);
 const [selectedCategory, setSelectedCategory] = useState();
 const { categories, isLoading, errorMessage } = useSelector((state) => state.products);
@@ -53,13 +53,13 @@ useEffect(() => {
             const sendData ={
               ...data,
             };
-         dispatch(addProductFromDashboard(categoryId,sendData, toast, reset, setLoader, setOpen))
+         dispatch(addProductFromDashboard(categoryId,sendData, toast, reset, setLoader, setOpen,isOnlySeller))
         } else {
             const sendData = {
                 ...data,
                 id: product.id,
             };
-            dispatch(updateProductFromDashboard(sendData, toast, reset, setLoader, setOpen));
+            dispatch(updateProductFromDashboard(sendData, toast, reset, setLoader, setOpen, isOnlySeller));
         }
     };
 

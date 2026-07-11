@@ -35,6 +35,21 @@ export const productReducer = (state = initialState, action) => {
                 
                 
             };
+        case "FETCH_SELLER_PRODUCTS":
+            return {
+                ...state,
+                isLoading: false,
+                sellerProducts: action.payload,
+                sellerProductPagination: {
+                    pageNumber: action.pageNumber,
+                    pageSize: action.pageSize,
+                    totalElements: action.totalElements,
+                    totalPages: action.totalPages,
+                    lastPage: action.lastPage,
+                },
+                
+                
+            };
 
         case "FETCH_CATEGORIES":
             return {

@@ -43,21 +43,11 @@ public class ProductController {
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
     }
 
-@GetMapping("/admin/products")
-    public ResponseEntity<ProductResponse> getAllProductsForAdmin(
-            @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
-            @RequestParam(name = "pageSize",defaultValue = AppConstants.PAGE_SIZE,required = false)Integer pageSize,
-            @RequestParam(name = "sortBy",defaultValue = AppConstants.SORT_PRODUCT_BY,required = false)String sortBy,
-            @RequestParam(name = "sortOrder",defaultValue = AppConstants.SORT_ORDER,required = false)String sortOrder,
-            @RequestParam(name = "category", required = false) String category,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ){
-        ProductResponse productResponse=productService.getAllProductsForAdminAndSeller(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
-        return new ResponseEntity<>(productResponse,HttpStatus.OK);
-    }
-
-    @GetMapping("/seller/products")
-    public ResponseEntity<ProductResponse> getAllProductsForSeller(
+@GetMapping({
+        "/admin/products",
+        "/sellers/products"
+})
+    public ResponseEntity<ProductResponse> getAllProductsForAdminAndSeller(
             @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
             @RequestParam(name = "pageSize",defaultValue = AppConstants.PAGE_SIZE,required = false)Integer pageSize,
             @RequestParam(name = "sortBy",defaultValue = AppConstants.SORT_PRODUCT_BY,required = false)String sortBy,

@@ -16,8 +16,6 @@ function AdminOrders() {
 
   const emptyOrder = isAdmin ? (!adminOrder || adminOrder.length === 0) : (!sellerOrders || sellerOrders.length === 0);
 
-  console.log(sellerPagination);
-
   return (
     <div className="min-h-screen bg-slate-50 p-6">
       {/* Header */}
