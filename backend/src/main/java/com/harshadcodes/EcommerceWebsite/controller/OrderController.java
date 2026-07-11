@@ -50,4 +50,25 @@ public class OrderController {
         OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.status());
         return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
     }
+
+    @GetMapping("/seller/orders")
+    public ResponseEntity<OrderResponse> getAllSellerOrders(
+            @RequestParam(name = "pageNumber",required = false,defaultValue = AppConstants.PAGE_NUMBER)Integer pageNumber,
+            @RequestParam(name = "pageSize",required = false,defaultValue = AppConstants.PAGE_SIZE)Integer pageSize,
+            @RequestParam(name = "sortBy",required = false,defaultValue = AppConstants.SORT_ORDER_BY)String sortBy,
+            @RequestParam(name = "sortOrder",required = false,defaultValue = AppConstants.SORT_ORDER_DESC)String sortOrder,
+            @RequestParam(name = "keyword", required = false) String keyword
+            )
+    {
+        OrderResponse response = orderService.findAllOrdersBySeller(pageNumber,pageSize,sortBy,sortOrder,keyword);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+    }
+
+    @PutMapping("/seller/orders/{orderId}/status")
+    public ResponseEntity<OrderDTO> updateOrderStatusBySeller(@PathVariable Long orderId,
+                                                      @RequestBody OrderStatusUpdateDTO orderStatusUpdateDto) {
+        OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.status());
+        return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
+    }
 }

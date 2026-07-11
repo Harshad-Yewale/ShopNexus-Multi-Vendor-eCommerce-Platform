@@ -6,10 +6,11 @@ import com.harshadcodes.EcommerceWebsite.payload.OrderDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderItemDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderResponse;
 import com.harshadcodes.EcommerceWebsite.repositories.*;
+import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
 import com.harshadcodes.EcommerceWebsite.utils.specifications.OrderSpecifications;
-import com.harshadcodes.EcommerceWebsite.utils.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,9 +34,8 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ProductRepository productRepository;
-    private final CartService cartService;
     private final ModelMapper modelMapper;
+    private final AuthUtils authUtils;
 
 
     @Transactional
@@ -125,6 +125,34 @@ public class OrderServiceImpl implements OrderService {
         Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sort);
         Specification<Order> spec = Specification.unrestricted();
 
+        return getOrderResponse(keyword, pageDetails, spec);
+    }
+
+    @Override
+    public OrderDTO updateOrder(Long orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order","orderId",orderId));
+        order.setOrderStatus(status);
+        orderRepository.save(order);
+        return modelMapper.map(order, OrderDTO.class);
+    }
+
+    @Override
+    public OrderResponse findAllOrdersBySeller(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword) {
+        Sort sort = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Long sellerId = authUtils.getLoggedinUserId();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sort);
+        Specification<Order> spec = Specification.where(OrderSpecifications.belongsToSeller(sellerId));
+
+        return getOrderResponse(keyword, pageDetails, spec);
+    }
+
+    @NonNull
+    private OrderResponse getOrderResponse(String keyword, Pageable pageDetails, Specification<Order> spec) {
         if (keyword != null && !keyword.trim().isEmpty()) {
 
             keyword = keyword.toLowerCase().trim();
@@ -140,7 +168,9 @@ public class OrderServiceImpl implements OrderService {
         }else{
             pageOrders = orderRepository.findAll(pageDetails);
         }
-        List<OrderDTO> orderDTOs = pageOrders.getContent()
+
+
+        List<OrderDTO> orderDTOs =pageOrders.getContent()
                 .stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
                 .toList();
@@ -152,14 +182,5 @@ public class OrderServiceImpl implements OrderService {
                 pageOrders.getTotalElements(),
                 pageOrders.isLast()
         );
-    }
-
-    @Override
-    public OrderDTO updateOrder(Long orderId, OrderStatus status) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Order","orderId",orderId));
-        order.setOrderStatus(status);
-        orderRepository.save(order);
-        return modelMapper.map(order, OrderDTO.class);
     }
 }
