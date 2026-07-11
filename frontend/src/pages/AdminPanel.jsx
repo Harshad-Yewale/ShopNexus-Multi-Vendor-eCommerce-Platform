@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 const AdminPanel = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const {user} = useSelector(state => state.auth);
-  const isAdmin = user?.roles?.includes("IS_ADMIN");
+  const isAdmin = user?.roles?.includes("ROLE_ADMIN");
 
   const location = useLocation();
 

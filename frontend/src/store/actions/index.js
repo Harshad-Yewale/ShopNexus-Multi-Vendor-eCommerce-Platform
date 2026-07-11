@@ -650,4 +650,42 @@ export const updateUserFromDashboard =
 };
 
 
+export const getOrdersBySellerForDashboard = (queryString) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get(`/seller/orders?${queryString}`);
+        dispatch({
+            type: "GET_SELLER_ORDERS",
+            payload: data.content,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            totalElements: data.totalElements,
+            totalPages: data.totalPages,
+            lastPage: data.lastPage,
+        });
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: getErrorMessage(error) || "Failed to fetch orders data",
+         });
+    }
+};
+
+export const updateOrderStatusBySellerFromDashboard =
+     (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
+    try {
+        setLoader(true);
+        const { data } = await api.put(`/seller/orders/${orderId}/status`, { status: orderStatus});
+        toast.success(data.message || "Order updated successfully");
+        await dispatch(getOrdersBySellerForDashboard());
+    } catch (error) {
+        toast.error(getErrorMessage(error) || "Internal Server Error");
+    } finally {
+        setLoader(false)
+    }
+};
+
+
 

@@ -6,7 +6,7 @@ import { formatPrice } from "../../../utils/FormatPrice";
 import Modal from "../../shared/Modal";
 import UpdateOrderForm from "./UpdateOrderForm";
 
-export const OrderTable = ({ adminOrder, pagination }) => {
+export const OrderTable = ({ orders, pagination }) => {
   const [updateOpenModal, setUpdateOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loader, setLoader] = useState(false);
@@ -28,14 +28,14 @@ export const OrderTable = ({ adminOrder, pagination }) => {
 
   const tableRecords = useMemo(
     () =>
-      adminOrder?.map((item) => ({
+      orders?.map((item) => ({
         id: item.orderId,
         email: item.email,
         totalAmount: formatPrice(item.totalAmount),
         status: item.orderStatus,
         date: item.orderDate,
       })),
-    [adminOrder]
+    [orders]
   );
 
   const handlePaginationChange = (paginationModel) => {

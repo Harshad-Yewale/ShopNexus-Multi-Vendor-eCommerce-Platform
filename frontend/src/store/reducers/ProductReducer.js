@@ -1,9 +1,11 @@
 const initialState = {
     products: null,
+    sellerProducts:[],
     cartProducts: [],
     categories: null,
     pagination: {},
     categoryPagination:{},
+    sellerProductPagination:[],
     isLoading: false,
     errorMessage:null
 };

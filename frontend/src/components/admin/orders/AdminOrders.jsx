@@ -6,13 +6,17 @@ import OrderFilter from "./OrderFilter";
 import useOrderFilter from "../../filter and pagination/useOrderFilter";
 
 function AdminOrders() {
-  const { adminOrder, pagination, isLoading } = useSelector(
+  const { adminOrder,sellerOrders, pagination, sellerPagination , isLoading } = useSelector(
     (state) => state.orders
   );
+  const {user} = useSelector(state=>state.auth);
+  const isAdmin=user?.roles?.includes("ROLE_ADMIN");
 
-  useOrderFilter();
+  useOrderFilter(isAdmin);
 
-  const emptyOrder = !adminOrder || adminOrder.length === 0;
+  const emptyOrder = isAdmin ? (!adminOrder || adminOrder.length === 0) : (!sellerOrders || sellerOrders.length === 0);
+
+  console.log(sellerPagination);
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -56,8 +60,8 @@ function AdminOrders() {
         ) : (
           <div className="w-full">
             <OrderTable
-              adminOrder={adminOrder}
-              pagination={pagination}
+              orders={isAdmin ? adminOrder : sellerOrders}
+              pagination={isAdmin ? pagination : sellerPagination}
             />
           </div>
         )}

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { getOrdersForDashboard } from "../../store/actions";
+import { getOrdersBySellerForDashboard, getOrdersForDashboard } from "../../store/actions";
 
-const useOrderFilter = () => {
+const useOrderFilter = (isAdmin) => {
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
 
@@ -25,7 +25,12 @@ const useOrderFilter = () => {
         params.set("keyword", keyword.trim());
     }
 
+    if(isAdmin){
     dispatch(getOrdersForDashboard(params.toString()));
+    }
+    else{
+        dispatch(getOrdersBySellerForDashboard(params.toString()));
+    }
 }, [dispatch, searchParams]);
 };
 
