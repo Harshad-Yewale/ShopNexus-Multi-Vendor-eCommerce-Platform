@@ -21,7 +21,10 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/admin/categories/{categoryId}/product")
+    @PostMapping({
+            "/admin/categories/{categoryId}/product",
+            "/seller/categories/{categoryId}/product"
+    })
     public ResponseEntity<ProductDTO> saveProduct(@Valid @RequestBody ProductDTO productDTO, @PathVariable Long categoryId){
         ProductDTO savedProduct=productService.saveProduct(productDTO,categoryId);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
@@ -36,7 +39,7 @@ public class ProductController {
             @RequestParam(name = "category", required = false) String category,
             @RequestParam(name = "keyword", required = false) String keyword
     ){
-        ProductResponse productResponse=productService.getAllProducts(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
+        ProductResponse productResponse=productService.getAllProductsForPublic(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
     }
 
@@ -49,7 +52,20 @@ public class ProductController {
             @RequestParam(name = "category", required = false) String category,
             @RequestParam(name = "keyword", required = false) String keyword
     ){
-        ProductResponse productResponse=productService.getAllProducts(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
+        ProductResponse productResponse=productService.getAllProductsForAdminAndSeller(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
+        return new ResponseEntity<>(productResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("/seller/products")
+    public ResponseEntity<ProductResponse> getAllProductsForSeller(
+            @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize",defaultValue = AppConstants.PAGE_SIZE,required = false)Integer pageSize,
+            @RequestParam(name = "sortBy",defaultValue = AppConstants.SORT_PRODUCT_BY,required = false)String sortBy,
+            @RequestParam(name = "sortOrder",defaultValue = AppConstants.SORT_ORDER,required = false)String sortOrder,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "keyword", required = false) String keyword
+    ){
+        ProductResponse productResponse=productService.getAllProductsForAdminAndSeller(pageNumber,pageSize,sortBy,sortOrder,keyword,category);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
     }
 
@@ -88,19 +104,28 @@ public class ProductController {
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
     }*/
 
-    @PutMapping("/admin/product/{productId}")
+    @PutMapping({
+            "/admin/product/{productId}",
+            "/seller/product/{productId}"
+            })
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long productId,@Valid @RequestBody ProductDTO productDTO){
         ProductDTO updatedProduct=productService.updateProduct(productId,productDTO);
         return new ResponseEntity<>(updatedProduct,HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/product/{productId}")
+    @DeleteMapping({
+            "/admin/product/{productId}",
+            "/seller/product/{productId}"
+            })
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable Long productId){
         ProductDTO deletedProduct=productService.deleteProduct(productId);
         return new ResponseEntity<>(deletedProduct,HttpStatus.OK);
     }
 
-    @PutMapping("/admin/product/{productId}/upload")
+    @PutMapping({
+            "/admin/product/{productId}/upload",
+            "/seller/product/{productId}/upload"
+    })
     public ResponseEntity<ProductDTO> uploadFiles(@PathVariable Long productId,
                                                   @RequestBody MultipartFile image) throws IOException {
         ProductDTO updatedProduct=productService.uploadFiles(productId,image);

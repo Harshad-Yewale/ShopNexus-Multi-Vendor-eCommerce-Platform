@@ -1,16 +1,19 @@
 package com.harshadcodes.EcommerceWebsite.service;
 
+import com.harshadcodes.EcommerceWebsite.constants.AppRole;
 import com.harshadcodes.EcommerceWebsite.exceptions.ResourceAlreadyExistException;
 import com.harshadcodes.EcommerceWebsite.exceptions.ResourceNotFoundException;
 import com.harshadcodes.EcommerceWebsite.model.Cart;
 import com.harshadcodes.EcommerceWebsite.model.Category;
 import com.harshadcodes.EcommerceWebsite.model.Product;
+import com.harshadcodes.EcommerceWebsite.model.User;
 import com.harshadcodes.EcommerceWebsite.payload.CartDTO;
 import com.harshadcodes.EcommerceWebsite.payload.ProductDTO;
 import com.harshadcodes.EcommerceWebsite.payload.ProductResponse;
 import com.harshadcodes.EcommerceWebsite.repositories.CartRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.CategoryRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.ProductRepository;
+import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
 import com.harshadcodes.EcommerceWebsite.utils.PaginationUtility;
 import com.harshadcodes.EcommerceWebsite.utils.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +41,7 @@ public class ProductServiceImpl implements ProductService{
 
     private final CartService cartService;
     private final CartRepository cartRepository;
+    private final AuthUtils authUtils;
 
     @Value("${product.image}")
     private String path;
@@ -49,10 +54,12 @@ public class ProductServiceImpl implements ProductService{
         Category category= categoryRepository.findById(categoryId).orElseThrow(
                 ()->new ResourceNotFoundException("Category","CategoryId",categoryId)
         );
+        User user =authUtils.getLoggedinUser();
 
         Product  product = modelMapper.map(productDTO, Product.class);
-        if(productRepository.existsByProductNameAndCategory_CategoryId(product.getProductName(),category.getCategoryId())){
-            throw new ResourceAlreadyExistException("Product","ProductId and Category",product.getProductName()+" - "+category.getCategoryName());
+        product.setUser(user);
+        if(productRepository.existsByProductNameAndCategory_CategoryIdAndUser_id(product.getProductName(),category.getCategoryId(),user.getId())){
+            throw new ResourceAlreadyExistException("Product","ProductName and Category ",product.getProductName()+" - "+category.getCategoryName());
         }
         product.setCategory(category);
         Product savedProduct=productRepository.save(product);
@@ -61,8 +68,7 @@ public class ProductServiceImpl implements ProductService{
         return savedProductDTO;
     }
 
-    @Override
-    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category) {
+    public ProductResponse getAllProductsForPublic(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category) {
 
         Pageable pageDetails= PaginationUtility.createPageable(pageNumber,pageSize,sortBy,sortOrder);
         Specification<Product> spec=Specification.unrestricted();
@@ -72,30 +78,62 @@ public class ProductServiceImpl implements ProductService{
                     .replaceAll("[^a-zA-Z0-9 ]", "")
                     .toLowerCase()
                     .trim();
-
             String[] words = keyword.split("\\s+");
-
             for(String word:words){
-
                 if(!word.isEmpty()) {
                     spec = spec.and(ProductSpecifications.productSpecificationByName(word));
                 }
             }
-
         }
         if(category!=null && !category.isEmpty()){
-          spec=  spec.and(ProductSpecifications.productSpecificationByCategory(category));
+            spec=  spec.and(ProductSpecifications.productSpecificationByCategory(category));
         }
-
-
         Page<Product> productPage;
         if (spec == null) {
             productPage = productRepository.findAll(pageDetails);
         } else {
             productPage = productRepository.findAll(spec, pageDetails);
         }
-        //Page<Product> productPage;
-       // productPage = productRepository.findAll(pageDetails);
+        return buildProductResponse(productPage);
+    }
+
+
+    @Override
+    public ProductResponse getAllProductsForAdminAndSeller(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category) {
+
+        User user = authUtils.getLoggedinUser();
+        boolean hasSellerRole = authUtils.hasRole(user,AppRole.ROLE_SELLER);
+
+        boolean hasAdminRole = authUtils.hasRole(user,AppRole.ROLE_ADMIN);
+        boolean isOnlySeller = hasSellerRole && !hasAdminRole;
+        Pageable pageDetails= PaginationUtility.createPageable(pageNumber,pageSize,sortBy,sortOrder);
+        Specification<Product> spec=Specification.unrestricted();
+
+        if(keyword!=null && !keyword.isEmpty()){
+            keyword = keyword
+                    .replaceAll("[^a-zA-Z0-9 ]", "")
+                    .toLowerCase()
+                    .trim();
+            String[] words = keyword.split("\\s+");
+            for(String word:words){
+                if(!word.isEmpty()) {
+                    spec = spec.and(ProductSpecifications.productSpecificationByName(word));
+                }
+            }
+        }
+        if(category!=null && !category.isEmpty()){
+          spec=  spec.and(ProductSpecifications.productSpecificationByCategory(category));
+        }
+
+        if(isOnlySeller){
+            spec= spec.and(ProductSpecifications.productSpecificationForSeller(user.getId()));
+        }
+        Page<Product> productPage;
+        if (spec == null) {
+            productPage = productRepository.findAll(pageDetails);
+        } else {
+            productPage = productRepository.findAll(spec, pageDetails);
+        }
         return buildProductResponse(productPage);
     }
 
@@ -124,6 +162,13 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
         Product product=productRepository.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product","ProductId",productId));
+
+        User user = authUtils.getLoggedinUser();
+        boolean isAdmin = authUtils.hasRole(user, AppRole.ROLE_ADMIN);
+
+        if (!isAdmin && !product.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You can only update your own products.");
+        }
 
         product.setProductName(productDTO.getProductName());
         product.setProductDescription(productDTO.getProductDescription());
@@ -165,6 +210,12 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductDTO deleteProduct(Long productId) {
         Product product=productRepository.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product","ProductId",productId));
+        User user = authUtils.getLoggedinUser();
+        boolean isAdmin = authUtils.hasRole(user, AppRole.ROLE_ADMIN);
+
+        if (!isAdmin && !product.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You can only delete your own products.");
+        }
         productRepository.delete(product);
 
         List<Cart>carts=cartRepository.findCartsByProductId(productId);
@@ -181,6 +232,12 @@ public class ProductServiceImpl implements ProductService{
         Product productFromDb=productRepository.findById(productId).orElseThrow(
                 ()->new ResourceNotFoundException("Product","ProductId",productId)
         );
+        User user = authUtils.getLoggedinUser();
+        boolean isAdmin = authUtils.hasRole(user, AppRole.ROLE_ADMIN);
+
+        if (!isAdmin && !productFromDb.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You can only update your own products.");
+        }
 
         String fileName=filesService.uploadImage(path,file);
 

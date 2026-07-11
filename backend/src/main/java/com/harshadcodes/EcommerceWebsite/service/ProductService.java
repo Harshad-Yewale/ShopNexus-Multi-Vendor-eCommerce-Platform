@@ -10,7 +10,9 @@ import java.util.List;
 public interface ProductService {
 
 
-    ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category);
+    ProductResponse getAllProductsForPublic(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category);
+
+    ProductResponse getAllProductsForAdminAndSeller(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword, String category);
 
     ProductDTO saveProduct(ProductDTO productDTO, Long categoryId);
 

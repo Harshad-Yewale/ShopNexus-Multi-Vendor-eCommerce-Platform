@@ -27,4 +27,9 @@ public class ProductSpecifications {
         return (root, criteriaQuery, criteriaBuilder) ->
                 criteriaBuilder.like(root.get("category").get("categoryName"), category);
     }
+
+    public static Specification<Product> productSpecificationForSeller(Long sellerId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("user").get("id"), sellerId);
+    }
 }

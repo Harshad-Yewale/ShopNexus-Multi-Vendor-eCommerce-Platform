@@ -54,4 +54,10 @@ public class AuthUtils {
                 .stream()
                 .anyMatch(role -> role.getRole() == AppRole.ROLE_ADMIN);
     }
+
+    public boolean hasRole(User user , AppRole role){
+        return user.getUserRoles().stream().anyMatch(
+                userRole -> userRole.getRole() == role
+        );
+    }
 }
