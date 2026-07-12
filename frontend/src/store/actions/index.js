@@ -727,6 +727,30 @@ export const updateOrderStatusBySellerFromDashboard =
     }
 };
 
+export const getUserOrders = (queryString) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get(`/public/orders?${queryString}`);
+        dispatch({
+            type: "GET_USER_ORDERS",
+            payload: data.content,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            totalElements: data.totalElements,
+            totalPages: data.totalPages,
+            lastPage: data.lastPage,
+        });
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: getErrorMessage(error) || "Failed to fetch orders data",
+         });
+    }
+};
+
+
 
 
 

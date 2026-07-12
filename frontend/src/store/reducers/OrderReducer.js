@@ -3,6 +3,8 @@ const initialState={
   pagination:[],
   sellerOrders:[],
   sellerPagination:[],
+  userOrders:[],
+  userPagination:[],
   isLoading:false,
   errorMessage:null
 }
@@ -27,6 +29,19 @@ export const OrderReducer = (state = initialState, action) => {
                 ...state,
                 sellerOrders: action.payload,
                 sellerPagination: {
+                    ...state.sellerPagination,
+                    pageNumber: action.pageNumber,
+                    pageSize: action.pageSize,
+                    totalElements: action.totalElements,
+                    totalPages: action.totalPages,
+                    lastPage: action.lastPage,
+                },
+            };
+         case "GET_USER_ORDERS":
+            return {
+                ...state,
+                userOrders: action.payload,
+                userPagination: {
                     ...state.sellerPagination,
                     pageNumber: action.pageNumber,
                     pageSize: action.pageSize,

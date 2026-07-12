@@ -133,7 +133,7 @@ const OrderPlacedPage = () => {
         {/* Action Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            to="/orders"
+            to="/profile/orders"
             className="flex items-center justify-center gap-2 px-8 h-11 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
           >
             <FaShoppingBag />

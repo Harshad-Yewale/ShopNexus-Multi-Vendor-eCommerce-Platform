@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { getOrdersBySellerForDashboard, getOrdersForDashboard } from "../../store/actions";
+import { getOrdersBySellerForDashboard, getOrdersForDashboard, getUserOrders } from "../../store/actions";
 
-const useOrderFilter = (isAdmin) => {
+const useOrderFilter = (user) => {
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
+    const isAdmin=user?.roles?.includes("ROLE_ADMIN") && !user?.roles?.includes("ROLE_SELLER") ;
+    const isSeller=user?.roles?.includes("ROLE_SELLER") && !user?.roles?.includes("ROLE_ADMIN") ;
 
    useEffect(() => {
     const params = new URLSearchParams();
@@ -14,7 +16,7 @@ const useOrderFilter = (isAdmin) => {
         ? Number(searchParams.get("page"))
         : 1;
 
-    const sortOrder = searchParams.get("sortby") || "asc";
+    const sortOrder = searchParams.get("sortby") || "";
     const keyword = searchParams.get("keyword");
 
     params.set("sortBy", "orderDate");
@@ -28,8 +30,11 @@ const useOrderFilter = (isAdmin) => {
     if(isAdmin){
     dispatch(getOrdersForDashboard(params.toString()));
     }
-    else{
+    else if(isSeller){
         dispatch(getOrdersBySellerForDashboard(params.toString()));
+    }
+    else{
+        dispatch(getUserOrders(params.toString()));
     }
 }, [dispatch, searchParams]);
 };

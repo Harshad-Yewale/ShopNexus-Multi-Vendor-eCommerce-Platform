@@ -1,7 +1,7 @@
 import { Pagination } from "@mui/material";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-const Paginations = ({ numberOfPage, totalProducts }) => {
+const Paginations = ({numberOfPages}) => {
     const [searchParams] = useSearchParams();
     const pathname = useLocation().pathname;
     const params = new URLSearchParams(searchParams);
@@ -16,15 +16,16 @@ const Paginations = ({ numberOfPage, totalProducts }) => {
     };
 
     return(
+        <div className="mt-8 flex justify-center">
         <Pagination 
-            count={numberOfPage} 
+            count={numberOfPages} 
             page={paramValue}
-            defaultPage={1} 
             siblingCount={1} 
             boundaryCount={1} 
             shape="rounded" 
             onChange = {onChangeHandler}
             />
+        </div>
     )
 };
 

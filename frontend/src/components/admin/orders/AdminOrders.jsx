@@ -10,9 +10,8 @@ function AdminOrders() {
     (state) => state.orders
   );
   const {user} = useSelector(state=>state.auth);
-  const isAdmin=user?.roles?.includes("ROLE_ADMIN");
 
-  useOrderFilter(isAdmin);
+  useOrderFilter(user);
 
   const emptyOrder = isAdmin ? (!adminOrder || adminOrder.length === 0) : (!sellerOrders || sellerOrders.length === 0);
 
