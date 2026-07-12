@@ -6,7 +6,7 @@ import { getOrdersBySellerForDashboard, getOrdersForDashboard, getUserOrders } f
 const useOrderFilter = (user) => {
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
-    const isAdmin=user?.roles?.includes("ROLE_ADMIN") && !user?.roles?.includes("ROLE_SELLER") ;
+    const isAdmin=user?.roles?.includes("ROLE_ADMIN") ;
     const isSeller=user?.roles?.includes("ROLE_SELLER") && !user?.roles?.includes("ROLE_ADMIN") ;
 
    useEffect(() => {
@@ -28,7 +28,7 @@ const useOrderFilter = (user) => {
     }
 
     if(isAdmin){
-    dispatch(getOrdersForDashboard(params.toString()));
+        dispatch(getOrdersForDashboard(params.toString()));
     }
     else if(isSeller){
         dispatch(getOrdersBySellerForDashboard(params.toString()));

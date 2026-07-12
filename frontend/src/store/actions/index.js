@@ -486,9 +486,9 @@ export const updateOrderStatusFromDashboard =
      (orderId, orderStatus, toast, setLoader) => async (dispatch, getState) => {
     try {
         setLoader(true);
-        const { data } = await api.put(`/admin/orders/${orderId}/status`, { status: orderStatus});
-        toast.success(data.message || "Order updated successfully");
-        await dispatch(getOrdersForDashboard());
+            const { data } = await api.put(`/admin/orders/${orderId}/status`, { status: orderStatus});
+            toast.success(data.message || "Order updated successfully");
+           // await dispatch(getOrdersForDashboard());
     } catch (error) {
         toast.error(getErrorMessage(error) || "Internal Server Error");
     } finally {
@@ -522,7 +522,6 @@ export const addProductFromDashboard =
     (categoryId,sendData, toast, reset, setLoader, setOpen, isOnlySeller) => async (dispatch) => {
     try {
         setLoader(true);
-        console.log(categoryId);
         if(isOnlySeller){
             await api.post(`/seller/categories/${categoryId}/product`, sendData);
         }

@@ -10,6 +10,7 @@ function AdminOrders() {
     (state) => state.orders
   );
   const {user} = useSelector(state=>state.auth);
+  const isAdmin=user?.roles?.includes("ROLE_ADMIN") ;
 
   useOrderFilter(user);
 
@@ -59,6 +60,7 @@ function AdminOrders() {
             <OrderTable
               orders={isAdmin ? adminOrder : sellerOrders}
               pagination={isAdmin ? pagination : sellerPagination}
+              isAdmin={isAdmin}
             />
           </div>
         )}

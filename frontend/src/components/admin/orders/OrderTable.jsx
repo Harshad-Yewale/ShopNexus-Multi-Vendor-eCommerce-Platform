@@ -6,7 +6,7 @@ import { formatPrice } from "../../../utils/FormatPrice";
 import Modal from "../../shared/Modal";
 import UpdateOrderForm from "./UpdateOrderForm";
 
-export const OrderTable = ({ orders, pagination }) => {
+export const OrderTable = ({ orders, pagination,isAdmin }) => {
   const [updateOpenModal, setUpdateOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loader, setLoader] = useState(false);
@@ -109,6 +109,7 @@ export const OrderTable = ({ orders, pagination }) => {
             setLoader={setLoader}
             selectedId={selectedItem.id}
             selectedItem={selectedItem}
+            isAdmin={isAdmin}
           />
         )}
       </Modal>

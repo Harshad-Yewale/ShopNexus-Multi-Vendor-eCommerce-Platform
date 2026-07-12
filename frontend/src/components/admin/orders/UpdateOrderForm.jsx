@@ -2,7 +2,7 @@ import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select } fro
 import React, { useEffect, useState } from 'react'
 import { FaSpinner } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import { getOrdersForDashboard, updateOrderStatusBySellerFromDashboard, updateOrderStatusFromDashboard } from '../../../store/actions';
+import { getOrdersBySellerForDashboard, getOrdersForDashboard, updateOrderStatusBySellerFromDashboard, updateOrderStatusFromDashboard } from '../../../store/actions';
 import toast from 'react-hot-toast';
 
 const ORDER_STATUSES = [
