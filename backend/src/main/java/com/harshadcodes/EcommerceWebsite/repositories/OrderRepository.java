@@ -66,4 +66,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     List<MonthlyAnalyticsDTO> getOrdersPerMonth();
 
     Page<Order> findAll(Specification<Order> spec, Pageable pageDetails);
+
+    Page<Order> findAllByEmail( String email,Pageable pageDetails);
 }

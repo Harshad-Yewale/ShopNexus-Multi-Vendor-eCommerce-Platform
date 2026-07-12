@@ -71,4 +71,16 @@ public class OrderController {
         OrderDTO order = orderService.updateOrder(orderId, orderStatusUpdateDto.status());
         return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
     }
+
+    @GetMapping("/public/orders")
+    public ResponseEntity<OrderResponse> getAllUserOrders(
+            @RequestParam(name = "pageNumber",required = false,defaultValue = AppConstants.PAGE_NUMBER)Integer pageNumber,
+            @RequestParam(name = "pageSize",required = false,defaultValue = AppConstants.PAGE_SIZE)Integer pageSize,
+            @RequestParam(name = "sortBy",required = false,defaultValue = AppConstants.SORT_ORDER_BY)String sortBy,
+            @RequestParam(name = "sortOrder",required = false,defaultValue = AppConstants.SORT_ORDER_DESC)String sortOrder
+       ) {
+
+        OrderResponse response=orderService.findAllUserOrders(pageNumber,pageSize,sortBy,sortOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

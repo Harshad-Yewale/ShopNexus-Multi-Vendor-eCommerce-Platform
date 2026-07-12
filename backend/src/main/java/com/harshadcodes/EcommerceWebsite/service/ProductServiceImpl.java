@@ -14,6 +14,7 @@ import com.harshadcodes.EcommerceWebsite.repositories.CartRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.CategoryRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.ProductRepository;
 import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
+import com.harshadcodes.EcommerceWebsite.utils.InsertImageUrl;
 import com.harshadcodes.EcommerceWebsite.utils.PaginationUtility;
 import com.harshadcodes.EcommerceWebsite.utils.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
@@ -42,12 +43,10 @@ public class ProductServiceImpl implements ProductService{
     private final CartService cartService;
     private final CartRepository cartRepository;
     private final AuthUtils authUtils;
+    private final InsertImageUrl insertImageUrl;
 
     @Value("${product.image}")
     private String path;
-
-    @Value("${image.base.url}")
-    private String imageBaseUrl;
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO, Long categoryId) {
@@ -254,16 +253,11 @@ public class ProductServiceImpl implements ProductService{
                 .toList();
     }
 
-    private String constructImageUrl(String imageName) {
-        return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
-    }
-
-
     private   ProductResponse buildProductResponse(Page<Product> productPage) {
         List<ProductDTO> productDTOS = productPage.getContent().stream().map(product ->
         {
             ProductDTO dto = modelMapper.map(product, ProductDTO.class);
-            dto.setProductImage(constructImageUrl(product.getProductImage()));
+            dto.setProductImage(insertImageUrl.constructImageUrl(product.getProductImage()));
             dto.setProductDiscountedPrice(product.getProductDiscountedPrice());
             return dto;
         }).toList();
