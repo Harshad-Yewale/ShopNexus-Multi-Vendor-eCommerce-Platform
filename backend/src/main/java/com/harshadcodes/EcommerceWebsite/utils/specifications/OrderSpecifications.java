@@ -22,14 +22,12 @@ public class OrderSpecifications {
             };
         }
 
-        public static Specification<Order> belongsToSeller(Long sellerId) {
-            return (root, query, cb) -> {
-                query.distinct(true);
-                Join<Order, OrderItem> orderItems = root.join("orderItems");
-                Join<OrderItem, Product> product = orderItems.join("product");
-                Join<Product, User> seller = product.join("user");
-                return cb.equal(seller.get("id"), sellerId);
-            };
-        }
+    public static Specification<Order> belongsToSeller(Long sellerId) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            Join<Order, OrderItem> orderItems = root.join("orderItems");
+            return cb.equal(orderItems.get("sellerId"), sellerId);
+        };
+    }
 
 }

@@ -94,7 +94,12 @@ public class OrderServiceImpl implements OrderService {
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(savedOrder);
-            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setProductId(cartItem.getProduct().getProductId());
+            orderItem.setProductName(cartItem.getProduct().getProductName());
+            orderItem.setProductPrice(cartItem.getProduct().getProductPrice());
+            orderItem.setProductImage(cartItem.getProduct().getProductImage());
+            orderItem.setProductDescription(cartItem.getProduct().getProductDescription());
+            orderItem.setSellerId(cartItem.getProduct().getUser().getId());
             orderItem.setOrderItemQuantity(cartItem.getQuantity());
             orderItem.setDiscount(cartItem.getDiscount());
             orderItem.setDiscountedPrice(cartItem.getDiscountedPrice());
@@ -171,9 +176,8 @@ public class OrderServiceImpl implements OrderService {
                     OrderDTO dto = modelMapper.map(order, OrderDTO.class);
 
                     dto.getOrderItems().forEach(item -> {
-                        ProductDTO product = item.getProduct();
-                        product.setProductImage(insertImageUrl.constructImageUrl(product.getProductImage()));
-                    });
+                        item.setProductImage(insertImageUrl.constructImageUrl(item.getProductImage()));
+                        });
                     return dto;
                 })
                 .toList();
@@ -213,8 +217,7 @@ public class OrderServiceImpl implements OrderService {
                     OrderDTO dto = modelMapper.map(order, OrderDTO.class);
 
                     dto.getOrderItems().forEach(item -> {
-                        ProductDTO product = item.getProduct();
-                        product.setProductImage(insertImageUrl.constructImageUrl(product.getProductImage()));
+                        item.setProductImage(insertImageUrl.constructImageUrl(item.getProductImage()));
                     });
                     return dto;
                 }).toList();

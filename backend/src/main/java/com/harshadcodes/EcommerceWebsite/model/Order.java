@@ -37,6 +37,7 @@ public class Order {
     private LocalDate orderDate;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<OrderItem> orderItems=new ArrayList<>();
 
     @ManyToOne

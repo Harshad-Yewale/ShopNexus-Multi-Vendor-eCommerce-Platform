@@ -20,9 +20,23 @@ public class OrderItem {
     private Integer orderItemQuantity;
     private Double discountedPrice;
 
-    @ManyToOne
+    private Long productId;
+
+    private String productName;
+
+    @Column(length = 1000)
+    private String productImage;
+
+    @Column(length = 2000)
+    private String productDescription;
+
+    private Double productPrice;
+
+    private Long sellerId;
+
+    /*@ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Product product;*/
 
     @ManyToOne
     @JoinColumn(name = "order_id")

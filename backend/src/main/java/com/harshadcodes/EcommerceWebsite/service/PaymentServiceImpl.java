@@ -121,9 +121,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         for (OrderItem orderItem : order.getOrderItems()) {
 
-            Product product = productRepository.findById(orderItem.getProduct().getProductId())
+            Product product = productRepository.findById(orderItem.getProductId())
                     .orElseThrow(() ->
-                            new ResourceNotFoundException("Product", "productId", orderItem.getProduct().getProductId()));
+                            new ResourceNotFoundException("Product", "productId", orderItem.getProductId()));
 
             if (product.getProductQuantity() < orderItem.getOrderItemQuantity()) {
                 throw new Exception(product.getProductName() + " is out of stock.");
@@ -132,11 +132,11 @@ public class PaymentServiceImpl implements PaymentService {
 
         for (OrderItem orderItem : order.getOrderItems()) {
 
-            Product product = productRepository.findById(orderItem.getProduct().getProductId()).orElseThrow(() ->
+            Product product = productRepository.findById(orderItem.getProductId()).orElseThrow(() ->
                             new ResourceNotFoundException(
                                     "Product",
                                     "productId",
-                                    orderItem.getProduct().getProductId()));
+                                    orderItem.getProductId()));
 
             product.setProductQuantity(product.getProductQuantity() - orderItem.getOrderItemQuantity());
             productRepository.save(product);
