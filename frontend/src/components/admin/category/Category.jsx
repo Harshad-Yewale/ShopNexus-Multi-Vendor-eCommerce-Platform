@@ -63,7 +63,7 @@ const handleDelete = (row) => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">
-              Categpry Management
+              Category Management
             </h1>
             <p className="text-slate-500 mt-1">
               Manage Categories.

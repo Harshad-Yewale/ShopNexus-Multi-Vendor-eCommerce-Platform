@@ -26,6 +26,7 @@ import AdminProducts from './components/admin/products/AdminProducts'
 import Category from './components/admin/category/Category'
 import { setupInterceptors } from './api/api'
 import MyOrdersPage from './pages/myOrdersPage'
+import ProfilePage from './pages/ProfilePage'
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
           <Route path='/' element={<PrivateRoute />}>
             <Route path='/checkout' element={ cart.length > 0 ? <CheckoutPage />: <Navigate to='/cart' replace/>}/>
              <Route path='/profile/orders' element={<MyOrdersPage />} />
+             <Route path='/profile' element={<ProfilePage />} />
           </Route> 
 
           <Route element={<PrivateRoute adminOnly />}>
@@ -61,6 +63,7 @@ function App() {
                   <Route index element={<Dashboard />} />
                   <Route path="orders" element={<AdminOrders />} />
                   <Route path="products" element={<AdminProducts />} />
+                  <Route path="categories" element={<Category />} />
                   <Route path="sellers" element={<Sellers />} />
               </Route>
           </Route>

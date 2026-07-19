@@ -488,7 +488,7 @@ export const updateOrderStatusFromDashboard =
         setLoader(true);
             const { data } = await api.put(`/admin/orders/${orderId}/status`, { status: orderStatus});
             toast.success(data.message || "Order updated successfully");
-           // await dispatch(getOrdersForDashboard());
+            await dispatch(getOrdersForDashboard());
     } catch (error) {
         toast.error(getErrorMessage(error) || "Internal Server Error");
     } finally {
@@ -511,7 +511,7 @@ export const updateProductFromDashboard =
         reset();
         setLoader(false);
         setOpen(false);
-       dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
+       dispatch(fetchProductsForAdminAndSeller("",!isOnlySeller));
     } catch (error) {
         toast.error(getErrorMessage(error) || "Product update failed");
         setLoader(false)
@@ -533,7 +533,7 @@ export const addProductFromDashboard =
         reset();
         setLoader(false);
         setOpen(false);
-        dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
+        dispatch(fetchProductsForAdminAndSeller("",!isOnlySeller));
     } catch (error) {
         toast.error(getErrorMessage(error)|| "add product failed");
         setLoader(false);
@@ -552,7 +552,7 @@ export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal,is
         }
         toast.success("Product deleted successfully");
         setLoader(false)
-        dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
+        dispatch(fetchProductsForAdminAndSeller("",!isOnlySeller));
         setOpenDeleteModal(false)
     } catch (error) {
         console.log(error);
@@ -574,7 +574,7 @@ export const updateProductImageFromDashboard =  (formData, productId, toast, set
         toast.success("Image upload successful");
         setLoader(false);
         setOpen(false);
-        dispatch(fetchProductsForAdminAndSeller(!isOnlySeller));
+        dispatch(fetchProductsForAdminAndSeller("",!isOnlySeller));
     } catch (error) {
         toast.error(getErrorMessage(error) || "Product Image upload failed");
         setLoader(false)

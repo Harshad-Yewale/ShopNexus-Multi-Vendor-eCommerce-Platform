@@ -29,9 +29,11 @@ const useOrderFilter = (user) => {
 
     if(isAdmin){
         dispatch(getOrdersForDashboard(params.toString()));
+        dispatch(getUserOrders(params.toString()));
     }
     else if(isSeller){
         dispatch(getOrdersBySellerForDashboard(params.toString()));
+        dispatch(getUserOrders(params.toString()));
     }
     else{
         dispatch(getUserOrders(params.toString()));

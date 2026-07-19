@@ -54,6 +54,7 @@ useEffect(() => {
               ...data,
             };
          dispatch(addProductFromDashboard(categoryId,sendData, toast, reset, setLoader, setOpen,isOnlySeller))
+        
         } else {
             const sendData = {
                 ...data,
