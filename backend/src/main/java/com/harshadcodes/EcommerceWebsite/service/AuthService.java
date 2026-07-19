@@ -16,5 +16,7 @@ public interface AuthService {
 
     String addUser(addOrUpdateUserRequest userRequest);
 
-    String updateUser(Long userId, @Valid addOrUpdateUserRequest userRequest);
+    String updateUserRole(Long userId, @Valid addOrUpdateUserRequest userRequest);
+
+    String updateUserUsername(@Valid addOrUpdateUserRequest userRequest);
 }

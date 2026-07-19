@@ -9,6 +9,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +31,8 @@ public class UserDetailsImpl implements org.springframework.security.core.userde
     @NotBlank
     private String email;
 
+    private LocalDateTime createdAt;
+
     @JsonIgnore
     @NotBlank
     private String password;
@@ -37,10 +40,11 @@ public class UserDetailsImpl implements org.springframework.security.core.userde
     private Collection<? extends  GrantedAuthority> authorities;
 
 
-    public UserDetailsImpl(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String username, String email, LocalDateTime createdAt, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.createdAt = createdAt;
         this.password = password;
         this.authorities = authorities;
     }
@@ -56,6 +60,7 @@ public class UserDetailsImpl implements org.springframework.security.core.userde
         return new UserDetailsImpl(user.getId()
                 ,user.getUsername()
                 ,user.getEmail()
+                ,user.getCreatedAt()
                 , user.getPassword()
                 ,authorities);
     }

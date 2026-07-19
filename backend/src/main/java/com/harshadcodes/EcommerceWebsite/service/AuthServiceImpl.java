@@ -10,6 +10,7 @@ import com.harshadcodes.EcommerceWebsite.repositories.RoleRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.UserRepository;
 import com.harshadcodes.EcommerceWebsite.security.jwt.JwtUtils;
 import com.harshadcodes.EcommerceWebsite.security.services.UserDetailsImpl;
+import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
 import com.harshadcodes.EcommerceWebsite.utils.PaginationUtility;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
+    private final AuthUtils authUtils;
 
     @Override
     public UserInfoResponse SignIn(LoginRequest loginRequest) {
@@ -59,7 +61,7 @@ public class AuthServiceImpl implements AuthService{
                 .collect(Collectors.toList());
 
         return new  UserInfoResponse(userDetails.getId(),
-                userDetails.getUsername(), roles,cookie.toString());
+                userDetails.getUsername(),userDetails.getEmail(),userDetails.getCreatedAt(), roles,cookie.toString());
     }
 
     @Override
@@ -179,7 +181,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String updateUser(Long userId, addOrUpdateUserRequest userRequest) {
+    public String updateUserRole(Long userId, addOrUpdateUserRequest userRequest) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
@@ -211,5 +213,18 @@ public class AuthServiceImpl implements AuthService{
         user.setUserRoles(roles);
         userRepository.save(user);
         return "Updated successfully";
+    }
+
+    @Override
+    public String updateUserUsername(addOrUpdateUserRequest userRequest) {
+        String email=authUtils.getLoggedinEmail();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new ResourceNotFoundException("User","email",email));
+
+        user.setUsername(userRequest.username());
+        userRepository.save(user);
+        return "Username Updated successfully";
+
     }
 }

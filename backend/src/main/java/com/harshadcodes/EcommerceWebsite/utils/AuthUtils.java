@@ -18,6 +18,7 @@ public class AuthUtils {
     public String getLoggedinEmail(){
 
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication);
 
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(()-> {
@@ -40,6 +41,7 @@ public class AuthUtils {
 
     public User  getLoggedinUser(){
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        assert authentication != null;
         User user=userRepository.findByUsername(authentication.getName())
                 .orElseThrow(()-> {
             return new ResourceNotFoundException("User","username", authentication.getName());

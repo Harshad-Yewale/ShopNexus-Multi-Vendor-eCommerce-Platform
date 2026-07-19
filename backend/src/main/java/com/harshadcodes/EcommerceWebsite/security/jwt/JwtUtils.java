@@ -69,7 +69,7 @@ public class JwtUtils {
 
     public String generateToken(UserDetailsImpl user){
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(String.valueOf(user.getId()))
                 .claim("roles",user.getAuthorities().toString())
                 .claim("email",user.getEmail())
                 .issuedAt(new Date())
@@ -95,19 +95,18 @@ public class JwtUtils {
                 .getPayload();
     }
 
-    public String extractUsernameFromToken(String token){
-        return extractAllClaims(token).getSubject();
+    public Long extractUserIdFromToken(String token){
+        return Long.valueOf(extractAllClaims(token).getSubject());
     }
 
-
-    public boolean validateToken(String token,UserDetailsImpl userDetails){
+    public boolean validateToken(String token){
 
         try {
             Claims claims=extractAllClaims(token);
-            String username = claims.getSubject();
+            Long userId = Long.valueOf(claims.getSubject());
             Date expirationDate=claims.getExpiration();
 
-            if(username !=null && expirationDate.after(new Date())){
+            if(userId !=null && expirationDate.after(new Date())){
                 return true;
             }
         }
