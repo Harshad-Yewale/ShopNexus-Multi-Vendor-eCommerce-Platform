@@ -20,7 +20,6 @@ const AdminProducts = () => {
   const {user} = useSelector((state)=>state.auth);
   const isOnlySeller = user?.roles?.includes("ROLE_SELLER") && !user?.roles?.includes("ROLE_ADMIN");
 
-  console.log(isOnlySeller)
   const dispatch = useDispatch();
  
   const [currentPage, setCurrentPage] = useState(

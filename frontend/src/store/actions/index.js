@@ -750,6 +750,29 @@ export const getUserOrders = (queryString) => async (dispatch) => {
 };
 
 
+export const updateUsername = (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+    try {
+        setLoader(true);
+        await api.put(`/auth/public/update/username`, sendData);
+        reset();
+        setLoader(false);
+        dispatch({
+            type: "UPDATE_USER",
+            payload: {
+                username: sendData.username,
+            },
+        });
+        toast.success(`username updated Successfully`);
+        setOpen(false);
+    } catch (error) {
+        console.log(error)
+        toast.error(getErrorMessage(error));
+        setLoader(false);
+     
+    }
+};
+
+
 
 
 

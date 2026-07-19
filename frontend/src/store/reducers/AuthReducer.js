@@ -18,6 +18,15 @@ export const authReducer = (state = initialState, action) => {
             };
         case "USER_ADDRESS":
             return { ...state, address: action.payload };
+        
+        case "UPDATE_USER":
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    ...action.payload,
+                },
+            };
 
         case "SELECT_CHECKOUT_ADDRESS":
             return { ...state, selectedUserCheckoutAddress: action.payload };

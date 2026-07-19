@@ -78,18 +78,18 @@ export const OrderCard = ({ order }) => {
             className="flex items-center gap-5 p-5"
           >
             <img
-              src={item.product.productImage}
-              alt={item.product.productName}
+              src={item.productImage}
+              alt={item.productName}
               className="h-24 w-24 rounded-lg border object-contain"
             />
 
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-slate-800">
-                {item.product.productName}
+                {item.productName}
               </h3>
 
               <p className="mt-1 text-sm text-slate-500 line-clamp-2">
-                {item.product.productDescription}
+                {item.productDescription}
               </p>
 
               <div className="mt-3 flex flex-wrap gap-6 text-sm text-slate-600">
@@ -107,11 +107,11 @@ export const OrderCard = ({ order }) => {
 
             <div className="text-right">
               <p className="text-lg font-bold text-slate-800">
-                ₹{item.product.productDiscountedPrice.toFixed(2)}
+                ₹{item.productDiscountedPrice}
               </p>
 
               <p className="text-sm text-slate-400 line-through">
-                ₹{item.product.productPrice.toFixed(2)}
+                ₹{item.productPrice}
               </p>
             </div>
           </div>

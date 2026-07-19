@@ -1,16 +1,20 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Modal from "../shared/Modal";
 import InputField from "../shared/InputField";
+import { updateUsername } from "../../store/actions";
+import toast from "react-hot-toast";
 
-const EditUsernameModal = ({ open, setOpen }) => {
+const EditUsernameModal = ({ open, setOpen, loader, setLoader }) => {
     const user = useSelector((state) => state.auth.user);
+    const dispatch = useDispatch();
 
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -19,11 +23,8 @@ const EditUsernameModal = ({ open, setOpen }) => {
     });
 
     const submitHandler = (data) => {
-        console.log(data);
-
-        // Dispatch update username action here
-
-        // dispatch(updateUsername(data));
+        
+        dispatch(updateUsername(data,toast,reset,setLoader,setOpen));
 
         setOpen(false);
     };

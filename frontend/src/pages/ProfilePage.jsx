@@ -14,6 +14,7 @@ const ProfilePage = () => {
   const [openUsernameModal, setOpenUsernameModal] = useState(false);
   const [openEmailModal, setOpenEmailModal] = useState(false);
   const [openPasswordModal, setOpenPasswordModal] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   if (!user) {
     return (
@@ -208,6 +209,8 @@ const ProfilePage = () => {
      <EditUsernameModal
         open={openUsernameModal}
         setOpen={setOpenUsernameModal}
+        loader={loader}
+        setLoader={setLoader}
       />
 
       {/* <EditEmailModal
