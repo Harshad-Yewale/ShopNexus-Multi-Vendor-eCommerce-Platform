@@ -101,8 +101,8 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setProductDescription(cartItem.getProduct().getProductDescription());
             orderItem.setSellerId(cartItem.getProduct().getUser().getId());
             orderItem.setOrderItemQuantity(cartItem.getQuantity());
-            orderItem.setDiscount(cartItem.getDiscount());
-            orderItem.setDiscountedPrice(cartItem.getDiscountedPrice());
+            orderItem.setDiscount(cartItem.getProduct().getProductDiscount());
+            orderItem.setProductDiscountedPrice(cartItem.getProduct().getProductDiscountedPrice());
             orderItems.add(orderItem);
         }
 
@@ -113,8 +113,7 @@ public class OrderServiceImpl implements OrderService {
         orderDTO.setOrderItems(new ArrayList<>());
         orderItems.forEach(orderItem ->{
             OrderItemDTO orderItemDTO = modelMapper.map(orderItem, OrderItemDTO.class);
-            orderItemDTO.setOrderedProductPrice(orderItem.getDiscountedPrice());
-            orderItemDTO.setOrderedProductPrice(orderItem.getDiscountedPrice());
+            orderItemDTO.setProductDiscountedPrice(orderItem.getProductDiscountedPrice());
             orderDTO.getOrderItems().add(orderItemDTO);
             return;
                 });

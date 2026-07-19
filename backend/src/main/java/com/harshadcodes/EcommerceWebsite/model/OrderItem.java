@@ -18,7 +18,7 @@ public class OrderItem {
 
     private Double discount;
     private Integer orderItemQuantity;
-    private Double discountedPrice;
+    private Double productDiscountedPrice;
 
     private Long productId;
 

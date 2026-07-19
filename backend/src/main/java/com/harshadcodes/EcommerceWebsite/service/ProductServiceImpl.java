@@ -215,11 +215,10 @@ public class ProductServiceImpl implements ProductService{
         if (!isAdmin && !product.getUser().getId().equals(user.getId())) {
             throw new AccessDeniedException("You can only delete your own products.");
         }
-        productRepository.delete(product);
 
         List<Cart>carts=cartRepository.findCartsByProductId(productId);
         carts.forEach(cart -> cartService.deleteCartItem(productId,cart.getCartId()));
-
+        productRepository.delete(product);
 
         ProductDTO productDTO=modelMapper.map(product, ProductDTO.class);
         productDTO.setProductDiscountedPrice(product.getProductDiscountedPrice());

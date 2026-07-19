@@ -215,7 +215,9 @@ public class CartServiceImpl implements CartService{
 
         cart.setTotalPrice(updatedTotalPrice);
 
-        cartItemRepository.deleteCartItemByProductIdAndCartId(productId,cartId);
+        savedCartItem.getCart().getCartItems().remove(savedCartItem);
+        savedCartItem.getProduct().getProducts().remove(savedCartItem);
+        cartItemRepository.delete(savedCartItem);
 
         return "Product "+savedCartItem.getProduct().getProductName()+" deleted from the cart";
 
