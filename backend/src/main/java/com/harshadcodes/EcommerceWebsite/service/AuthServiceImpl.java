@@ -162,7 +162,7 @@ public class AuthServiceImpl implements AuthService{
         if(userRepository.existsByUsername(userRequest.username())){
             throw new ResourceAlreadyExistException("User","username",userRequest.username());
         }
-        String encodedPassword=passwordEncoder.encode(userRequest.password());
+        String encodedPassword=passwordEncoder.encode(userRequest.currentPassword());
         User savedUser=new User(userRequest.username(),userRequest.email(),encodedPassword);
 
         Set<Role> roles=new HashSet<>();
@@ -202,7 +202,7 @@ public class AuthServiceImpl implements AuthService{
             Role sellerRole = roleRepository.findByRole(AppRole.ROLE_SELLER).orElseThrow(() -> new ResourceNotFoundException("Role", "role", AppRole.ROLE_SELLER.name()));
             roles.add(sellerRole);
         }
-        String password = userRequest.password();
+        String password = userRequest.currentPassword();
 
         if (password != null && !password.isBlank() && password.length() >= 6) {
             user.setPassword(passwordEncoder.encode(password));
@@ -226,5 +226,27 @@ public class AuthServiceImpl implements AuthService{
         userRepository.save(user);
         return "Username Updated successfully";
 
+    }
+
+    @Override
+    public String updateUserPassword(addOrUpdateUserRequest userRequest) throws Exception {
+        String email=authUtils.getLoggedinEmail();
+
+        User user= userRepository.findByEmail(email)
+                .orElseThrow(()->new ResourceNotFoundException("User","email",email));
+
+        if (!passwordEncoder.matches(userRequest.currentPassword(), user.getPassword())) {
+            throw new Exception("Invalid current password. Please enter the correct current password.");
+        }
+
+        if (passwordEncoder.matches(userRequest.newPassword(), user.getPassword())) {
+            throw new Exception("New password must be different from the current password.");
+        }
+
+        String encodedNewPassword= passwordEncoder.encode(userRequest.newPassword());
+        user.setPassword(encodedNewPassword);
+        userRepository.save(user);
+
+        return "Password Updated successfully";
     }
 }

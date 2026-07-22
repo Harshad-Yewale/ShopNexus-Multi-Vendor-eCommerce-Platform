@@ -70,6 +70,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PutMapping("/public/update/password")
+    public ResponseEntity<String> updatePassword(@Valid @RequestBody addOrUpdateUserRequest userRequest) throws Exception {
+        String response = authService.updateUserPassword(userRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
 
 
 

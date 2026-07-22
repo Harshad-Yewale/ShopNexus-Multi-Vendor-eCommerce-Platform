@@ -45,7 +45,7 @@ public class ProductController {
 
 @GetMapping({
         "/admin/products",
-        "/sellers/products"
+        "/seller/products"
 })
     public ResponseEntity<ProductResponse> getAllProductsForAdminAndSeller(
             @RequestParam(name = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,

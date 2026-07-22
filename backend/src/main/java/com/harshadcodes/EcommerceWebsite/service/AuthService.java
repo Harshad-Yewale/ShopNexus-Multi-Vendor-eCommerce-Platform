@@ -19,4 +19,6 @@ public interface AuthService {
     String updateUserRole(Long userId, @Valid addOrUpdateUserRequest userRequest);
 
     String updateUserUsername(@Valid addOrUpdateUserRequest userRequest);
+
+    String updateUserPassword(@Valid addOrUpdateUserRequest userRequest) throws Exception;
 }
