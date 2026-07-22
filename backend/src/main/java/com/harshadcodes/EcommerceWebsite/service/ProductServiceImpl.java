@@ -8,18 +8,17 @@ import com.harshadcodes.EcommerceWebsite.model.Category;
 import com.harshadcodes.EcommerceWebsite.model.Product;
 import com.harshadcodes.EcommerceWebsite.model.User;
 import com.harshadcodes.EcommerceWebsite.payload.CartDTO;
+import com.harshadcodes.EcommerceWebsite.payload.CloudinaryImageResponse;
 import com.harshadcodes.EcommerceWebsite.payload.ProductDTO;
 import com.harshadcodes.EcommerceWebsite.payload.ProductResponse;
 import com.harshadcodes.EcommerceWebsite.repositories.CartRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.CategoryRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.ProductRepository;
 import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
-import com.harshadcodes.EcommerceWebsite.utils.InsertImageUrl;
 import com.harshadcodes.EcommerceWebsite.utils.PaginationUtility;
 import com.harshadcodes.EcommerceWebsite.utils.specifications.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,10 +42,6 @@ public class ProductServiceImpl implements ProductService{
     private final CartService cartService;
     private final CartRepository cartRepository;
     private final AuthUtils authUtils;
-    private final InsertImageUrl insertImageUrl;
-
-    @Value("${product.image}")
-    private String path;
 
     @Override
     public ProductDTO saveProduct(ProductDTO productDTO, Long categoryId) {
@@ -237,9 +232,14 @@ public class ProductServiceImpl implements ProductService{
             throw new AccessDeniedException("You can only update your own products.");
         }
 
-        String fileName=filesService.uploadImage(path,file);
+        if(productFromDb.getProductImagePublicId()!=null){
+            filesService.deleteImage(productFromDb.getProductImagePublicId());
+        }
 
-        productFromDb.setProductImage(fileName);
+        CloudinaryImageResponse uploadedImage = filesService.uploadImage(file);
+        productFromDb.setProductImage(uploadedImage.imageUrl());
+        productFromDb.setProductImagePublicId(uploadedImage.publicId());
+
         Product savedProduct=productRepository.save(productFromDb);
         return modelMapper.map(savedProduct,ProductDTO.class);
     }
@@ -256,8 +256,7 @@ public class ProductServiceImpl implements ProductService{
         List<ProductDTO> productDTOS = productPage.getContent().stream().map(product ->
         {
             ProductDTO dto = modelMapper.map(product, ProductDTO.class);
-            dto.setProductImage(insertImageUrl.constructImageUrl(product.getProductImage()));
-            dto.setProductDiscountedPrice(product.getProductDiscountedPrice());
+             dto.setProductDiscountedPrice(product.getProductDiscountedPrice());
             return dto;
         }).toList();
         return new ProductResponse(

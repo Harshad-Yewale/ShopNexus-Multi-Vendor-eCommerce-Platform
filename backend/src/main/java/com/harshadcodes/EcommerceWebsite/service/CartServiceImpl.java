@@ -10,7 +10,6 @@ import com.harshadcodes.EcommerceWebsite.repositories.CartItemRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.CartRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.ProductRepository;
 import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
-import com.harshadcodes.EcommerceWebsite.utils.InsertImageUrl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,7 +32,6 @@ public class CartServiceImpl implements CartService{
     private final Logger logger= LoggerFactory.getLogger(CartServiceImpl.class);
 
     private final AuthUtils authUtils;
-    private final InsertImageUrl insertImageUrl;
 
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) throws Exception {
@@ -101,7 +99,6 @@ public class CartServiceImpl implements CartService{
                     .map(item-> {
                         ProductDTO dto=modelMapper.map(item.getProduct(),ProductDTO.class);
                         dto.setProductQuantity(item.getQuantity());
-                        dto.setProductImage(insertImageUrl.constructImageUrl(item.getProduct().getProductImage()));
                         return dto;
                     }).collect(Collectors.toList());
             cartDTO.setProductDTOs(productDTOS);
@@ -128,7 +125,6 @@ public class CartServiceImpl implements CartService{
                 .map(item -> {
                     ProductDTO dto = modelMapper.map(item.getProduct(), ProductDTO.class);
                     dto.setQuantity(item.getQuantity()); // cart quantity, not stock quantity
-                    dto.setProductImage(insertImageUrl.constructImageUrl(item.getProduct().getProductImage()));
                     return dto;
                 })
                 .toList();

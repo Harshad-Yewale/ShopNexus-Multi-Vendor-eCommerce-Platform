@@ -5,10 +5,8 @@ import com.harshadcodes.EcommerceWebsite.model.*;
 import com.harshadcodes.EcommerceWebsite.payload.OrderDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderItemDTO;
 import com.harshadcodes.EcommerceWebsite.payload.OrderResponse;
-import com.harshadcodes.EcommerceWebsite.payload.ProductDTO;
 import com.harshadcodes.EcommerceWebsite.repositories.*;
 import com.harshadcodes.EcommerceWebsite.utils.AuthUtils;
-import com.harshadcodes.EcommerceWebsite.utils.InsertImageUrl;
 import com.harshadcodes.EcommerceWebsite.utils.specifications.OrderSpecifications;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
-    private final InsertImageUrl insertImageUrl;
 
 
     @Transactional
@@ -171,14 +168,8 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderDTO> orderDTOs =pageOrders.getContent()
                 .stream()
-                .map(order -> {
-                    OrderDTO dto = modelMapper.map(order, OrderDTO.class);
-
-                    dto.getOrderItems().forEach(item -> {
-                        item.setProductImage(insertImageUrl.constructImageUrl(item.getProductImage()));
-                        });
-                    return dto;
-                })
+                .map(order -> modelMapper.map(order, OrderDTO.class)
+                )
                 .toList();
         return new OrderResponse(
                 orderDTOs,
@@ -212,14 +203,8 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderDTO> orderDTOs =pageOrders.getContent()
                 .stream()
-                .map(order -> {
-                    OrderDTO dto = modelMapper.map(order, OrderDTO.class);
-
-                    dto.getOrderItems().forEach(item -> {
-                        item.setProductImage(insertImageUrl.constructImageUrl(item.getProductImage()));
-                    });
-                    return dto;
-                }).toList();
+                .map(order ->  modelMapper.map(order, OrderDTO.class)
+                ).toList();
 
         return new OrderResponse(
                 orderDTOs,

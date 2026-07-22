@@ -33,8 +33,11 @@ public class Product {
     @Column(length = 2000)
     private String productDescription;
 
-    @Column(length = 2000)
+    @Column(length = 1000)
     private String productImage;
+
+    @Column(length = 500)
+    private String productImagePublicId;
 
     @NotNull
     @Min(0)
