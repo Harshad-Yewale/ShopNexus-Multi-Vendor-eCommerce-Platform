@@ -221,6 +221,8 @@ const ProfilePage = () => {
       <ChangePasswordModal
         open={openPasswordModal}
         setOpen={setOpenPasswordModal}
+        loader={loader}
+        setLoader={setLoader}
       /> 
     </>
   );

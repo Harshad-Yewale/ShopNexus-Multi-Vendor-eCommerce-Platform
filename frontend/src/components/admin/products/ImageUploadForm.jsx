@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaCloudUploadAlt, FaTrashAlt } from "react-icons/fa";
 import { Button } from "@mui/material";
 import toast from "react-hot-toast";
@@ -49,6 +49,33 @@ const ImageUploadForm = ({ setOpen, product, isOnlySeller }) => {
 
         dispatch(updateProductImageFromDashboard(formData, product.id, toast, setLoader, setOpen,isOnlySeller));
     };
+
+    useEffect(() => {
+
+        const handlePaste = (e) => {
+
+                console.log("Paste event fired");
+                const items = e.clipboardData.items;
+                for (const item of items) {
+                    if (item.type.startsWith("image")) {
+                        const file = item.getAsFile();
+                        if ( file &&
+                            ["image/jpeg", "image/jpg", "image/png"].includes(file.type)
+                        ) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                setPreviewImage(reader.result);
+                            };
+                            reader.readAsDataURL(file);
+                            setSelectedFile(file);
+                        }
+                        break;
+                    }
+                }
+            };
+        window.addEventListener("paste", handlePaste);
+        return () =>window.removeEventListener("paste", handlePaste);
+    }, []);
 
   return (
     <div className="p-6 h-full">

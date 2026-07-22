@@ -3,24 +3,26 @@ import { useForm } from "react-hook-form";
 
 import Modal from "../shared/Modal";
 import InputField from "../shared/InputField";
-const ChangePasswordModal = ({ open, setOpen }) => {
+import { updatePassword } from "../../store/actions";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+const ChangePasswordModal = ({ open, setOpen,loader,setLoader }) => {
     const {
         register,
         handleSubmit,
         watch,
+        reset,
         formState: { errors },
     } = useForm();
+    const dispatch = useDispatch();
 
     const newPassword = watch("newPassword");
 
     const submitHandler = (data) => {
         console.log(data);
 
-        // Dispatch change password action here
 
-        // dispatch(changePassword(data));
-
-        setOpen(false);
+        dispatch(updatePassword(data,toast,reset,setLoader,setOpen));
     };
 
     return (

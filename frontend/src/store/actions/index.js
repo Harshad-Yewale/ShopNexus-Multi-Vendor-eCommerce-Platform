@@ -765,10 +765,29 @@ export const updateUsername = (sendData, toast, reset, setLoader, setOpen) => as
         toast.success(`username updated Successfully`);
         setOpen(false);
     } catch (error) {
-        console.log(error)
         toast.error(getErrorMessage(error));
         setLoader(false);
      
+    }
+};
+export const updatePassword = (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
+    try {
+        setLoader(true);
+        await api.put(`/auth/public/update/password`, sendData);
+        reset();
+        setLoader(false);
+        dispatch({
+            type: "UPDATE_USER",
+            payload: {
+                username: sendData.username,
+            },
+        });
+        toast.success(`password updated Successfully`);
+        setOpen(false);
+    } catch (error) {
+        console.log(error)
+        toast.error(getErrorMessage(error));
+        setLoader(false);
     }
 };
 

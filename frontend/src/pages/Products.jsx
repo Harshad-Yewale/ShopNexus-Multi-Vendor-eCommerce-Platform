@@ -26,6 +26,8 @@ const Products = () => {
         dispatch(fetchCategories());
     }, [dispatch]);
 
+                            console.log(pagination);
+
     return (
        
         <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
@@ -83,7 +85,7 @@ const Products = () => {
                        
                     </div>
                      <div className ="flex justify-center pt-10">
-                                <Paginations numberOfPage = {pagination?.totalPages}/>
+                                <Paginations numberOfPages = {pagination?.totalPages}/>
                             </div>
                 </div>
                 

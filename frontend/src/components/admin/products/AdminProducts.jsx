@@ -158,6 +158,7 @@ const AdminProducts = () => {
 
               <button
                 className="flex items-center gap-2 rounded-lg bg-custom-blue px-5 py-3 text-white font-semibold hover:bg-blue-800 transition"
+                onClick={() => setOpenAddModal(true)}
               >
                 <MdAddShoppingCart />
                 Add Product
