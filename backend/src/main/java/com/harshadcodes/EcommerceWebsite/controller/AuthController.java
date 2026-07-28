@@ -77,6 +77,24 @@ public class AuthController {
     }
 
 
+    @PostMapping("/send-registration-otp")
+    public ResponseEntity<String> sendRegistrationOtp(
+            @Valid @RequestBody PendingRegistrationRequestDTO request) throws Exception {
+
+        authService.sendRegistrationOtp(request);
+
+        return ResponseEntity.ok("OTP sent successfully.");
+    }
+
+    @PostMapping("/verify-registration-otp")
+    public ResponseEntity<String> verifyRegistrationOtp(
+            @Valid @RequestBody VerifyUserRegistrationDTO request) throws Exception {
+
+        authService.verifyRegistrationOtp(request);
+
+        return ResponseEntity.ok("Registration completed successfully.");
+    }
+
 
 
 }

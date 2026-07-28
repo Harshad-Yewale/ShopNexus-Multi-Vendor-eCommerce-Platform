@@ -3,9 +3,11 @@ package com.harshadcodes.EcommerceWebsite.service;
 import com.harshadcodes.EcommerceWebsite.constants.AppRole;
 import com.harshadcodes.EcommerceWebsite.exceptions.ResourceAlreadyExistException;
 import com.harshadcodes.EcommerceWebsite.exceptions.ResourceNotFoundException;
+import com.harshadcodes.EcommerceWebsite.model.PendingUserRegistration;
 import com.harshadcodes.EcommerceWebsite.model.Role;
 import com.harshadcodes.EcommerceWebsite.model.User;
 import com.harshadcodes.EcommerceWebsite.payload.*;
+import com.harshadcodes.EcommerceWebsite.repositories.PendingUserRegistrationRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.RoleRepository;
 import com.harshadcodes.EcommerceWebsite.repositories.UserRepository;
 import com.harshadcodes.EcommerceWebsite.security.jwt.JwtUtils;
@@ -24,6 +26,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +45,8 @@ public class AuthServiceImpl implements AuthService{
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
     private final AuthUtils authUtils;
+    private final PendingUserRegistrationRepository pendingUserRegistrationRepository;
+    private final EmailService emailService;
 
     @Override
     public UserInfoResponse SignIn(LoginRequest loginRequest) {
@@ -222,6 +228,10 @@ public class AuthServiceImpl implements AuthService{
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()->new ResourceNotFoundException("User","email",email));
 
+        if(userRepository.existsByUsername(userRequest.username())){
+            throw new ResourceAlreadyExistException("User","username",userRequest.username());
+        }
+
         user.setUsername(userRequest.username());
         userRepository.save(user);
         return "Username Updated successfully";
@@ -248,5 +258,88 @@ public class AuthServiceImpl implements AuthService{
         userRepository.save(user);
 
         return "Password Updated successfully";
+    }
+
+    @Override
+    public void sendRegistrationOtp(PendingRegistrationRequestDTO request) throws Exception {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new Exception("Email is already registered.");
+        }
+
+        if (userRepository.existsByUsername(request.username())) {
+            throw new Exception("Username is already taken.");
+        }
+
+        String otp = String.valueOf(
+                100000 + new SecureRandom().nextInt(900000)
+        );
+
+        PendingUserRegistration pendingRegistration =
+                pendingUserRegistrationRepository.findByEmail(request.email())
+                        .orElse(new PendingUserRegistration());
+
+        pendingRegistration.setUsername(request.username());
+        pendingRegistration.setEmail(request.email());
+        pendingRegistration.setPassword(
+                passwordEncoder.encode(request.password())
+        );
+        pendingRegistration.setOtp(otp);
+        pendingRegistration.setOtpExpiry(
+                LocalDateTime.now().plusMinutes(15)
+        );
+
+        pendingUserRegistrationRepository.save(pendingRegistration);
+
+        emailService.sendVerifyOtp(
+                request.email(),
+                request.username(),
+                otp
+        );
+    }
+
+
+    @Override
+    public void verifyRegistrationOtp(VerifyUserRegistrationDTO request) throws Exception {
+
+        // Find pending registration
+        PendingUserRegistration pendingRegistration = pendingUserRegistrationRepository
+                .findByEmail(request.email())
+                .orElseThrow(() ->
+                        new Exception("No pending registration found for this email."));
+
+        // Check OTP expiry
+        if (pendingRegistration.getOtpExpiry().isBefore(LocalDateTime.now())) {
+            pendingUserRegistrationRepository.delete(pendingRegistration);
+            throw new Exception("OTP has expired. Please register again.");
+        }
+
+        // Verify OTP
+        if (!pendingRegistration.getOtp().equals(request.otp())) {
+            throw new Exception("Invalid OTP.");
+        }
+
+        // Create User
+        User user = new User();
+
+        user.setUsername(pendingRegistration.getUsername());
+        user.setEmail(pendingRegistration.getEmail());
+        user.setPassword(pendingRegistration.getPassword());
+
+        Role role = roleRepository.findByRole(AppRole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setUserRoles(roles);
+
+        userRepository.save(user);
+
+        // Delete Pending Registration
+        pendingUserRegistrationRepository.delete(pendingRegistration);
+
+        // Send Welcome Email (Optional)
+        emailService.sendWelcomeMail(
+                user.getEmail(),
+                user.getUsername()
+        );
     }
 }
