@@ -13,12 +13,12 @@ const InputField = ({
     minLengthMessage,
     value,
     placeholder,
-    ReadOnly
+    readOnly
 }) => {
     return (
         <div className="flex flex-col gap-1 w-full">
             <label
-                htmlFor="id"
+                htmlFor={id}
                 className={`${
                     className ? className : ""
                 } font-semibold text-sm text-slate-800`}>
@@ -28,7 +28,7 @@ const InputField = ({
                 type={type}
                 id={id}
                 placeholder={placeholder}
-                readOnly={ReadOnly}
+                readOnly={readOnly}
                  onKeyDown={(e) => {
                         if (e.key === "Enter") {
                             e.preventDefault();

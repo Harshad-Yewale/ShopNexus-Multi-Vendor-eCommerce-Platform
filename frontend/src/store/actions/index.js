@@ -254,11 +254,40 @@ export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => 
             toast.success(data?.message || "User Registered Successfully");
             navigate("/login");
         } catch (error) {
-            console.log(error);
             toast.error(getErrorMessage(error) || error?.response?.data?.password || "Internal Server Error");
         } finally {
             setLoader(false);
         }
+};
+
+export const sendRegistrationOtp = (data,setLoader,toast,setRegistrationData,setStep) => async () => {
+    try{
+        console.log("hit");
+        setLoader(true);
+        const response = await api.post(`/auth/send-registration-otp`,data);
+        toast.success("otp sent successfully");
+        setRegistrationData(data);
+        setStep("VERIFY");
+    }
+    catch(error){
+        toast.error(getErrorMessage(error)|| "unable to send otp");
+    }
+    finally{
+        setLoader(false);
+    }
+};
+
+export const verifyRegistrationOtp = ( data, setLoader, toast, navigate) => async () => {
+    try {
+        setLoader(true);
+        await api.post("/auth/verify-registration-otp", data);
+        toast.success("Registration completed successfully.");
+        navigate("/login");
+    } catch (error) {
+        toast.error(getErrorMessage(error) || "OTP verification failed.");
+    } finally {
+        setLoader(false);
+    }
 };
 
 export const logOutUser = (navigate) => (dispatch) => {
@@ -762,6 +791,11 @@ export const updateUsername = (sendData, toast, reset, setLoader, setOpen) => as
                 username: sendData.username,
             },
         });
+        const auth = JSON.parse(localStorage.getItem("auth"));
+        if (auth) {
+            auth.username = sendData.username;
+            localStorage.setItem("auth", JSON.stringify(auth));
+        }
         toast.success(`username updated Successfully`);
         setOpen(false);
     } catch (error) {

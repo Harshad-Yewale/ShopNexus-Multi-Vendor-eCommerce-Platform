@@ -13,13 +13,6 @@ const initialState = {
 export const productReducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case "IS_FETCHING":
-            return {
-                ...state,
-                isLoading: true,
-                errorMessage: null,
-            };
-
         case "FETCH_PRODUCTS":
             return {
                 ...state,
@@ -78,20 +71,6 @@ export const productReducer = (state = initialState, action) => {
                     p => p.productId !== action.payload
                 ),
             };
-        case "IS_SUCCESS":
-            return {
-                ...state,
-                isLoading: false,
-                errorMessage: null,
-            };
-
-        case "IS_ERROR":
-            return {
-                ...state,
-                isLoading: false,
-                errorMessage: action.payload,
-            };
-
         default:
             return state;
     }
