@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -93,6 +94,14 @@ public class AuthController {
         authService.verifyRegistrationOtp(request);
 
         return ResponseEntity.ok("Registration completed successfully.");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserInfoResponse> me(Authentication authentication) throws Exception {
+
+      UserInfoResponse response = authService.getCurrentUser(authentication);
+
+        return ResponseEntity.ok(response);
     }
 
 

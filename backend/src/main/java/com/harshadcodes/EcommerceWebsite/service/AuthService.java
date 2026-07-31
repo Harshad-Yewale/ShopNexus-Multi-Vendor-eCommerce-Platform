@@ -3,6 +3,7 @@ package com.harshadcodes.EcommerceWebsite.service;
 import com.harshadcodes.EcommerceWebsite.payload.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.Authentication;
 
 public interface AuthService {
 
@@ -25,4 +26,6 @@ public interface AuthService {
     public void sendRegistrationOtp(PendingRegistrationRequestDTO request) throws Exception;
 
     public void verifyRegistrationOtp(VerifyUserRegistrationDTO request)throws Exception;
+
+    UserInfoResponse getCurrentUser(Authentication authentication) throws Exception;
 }

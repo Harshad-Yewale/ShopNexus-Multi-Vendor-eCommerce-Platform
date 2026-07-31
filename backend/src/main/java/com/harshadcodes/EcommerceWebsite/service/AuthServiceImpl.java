@@ -342,4 +342,23 @@ public class AuthServiceImpl implements AuthService{
                 user.getUsername()
         );
     }
+
+    @Override
+    public UserInfoResponse getCurrentUser(Authentication authentication) throws Exception {
+        UserDetailsImpl userDetails =
+                (UserDetailsImpl) authentication.getPrincipal();
+
+        assert userDetails != null;
+        User user = userRepository.findById(userDetails.getId())
+                .orElseThrow(()-> new Exception("User not logged In"));
+
+        return new UserInfoResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUserRoles().stream().map(role -> role.getRole().name()).toList(),
+                null
+        );
+    }
 }

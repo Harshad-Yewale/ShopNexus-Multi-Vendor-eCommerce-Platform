@@ -75,6 +75,20 @@ public class User {
     )
     private List<Address> addresses=new ArrayList<>();
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SellerApplication> applications=new ArrayList<>();
+
+    //seller
+    private String businessName;
+
+    @Column(length = 2000)
+    private String businessDescription;
+
+    private String businessAddress;
+
+    private String csNumber;
+
 
     public User(String username, String email, String password) {
         this.username = username;

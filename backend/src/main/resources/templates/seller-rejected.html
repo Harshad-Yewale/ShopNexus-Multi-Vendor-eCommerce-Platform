@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Application Update</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">
+
+<div style="max-width:600px;margin:40px auto;background:white;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.1);">
+
+    <div style="background:#dc2626;padding:30px;text-align:center;color:white;">
+        <h1 style="margin:0;">Seller Application Update</h1>
+    </div>
+
+    <div style="padding:35px;">
+
+        <p>Hello <strong>{{name}}</strong>,</p>
+
+        <p>
+            Thank you for applying to become a seller on
+            <strong>{{appName}}</strong>.
+        </p>
+
+        <p>
+            After carefully reviewing your application for
+            <strong>{{businessName}}</strong>, we are unable to approve it at
+            this time.
+        </p>
+
+        <div style="background:#fef2f2;padding:18px;border-left:5px solid #dc2626;border-radius:5px;margin:25px 0;">
+
+            <strong>Admin Remarks</strong>
+
+            <p style="margin-top:10px;">
+                {{adminRemarks}}
+            </p>
+
+        </div>
+
+        <p>
+            Don't worry—this doesn't necessarily mean you can't become a seller.
+            Please review the remarks above, make the necessary improvements,
+            and submit a new application whenever you're ready.
+        </p>
+
+        <div style="background:#f9fafb;padding:18px;border-radius:6px;margin:30px 0;">
+
+            <p style="margin:0;font-weight:bold;color:#333;">
+                Need Assistance?
+            </p>
+
+            <p style="margin:10px 0 0;color:#555;">
+                If you have any questions regarding your application or believe this
+                decision was made in error, please feel free to contact our support team.
+            </p>
+
+            <p style="margin-top:15px;">
+                📧 <strong>Email:</strong>
+                <a href="mailto:{{supportEmail}}" style="color:#2563eb;text-decoration:none;">
+                    {{supportEmail}}
+                </a>
+            </p>
+
+        </div>
+
+        <p>
+            We appreciate your interest in joining the ShopNexus marketplace and
+            hope to receive your application again in the future.
+        </p>
+
+        <br>
+
+        <p>
+            Regards,<br>
+            <strong>Team {{appName}}</strong>
+        </p>
+
+    </div>
+
+    <div style="background:#f8f8f8;padding:18px;text-align:center;font-size:12px;color:#666;">
+        © {{year}} {{appName}}. All rights reserved.
+    </div>
+
+</div>
+
+</body>
+</html>

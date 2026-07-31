@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Application Approved</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;">
+
+<div style="max-width:600px;margin:40px auto;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+
+    <div style="background:#16a34a;padding:30px;text-align:center;color:white;">
+        <h1 style="margin:0;">🎉 Congratulations!</h1>
+        <p style="margin-top:10px;">Your Seller Application Has Been Approved</p>
+    </div>
+
+    <div style="padding:35px;">
+
+        <p>Hello <strong>{{name}}</strong>,</p>
+
+        <p>
+            We are excited to inform you that your seller application for
+            <strong>{{businessName}}</strong> has been successfully approved.
+        </p>
+
+        <p>
+            You are now an official seller on
+            <strong>{{appName}}</strong> and can start listing your products,
+            managing inventory, and growing your business.
+        </p>
+
+        <div style="background:#f0fdf4;padding:18px;border-left:5px solid #16a34a;border-radius:5px;margin:25px 0;">
+
+            <strong>Admin Remarks</strong>
+
+            <p style="margin-top:10px;">
+                {{adminRemarks}}
+            </p>
+
+        </div>
+
+        <p>
+            We wish you great success and look forward to helping your business
+            reach more customers.
+        </p>
+
+        <div style="text-align:center;margin:35px 0;">
+            <a href="{{dashboardUrl}}"
+               style="background:#16a34a;color:white;text-decoration:none;padding:14px 28px;border-radius:6px;display:inline-block;">
+                Go to Seller Dashboard
+            </a>
+        </div>
+
+        <p>
+            Welcome to the ShopNexus seller community!
+        </p>
+
+        <br>
+
+        <p>
+            Regards,<br>
+            <strong>Team {{appName}}</strong>
+        </p>
+
+    </div>
+
+    <div style="background:#f8f8f8;padding:18px;text-align:center;font-size:12px;color:#666;">
+        © {{year}} {{appName}}. All rights reserved.
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.harshadcodes.EcommerceWebsite.service;
 
 
 import com.harshadcodes.EcommerceWebsite.exceptions.EmailException;
+import com.harshadcodes.EcommerceWebsite.model.SellerApplication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -52,7 +53,7 @@ public class EmailService{
             throw new EmailException("Failed to send Welcome email",e);
         }
     }
-
+/*
     public void sendResetOtp(String toEmail, String name, String otp) {
         try {
             ClassPathResource resource = new ClassPathResource("templates/ResetOtp-email.html");
@@ -72,8 +73,7 @@ public class EmailService{
         } catch (Exception e) {
             throw new EmailException("Failed to send Reset OTP email", e);
         }
-    }
-
+    }*/
     public void sendVerifyOtp(String toEmail, String name, String otp) {
 
         try {
@@ -95,6 +95,90 @@ public class EmailService{
             throw new EmailException("Failed to send Verify OTP email", e);
         }
     }
+
+
+    public void sendSellerApplicationApprovedMail(SellerApplication application, String s) {
+        try {
+            ClassPathResource resource = new ClassPathResource("templates/seller-approved.html");
+            String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+            html = html.replace("{{name}}", application.getUser().getUsername());
+            html = html.replace("{{businessName}}", application.getBusinessName());
+            html = html.replace("{{adminRemarks}}",
+                    application.getAdminRemarks() == null
+                            ? "No remarks provided."
+                            : application.getAdminRemarks());
+            html = html.replace(
+                    "{{dashboardUrl}}",
+                    "https://your-frontend-url/seller/dashboard"
+            );
+            html = html.replace("{{appName}}", "ShopNexus");
+            html = html.replace("{{year}}", "2026");
+
+            sendEmail(
+                    application.getUser().getEmail(),
+                    application.getUser().getUsername(),
+                    "Your Seller Application Has Been Approved",
+                    html
+            );
+
+        } catch (Exception e) {
+            throw new EmailException("Failed to send seller approval email", e);
+        }
+    }
+
+    public void sendSellerApplicationRejectedMail(SellerApplication application, String s) {
+
+        try {
+
+            ClassPathResource resource = new ClassPathResource("templates/seller-rejected.html");
+            String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+            html = html.replace("{{name}}", application.getUser().getUsername());
+            html = html.replace("{{businessName}}", application.getBusinessName());
+            html = html.replace("{{adminRemarks}}",
+                    application.getAdminRemarks() == null
+                            ? "No remarks provided."
+                            : application.getAdminRemarks());
+            html = html.replace("{{supportEmail}}", fromMail);
+            html = html.replace("{{appName}}", "ShopNexus");
+            html = html.replace("{{year}}", "2026");
+            sendEmail(
+                    application.getUser().getEmail(),
+                    application.getUser().getUsername(),
+                    "Update on Your Seller Application",
+                    html
+            );
+
+        } catch (Exception e) {
+            throw new EmailException("Failed to send seller rejection email", e);
+        }
+    }
+
+    public void sendSellerApplicationSubmittedMail(SellerApplication application) {
+
+            try {
+
+                ClassPathResource resource = new ClassPathResource("templates/seller-application-submitted.html");
+                String html = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+                html = html.replace("{{name}}", application.getUser().getUsername());
+                html = html.replace("{{businessName}}", application.getBusinessName());
+                html = html.replace("{{appName}}", "ShopNexus");
+                html = html.replace("{{year}}", "2026");
+                html = html.replace("{{supportEmail}}", fromMail);
+
+                sendEmail(
+                        application.getUser().getEmail(),
+                        application.getUser().getUsername(),
+                        "Your Seller Application Has Been Received",
+                        html
+                );
+
+            } catch (Exception e) {
+                throw new EmailException("Failed to send seller application submitted email", e);
+            }
+        }
 
     private void sendEmail(String toEmail, String toName, String subject, String htmlContent) {
 
