@@ -1,4 +1,4 @@
-import { FaBoxOpen, FaHome, FaStore, FaThList,FaShoppingCart } from "react-icons/fa";
+import { FaBoxOpen, FaHome, FaStore, FaThList,FaShoppingCart, FaAddressCard } from "react-icons/fa";
 
 export const adminNavigation = [
   {
@@ -23,6 +23,11 @@ export const adminNavigation = [
     name: "Sellers", 
     href: "/admin/sellers", 
     icon: FaStore 
+  },
+   {
+    name: "Sellers Applications", 
+    href: "/admin/sellers-applications", 
+    icon: FaAddressCard
   }
 ];
 

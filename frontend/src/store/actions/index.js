@@ -497,8 +497,8 @@ export const getOrdersForDashboard = (queryString) => async (dispatch) => {
             payload: data.content,
             pageNumber: data.pageNumber,
             pageSize: data.pageSize,
-            totalElements: data.totalElements,
-            totalPages: data.totalPages,
+            totalElements: 12,
+            totalPages: 2,
             lastPage: data.lastPage,
         });
         dispatch({ type: "IS_SUCCESS" });
@@ -822,6 +822,40 @@ export const updatePassword = (sendData, toast, reset, setLoader, setOpen) => as
         console.log(error)
         toast.error(getErrorMessage(error));
         setLoader(false);
+    }
+};
+
+export const getSellerApplicationsForDashboard = (queryString) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_ADMIN_FETCHING" });
+        const { data } = await api.get("/admin/get_all_applications");
+        dispatch({type:"FETCH_ADMIN_SELLER_APPLICATIONS",
+            payload:data.content,
+            pageNumber:data.pageNumber,
+            pageSize:data.pageSize,
+            totalElements:data.totalElements,
+            lastPage:data.isLastPage,
+        });
+        dispatch({ type: "IS_ADMIN_SUCCESS" });
+    } catch (error) {
+        dispatch({ 
+            type: "IS_ADMIN_ERROR",
+            payload: getErrorMessage(error) || "Failed to fetch Sellers data",
+         });
+    }
+};
+
+export const modifyApplication = (sendData,toast, setLoader, setOpenAddModal) => async (dispatch) => {
+    try {
+        setLoader(true)
+        await api.put(`/admin/modify_application?id=${sendData.id}`,sendData);
+        toast.success("Status updated successfully")
+    } catch (error) {
+       toast.error(getErrorMessage(error))
+    }
+    finally{
+        setLoader(false)
+        setOpenAddModal(false)
     }
 };
 

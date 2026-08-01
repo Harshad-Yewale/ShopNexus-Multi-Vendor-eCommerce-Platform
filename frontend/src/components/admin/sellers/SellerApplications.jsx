@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { adminCategoryTableColumn, adminSellerTableColumn } from '../../../utils/TableColumns'
+import { adminSellerApplicationTableColumn } from '../../../utils/TableColumns'
 import { MdAddShoppingCart } from 'react-icons/md';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { BsShop } from "react-icons/bs";
+import { FaAddressCard } from "react-icons/fa";
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Modal from '../../shared/Modal';
-import { DeleteModal } from '../../shared/DeleteModal';
-import { deleteCategory, fetchCategories, getSellersForDashboard } from '../../../store/actions';
 import toast from 'react-hot-toast';
-import SellerForm from './SellerForm';
+import { getSellerApplicationsForDashboard, modifyApplication } from '../../../store/actions';
+import ViewApplication from './ViewApplication';
 
-function Sellers() {
+function SellerApplications() {
 
-  const [updateOpenModal, setUpdateOpenModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loader, setLoader] = useState(false);
-  const { sellers, sellerPagination, isLoading } = useSelector( (state) => state.adminAnalytics);
-  const emptySellers = !sellers || sellers.length === 0;
+  const [loadingAction, setLoadingAction] = useState(null);
+  const [remarks, setRemarks] = useState("");
+  const { sellerApplications, applicationPagination, isLoading } = useSelector( (state) => state.adminAnalytics);
+  const emptySellerApplications = !sellerApplications || sellerApplications.length === 0;
   const [currentPage, setCurrentPage] = useState(
-      sellerPagination?.pageNumber + 1 || 1
+      applicationPagination?.pageNumber + 1 || 1
     );
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -30,27 +29,46 @@ function Sellers() {
   const dispatch= useDispatch();
   const queryString = params.toString();
 
-  const handleEdit = (row) => {
+  useEffect(() => {
+      if (applicationPagination) {
+          setCurrentPage(applicationPagination.pageNumber + 1);
+      }
+  }, [applicationPagination]);
+
+ const handleView = (row) => {
     setSelectedItem(row);
-    setUpdateOpenModal(true);
+    setRemarks(row.adminRemarks || "");
+    setOpenAddModal(true);
   };
 
-   useEffect(() => {
-        if (sellerPagination) {
-            setCurrentPage(sellerPagination.pageNumber + 1);
-        }
-    }, [sellerPagination]);
-  
+const handleApprove = async () => {
+  setLoadingAction("APPROVE")
+    const sendData = {
+        id: selectedItem.id,
+        status: "APPROVED",
+        adminRemarks: remarks,
+    };
+    await dispatch( modifyApplication( sendData, toast, setLoader, setOpenAddModal));
+    console.log(loader)
+    dispatch(getSellerApplicationsForDashboard(queryString));
+  setLoadingAction(null)
+};
+
+const handleReject = async () => {
+  setLoadingAction("REJECT")
+    const sendData = {
+        id: selectedItem.id,
+        status: "REJECTED",
+        adminRemarks: remarks,
+    };
+    await dispatch( modifyApplication( sendData, toast, setLoader, setOpenAddModal));
+    dispatch(getSellerApplicationsForDashboard(queryString));
+  setLoadingAction(null)
+};
 
     useEffect(() => {
-        dispatch(getSellersForDashboard(queryString));
-    }, [dispatch]);
-
-
-const handleDelete = (row) => {
-    setSelectedItem(row);
-    setOpenDeleteModal(true);
-  };
+        dispatch(getSellerApplicationsForDashboard(queryString));
+    }, [dispatch,queryString]);
 
   const handlePaginationChange = (paginationModel) => {
     const page = paginationModel.page + 1;
@@ -59,30 +77,18 @@ const handleDelete = (row) => {
     navigate(`${pathname}?${params}`);
   };
 
-   const onDeleteHandler = () => {
-    //dispatch(deleteCategory(setLoader,selectedItem.categoryId,toast,setOpenDeleteModal));
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 p-6">
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-6">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">
-              Seller Management
+              Seller Applications Management
             </h1>
             <p className="text-slate-500 mt-1">
-              Manage sellers.
+              Manage seller Applications.
             </p>
           </div>
-    
-          <button
-            className="flex items-center gap-2 rounded-lg bg-custom-blue px-5 py-3 text-white font-semibold shadow hover:bg-blue-800 transition-all duration-200"
-            onClick={() => setOpenAddModal(true)}
-          >
-            <BsShop  size={20} />
-            Add sellers
-          </button>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 mb-6">
         </div>
@@ -93,54 +99,43 @@ const handleDelete = (row) => {
             </div>
           ) : (
             <>
-              {emptySellers ? (
+              {emptySellerApplications ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-500">
-                  <BsShop size={70} className="text-slate-400 mb-5" />
+                  <FaAddressCard size={70} className="text-slate-400 mb-5" />
     
                   <h2 className="text-2xl font-semibold mb-2">
-                    No seller Found
+                    No seller Applications found
                   </h2>
-    
-                  <p className="text-sm text-slate-400 mb-6">
-                    Add your first seller.
-                  </p>
-    
-                  <button
-                    className="flex items-center gap-2 rounded-lg bg-custom-blue px-5 py-3 text-white font-semibold hover:bg-blue-800 transition"
-                  >
-                    <BsShop/>
-                    Add Seller
-                  </button>
                 </div>
               ) : (
                <div className="space-y-6 px-4 py-4">
                   <div className="text-center">
                     <h1 className="text-2xl font-bold uppercase tracking-wide text-slate-800 md:text-3xl">
-                      All Seller
+                      All Seller Applications
                     </h1>
                   </div>
     
                   <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
                     <div className="w-full">
                       <DataGrid
-                        rows={sellers}
-                        columns={adminSellerTableColumn(handleEdit,handleDelete)}
+                        rows={sellerApplications}
+                        columns={adminSellerApplicationTableColumn(handleView)}
                         getRowId={(row) => row.id}
                         autoHeight
                         paginationMode="server"
-                        rowCount={sellerPagination?.totalElements ||0}
+                        rowCount={applicationPagination?.totalElements ||0}
                         initialState={{
                           pagination: {
                             paginationModel: {
-                              page: currentPage - 1,
-                               pageSize: sellerPagination?.pageSize || 10,
-                             },
+                               page: currentPage - 1,
+                               pageSize: applicationPagination?.pageSize || 10,
+                            },
                           },
                         }}
                         onPaginationModelChange={handlePaginationChange}
                         disableRowSelectionOnClick
                         disableColumnResize
-                        pageSizeOptions={[[sellerPagination?.pageSize || 10]]}
+                        pageSizeOptions={[applicationPagination?.pageSize || 10]}
                         pagination
                         sx={{
                           border: 0,
@@ -167,42 +162,21 @@ const handleDelete = (row) => {
         <Modal
             open={openAddModal}
             setOpen={setOpenAddModal}
-            title="Add Seller"
+            title="Seller Application"
         >
-            <SellerForm
-                setOpen={setOpenAddModal}
-                loader={loader}
-                setLoader={setLoader}
-                buttonName="Add"
+           <ViewApplication
+                application={selectedItem}
+                remarks={remarks}
+                setRemarks={setRemarks}
+                onApprove={handleApprove}
+                onReject={handleReject}
+                loadingAction={loadingAction}
             />
         </Modal>
-
-        <Modal
-            open={updateOpenModal}
-            setOpen={setUpdateOpenModal}
-            title="Update Seller"
-        >
-            <SellerForm
-                setOpen={setUpdateOpenModal}
-                loader={loader}
-                setLoader={setLoader}
-                selectedId={selectedItem?.id}
-                selectedItem={selectedItem}
-                update
-                buttonName="Update"
-            />
-        </Modal>
-
-        <DeleteModal
-            open ={openDeleteModal}
-            setOpen={setOpenDeleteModal}
-            title="Delete Seller"
-            onDeleteHandler={onDeleteHandler}
-            loader={loader}
-        />
+       
         </div>
 
   )
 }
 
-export default Sellers
+export default SellerApplications

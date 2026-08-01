@@ -35,6 +35,12 @@ function Category() {
     setUpdateOpenModal(true);
   };
 
+  useEffect(() => {
+          if (categoryPagination) {
+              setCurrentPage(categoryPagination.pageNumber + 1);
+          }
+      }, [categoryPagination]);
+
     useEffect(() => {
         dispatch(fetchCategories());
         dispatch(getSellersForDashboard(queryString));
@@ -137,11 +143,6 @@ const handleDelete = (row) => {
                         disableColumnResize
                         pageSizeOptions={[[categoryPagination?.pageSize || 10]]}
                         pagination
-                        paginationOptions={{
-                          showFirstButton: true,
-                          showLastButton: true,
-                          hideNextButton:currentPage === categoryPagination?.totalPages,
-                        }}
                         sx={{
                           border: 0,
                           "& .MuiDataGrid-columnHeaders": {

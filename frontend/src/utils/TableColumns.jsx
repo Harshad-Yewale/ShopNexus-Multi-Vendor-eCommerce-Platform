@@ -1,5 +1,112 @@
 import { FaEdit, FaEye, FaImage, FaTrashAlt } from "react-icons/fa";
 
+export const adminSellerApplicationTableColumn = (handleView) =>[
+  {
+    field: "id",
+    headerName: "Application ID",
+    width: 120,
+    sortable: true,
+    disableColumnMenu: true,
+    align: "center",
+    headerAlign: "center",
+    editable: false,
+    headerClassName:
+      "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
+    cellClassName:
+      "text-gray-700 border border-gray-200",
+  },
+
+  {
+    field: "email",
+    headerName: "Email",
+    flex: 1,
+    minWidth: 250,
+    sortable: true,
+    disableColumnMenu: true,
+    editable: false,
+    headerClassName:
+      "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
+    cellClassName:
+      "text-gray-700 border border-gray-200",
+  },
+
+  {
+    field: "businessName",
+    headerName: "Business Name",
+    flex: 1,
+    minWidth: 180,
+    sortable: true,
+    disableColumnMenu: true,
+    editable: false,
+    headerClassName:
+      "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
+    cellClassName:
+      "text-gray-700 border border-gray-200",
+  },
+
+  {
+    field: "status",
+    headerName: "Status",
+    width: 150,
+    sortable: true,
+    disableColumnMenu: true,
+    align: "center",
+    headerAlign: "center",
+    editable: false,
+    headerClassName:
+      "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
+    cellClassName:
+      "border border-gray-200",
+    renderCell: (params) => {
+      const status = params.value;
+
+      const statusClasses =
+        status === "APPROVED"
+          ? "bg-green-100 text-green-700"
+          : status === "REJECTED"
+          ? "bg-red-100 text-red-700"
+          : "bg-yellow-100 text-yellow-700";
+
+      return (
+        <span
+          className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClasses}`}
+        >
+          {status}
+        </span>
+      );
+    },
+  },
+
+  {
+    field: "action",
+    headerName: "Action",
+    width: 220,
+    sortable: false,
+    disableColumnMenu: true,
+    align: "center",
+    headerAlign: "center",
+    editable: false,
+    headerClassName:
+      "bg-gray-100 text-gray-800 font-semibold border border-gray-300",
+    cellClassName:
+      "border border-gray-200",
+    renderCell: (params) => (
+      <div className="flex h-full items-center justify-center gap-2">
+        <button
+          onClick={() => handleView(params.row)}
+          className="flex items-center gap-1 rounded-md border border-slate-700 bg-white px-3 py-1 text-xs font-medium text-slate-700 transition hover:bg-slate-700 hover:text-white cursor-pointer"
+        >
+          <FaEye />
+          View
+        </button>
+      </div>
+    ),
+  },
+
+
+]
+
+
 export const adminSellerTableColumn = (handleEdit, handleDelete) => [
   {
     field: "id",

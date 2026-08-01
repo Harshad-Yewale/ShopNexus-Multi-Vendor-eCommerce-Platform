@@ -27,6 +27,7 @@ import Category from './components/admin/category/Category'
 import { setupInterceptors } from './api/api'
 import MyOrdersPage from './pages/myOrdersPage'
 import ProfilePage from './pages/ProfilePage'
+import SellerApplications from './components/admin/sellers/SellerApplications'
 
 function App() {
 
@@ -65,6 +66,7 @@ function App() {
                   <Route path="products" element={<AdminProducts />} />
                   <Route path="categories" element={<Category />} />
                   <Route path="sellers" element={<Sellers />} />
+                  <Route path="sellers-applications" element={<SellerApplications/>} />
               </Route>
           </Route>
 
