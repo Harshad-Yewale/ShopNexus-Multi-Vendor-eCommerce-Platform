@@ -8,6 +8,7 @@ import com.harshadcodes.EcommerceWebsite.security.jwt.AuthEntryPointJwt;
 import com.harshadcodes.EcommerceWebsite.security.jwt.JwtAuthFilter;
 import com.harshadcodes.EcommerceWebsite.security.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -68,15 +69,30 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**").permitAll()
-                                //.requestMatchers("/api/admin/**").permitAll()
-                                .requestMatchers("/api/public/**").permitAll()
-                                .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                .anyRequest().authenticated()
+                        auth
+                                // Public APIs
+                                .requestMatchers(
+                                        "/api/public/**",
+                                        "/images/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/h2-console/**"
+                                ).permitAll()
+
+                                // Admin APIs
+                                .requestMatchers("/api/admin/**")
+                                .hasRole("ADMIN")
+
+                                // Seller APIs
+                                .requestMatchers("/api/seller/**")
+                                .hasAnyRole("SELLER", "ADMIN")
+
+                                // User APIs
+                                .requestMatchers("/api/user/**","/api/payments/**")
+                                .hasAnyRole("USER", "SELLER", "ADMIN")
+
+                                .anyRequest()
+                                .authenticated()
                 )
                 .headers(headerConfig-> headerConfig.frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin()))
         .authenticationProvider(authenticationProvider())
@@ -93,66 +109,5 @@ public class SecurityConfig {
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**"));
-    }
-
-    @Bean
-    public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return args -> {
-            // Retrieve or create roles
-            Role userRole = roleRepository.findByRole(AppRole.ROLE_USER)
-                    .orElseGet(() -> {
-                        Role newUserRole = new Role(AppRole.ROLE_USER);
-                        return roleRepository.save(newUserRole);
-                    });
-
-            Role sellerRole = roleRepository.findByRole(AppRole.ROLE_SELLER)
-                    .orElseGet(() -> {
-                        Role newSellerRole = new Role(AppRole.ROLE_SELLER);
-                        return roleRepository.save(newSellerRole);
-                    });
-
-            Role adminRole = roleRepository.findByRole(AppRole.ROLE_ADMIN)
-                    .orElseGet(() -> {
-                        Role newAdminRole = new Role(AppRole.ROLE_ADMIN);
-                        return roleRepository.save(newAdminRole);
-                    });
-
-            Set<Role> userRoles = Set.of(userRole);
-            Set<Role> sellerRoles = Set.of(sellerRole);
-            Set<Role> adminRoles = Set.of(userRole, sellerRole, adminRole);
-
-
-            // Create users if not already present
-            if (!userRepository.existsByUsername("user1")) {
-                User user1 = new User("user1", "user1@example.com", passwordEncoder.encode("password1"));
-                userRepository.save(user1);
-            }
-
-            if (!userRepository.existsByUsername("seller1")) {
-                User seller1 = new User("seller1", "seller1@example.com", passwordEncoder.encode("password2"));
-                userRepository.save(seller1);
-            }
-
-            if (!userRepository.existsByUsername("admin")) {
-                User admin = new User("admin", "admin@example.com", passwordEncoder.encode("adminPass"));
-                userRepository.save(admin);
-            }
-
-            // Update roles for existing users
-            userRepository.findByUsername("user1").ifPresent(user -> {
-                user.setUserRoles(userRoles);
-                userRepository.save(user);
-            });
-
-            userRepository.findByUsername("seller1").ifPresent(seller -> {
-                seller.setUserRoles(sellerRoles);
-                userRepository.save(seller);
-            });
-
-            userRepository.findByUsername("admin").ifPresent(admin -> {
-                admin.setUserRoles(adminRoles);
-                userRepository.save(admin);
-            });
-        };
     }
 }

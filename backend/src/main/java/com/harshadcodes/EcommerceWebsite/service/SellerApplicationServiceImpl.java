@@ -137,9 +137,9 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
             throw new DefaultException("Application is already " + request.status().name());
         }
 
-        // Prevent changing an approved application
-        if (application.getStatus() == ApplicationStatus.APPROVED) {
-            throw new DefaultException("Approved application cannot be modified.");
+        // Prevent changing an approved/rejected application
+        if (application.getStatus() != ApplicationStatus.PENDING) {
+            throw new DefaultException("only pending applications can be modified.");
         }
         application.setStatus(request.status());
 
@@ -194,7 +194,8 @@ public class SellerApplicationServiceImpl implements SellerApplicationService {
                 application.getAddress(),
                 application.getCsNumber(),
                 application.getStatus(),
-                application.getCreatedAt()
+                application.getCreatedAt(),
+                application.getAdminRemarks()
 
         );
     }

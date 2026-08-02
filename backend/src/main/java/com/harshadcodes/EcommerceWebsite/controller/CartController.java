@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/carts")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/cart/create")
+    @PostMapping("/user/cart/create")
     public ResponseEntity<String> createOrUpdateCart(@RequestBody List<CartItemDTO> cartItems){
         String response = cartService.createOrUpdateCartWithItems(cartItems);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 
-    @PostMapping("/products/{productId}/quantity/{quantity}")
+    @PostMapping("/user/products/{productId}/quantity/{quantity}")
     public ResponseEntity<CartDTO> addProductToCart(@PathVariable Long productId,
                                                     @PathVariable Integer quantity) throws Exception {
         CartDTO cartDTO=cartService.addProductToCart(productId,quantity);
@@ -36,28 +36,28 @@ public class CartController {
 
     }
 
-    @GetMapping
+    @GetMapping("/admin/get-all-carts")
     public ResponseEntity<List<CartDTO>> getAllCarts() throws Exception {
         List<CartDTO> cartDTO=cartService.getAllCarts();
         return ResponseEntity.status(HttpStatus.CREATED).body(cartDTO);
 
     }
 
-    @GetMapping("/users/cart")
+    @GetMapping("/user/cart")
     public ResponseEntity<CartDTO> getUserCart() throws Exception {
         CartDTO cartDTO = cartService.getUserCart();
         return ResponseEntity.status(HttpStatus.CREATED).body(cartDTO);
 
     }
 
-    @PutMapping("/products/{productId}/quantity/{operation}")
+    @PutMapping("/user/products/{productId}/quantity/{operation}")
     public ResponseEntity<CartDTO> updateUserCart(@PathVariable @Valid Long productId,
                                                   @PathVariable @Valid String operation) throws Exception{
         CartDTO cartDTO=cartService.updateUserCart(productId,operation);
         return ResponseEntity.status(HttpStatus.OK).body(cartDTO);
     }
 
-    @DeleteMapping("/{cartId}/product/{productId}")
+    @DeleteMapping("/user/{cartId}/product/{productId}")
     public ResponseEntity<String> deleteCartItem(@PathVariable @Valid Long productId,
                                                   @PathVariable @Valid Long cartId) throws Exception{
         String message=cartService.deleteCartItem(productId,cartId);

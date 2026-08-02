@@ -18,7 +18,6 @@ public class AuthUtils {
     public String getLoggedinEmail(){
 
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
 
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(()-> {

@@ -21,7 +21,7 @@ public class OrderController {
     private final OrderService orderService;
     private final AuthUtils authUtils;
 
-    @PostMapping("/orders/create")
+    @PostMapping("/user/orders/create")
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody CreateOrderRequest request)
             throws Exception {
 
@@ -72,7 +72,7 @@ public class OrderController {
         return new ResponseEntity<OrderDTO>(order, HttpStatus.OK);
     }
 
-    @GetMapping("/public/orders")
+    @GetMapping("/user/orders")
     public ResponseEntity<OrderResponse> getAllUserOrders(
             @RequestParam(name = "pageNumber",required = false,defaultValue = AppConstants.PAGE_NUMBER)Integer pageNumber,
             @RequestParam(name = "pageSize",required = false,defaultValue = AppConstants.PAGE_SIZE)Integer pageSize,

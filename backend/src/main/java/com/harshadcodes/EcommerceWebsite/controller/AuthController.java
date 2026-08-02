@@ -15,26 +15,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
     private final JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/public/auth/signin")
     public ResponseEntity<?>authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
         UserInfoResponse response=authService.SignIn(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,response.token()).body(response);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/public/auth/signup")
     public ResponseEntity<SignupResponse> createUser(@Valid @RequestBody SignupRequest signupRequest){
         SignupResponse response= authService.signUp(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/signout")
+    @PostMapping("/public/auth/signout")
     public ResponseEntity<?> signoutUser(){
         ResponseCookie cookie = authService.logoutUser();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -65,20 +65,20 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/public/update/username")
+    @PutMapping("/user/update/username")
     public ResponseEntity<String> updateUserName(@Valid @RequestBody addOrUpdateUserRequest userRequest){
         String response = authService.updateUserUsername(userRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/public/update/password")
+    @PutMapping("/user/update/password")
     public ResponseEntity<String> updatePassword(@Valid @RequestBody addOrUpdateUserRequest userRequest) throws Exception {
         String response = authService.updateUserPassword(userRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
-    @PostMapping("/send-registration-otp")
+    @PostMapping("/public/send-registration-otp")
     public ResponseEntity<String> sendRegistrationOtp(
             @Valid @RequestBody PendingRegistrationRequestDTO request) throws Exception {
 
@@ -87,7 +87,7 @@ public class AuthController {
         return ResponseEntity.ok("OTP sent successfully.");
     }
 
-    @PostMapping("/verify-registration-otp")
+    @PostMapping("/public/verify-registration-otp")
     public ResponseEntity<String> verifyRegistrationOtp(
             @Valid @RequestBody VerifyUserRegistrationDTO request) throws Exception {
 
@@ -96,7 +96,7 @@ public class AuthController {
         return ResponseEntity.ok("Registration completed successfully.");
     }
 
-    @GetMapping("/me")
+    @GetMapping("/user/me")
     public ResponseEntity<UserInfoResponse> me(Authentication authentication) throws Exception {
 
       UserInfoResponse response = authService.getCurrentUser(authentication);

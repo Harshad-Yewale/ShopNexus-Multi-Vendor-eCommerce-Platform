@@ -21,7 +21,7 @@ public class SellerApplicationController {
 
     private final SellerApplicationService sellerApplicationService;
 
-    @PostMapping("/public/apply-seller")
+    @PostMapping("/user/apply-seller")
     public ResponseEntity<String> sellerApplication (@Valid @RequestBody SellerApplicationRequest request){
         String response= sellerApplicationService.applyForSeller(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -39,7 +39,7 @@ public class SellerApplicationController {
         return new ResponseEntity<>(applications, HttpStatus.OK);
     }
 
-    @GetMapping("/public/get_my_application")
+    @GetMapping("/user/get_my_application")
     public ResponseEntity<SellerApplicationResponseList> getMyApplication(){
         SellerApplicationResponseList response = sellerApplicationService.getMyApplication();
         return new ResponseEntity<>(response, HttpStatus.OK);

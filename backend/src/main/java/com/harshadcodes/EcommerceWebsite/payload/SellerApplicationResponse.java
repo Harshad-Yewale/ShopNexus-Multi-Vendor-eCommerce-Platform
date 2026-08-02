@@ -13,6 +13,7 @@ public record SellerApplicationResponse(
         String address,
         String csNumber,
         ApplicationStatus status,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String adminRemarks
 ) {
 }
