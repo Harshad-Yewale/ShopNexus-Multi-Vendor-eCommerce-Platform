@@ -28,6 +28,7 @@ import { setupInterceptors } from './api/api'
 import MyOrdersPage from './pages/myOrdersPage'
 import ProfilePage from './pages/ProfilePage'
 import SellerApplications from './components/admin/sellers/SellerApplications'
+import ApplyForSellerPage from './pages/ApplyForSellerPage'
 
 function App() {
 
@@ -50,14 +51,19 @@ function App() {
           <Route path='/about' element={ <About />}/>
           <Route path='/contact' element={ <Contact />}/>
           <Route path='/cart' element={ <Cart />}/>
-          <Route path='/order-confirmation' element={<OrderPlacedPage/>}/>
+
 
 
           <Route path='/' element={<PrivateRoute />}>
             <Route path='/checkout' element={ cart.length > 0 ? <CheckoutPage />: <Navigate to='/cart' replace/>}/>
              <Route path='/profile/orders' element={<MyOrdersPage />} />
              <Route path='/profile' element={<ProfilePage />} />
+              <Route path='/order-confirmation' element={<OrderPlacedPage/>}/>
           </Route> 
+
+          <Route element={<PrivateRoute userOnly/>}>
+            <Route path='/apply-for-seller' element={<ApplyForSellerPage/>}/>
+          </Route>
 
           <Route element={<PrivateRoute adminOnly />}>
               <Route path="/admin" element={<AdminPanel />}>

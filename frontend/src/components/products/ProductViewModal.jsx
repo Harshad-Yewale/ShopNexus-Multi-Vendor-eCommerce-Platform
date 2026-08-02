@@ -3,7 +3,7 @@ import {Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle,
 import { MdClose, MdDone } from "react-icons/md";
 import Status from "./status";
 
-function ProductViewModal({ open, setOpen, product, isAvailable, isAdmin = false,}) {
+function ProductViewModal({ open, setOpen, product, isAdmin = false,}) {
   if (!product) return null;
   const {id,
     productName,
@@ -16,6 +16,7 @@ function ProductViewModal({ open, setOpen, product, isAvailable, isAdmin = false
     category,
     user,
   } = product;
+  const isAvailable=productQuantity && Number(productQuantity) > 0;
 
   return (
     <Dialog

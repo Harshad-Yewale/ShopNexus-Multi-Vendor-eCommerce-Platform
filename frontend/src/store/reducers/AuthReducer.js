@@ -1,6 +1,7 @@
 const initialState = {
     user: null,
     address: [],
+    applications:[],
     selectedUserCheckoutAddress: null,
     isLoading:false,
     errorMessage:null
@@ -33,6 +34,9 @@ export const authReducer = (state = initialState, action) => {
         
          case "REMOVE_CHECKOUT_ADDRESS":
             return { ...state, selectedUserCheckoutAddress: null };
+        
+        case "FETCH_MY_SELLER_APPLICATION":
+            return{...state, applications: action.payload}
 
         case "IS_FETCHING":
             return {

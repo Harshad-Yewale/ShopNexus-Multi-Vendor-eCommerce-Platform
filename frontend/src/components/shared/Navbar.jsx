@@ -13,6 +13,7 @@ const Navbar = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const {cart}=useSelector((state=>state.cart));
   const { user } = useSelector((state) => state.auth);
+  const isUserOnly= user?.roles?.includes("ROLE_USER") && user?.roles?.length ==1;
 
   return (
     <nav className="sticky top-0 z-90 h-17.5  bg-slate-950 text-white">
@@ -95,6 +96,18 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
+           {isUserOnly &&<li>
+            <Link
+              to="/apply-for-seller"
+              onClick={() => setNavbarOpen(false)}
+              className={`${
+                path === "/apply-for-seller" ? "text-blue-400" : "text-white"
+              }`}
+            >
+              Become a seller
+            </Link>
+          </li>
+            }
 
           {/* Cart */}
           <li>
@@ -224,6 +237,19 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
+
+          {isUserOnly &&<li>
+              <Link
+                to="/apply-for-seller"
+                onClick={() => setNavbarOpen(false)}
+                className={`${
+                  path === "/apply-for-seller" ? "text-blue-400" : "text-white"
+                }`}
+              >
+                Become a seller
+              </Link>
+          </li>
+            }
         </ul>
       </div>
     </nav>

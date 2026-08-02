@@ -146,7 +146,7 @@ useEffect(() => {
             placeholder="Product Discount"
             register={register}
             errors={errors}
-            ReadOnly
+            readOnly
           />
         </div>
 

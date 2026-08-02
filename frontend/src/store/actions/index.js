@@ -860,6 +860,35 @@ export const modifyApplication = (sendData,toast, setLoader, setOpenAddModal) =>
 };
 
 
+export const getMySellerApplications = () => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get("/public/get_my_application");
+        dispatch({type:"FETCH_MY_SELLER_APPLICATION",
+            payload:data.content,
+        });
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: getErrorMessage(error) || "Failed to fetch Sellers data",
+         });
+    }
+};
+
+export const applyForSeller =(data, toast, reset, setLoader) => async (dispatch) => {
+    try {
+      setLoader(true);
+      const response = await api.post("/public/apply-seller", data);
+      dispatch(getMySellerApplications());
+      reset();
+      toast.success(response.data || "Application submitted successfully.");
+    } catch (error) {
+      toast.error(getErrorMessage(error) || "Failed to apply.");
+    } finally {
+      setLoader(false);
+    }
+};
 
 
 
