@@ -21,7 +21,6 @@ const ProductCard = ({
     const [selectedViewProduct, setSelectedViewProduct] = useState("");
     const isAvailable = productQuantity && Number(productQuantity) > 0;
     const dispatch = useDispatch();
-    console.log(isAvailable);
 
     const handleProductView = (product) => {
         setSelectedViewProduct(product);

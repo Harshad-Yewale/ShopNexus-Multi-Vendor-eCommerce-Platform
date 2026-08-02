@@ -49,7 +49,6 @@ const handleApprove = async () => {
         adminRemarks: remarks,
     };
     await dispatch( modifyApplication( sendData, toast, setLoader, setOpenAddModal));
-    console.log(loader)
     dispatch(getSellerApplicationsForDashboard(queryString));
   setLoadingAction(null)
 };

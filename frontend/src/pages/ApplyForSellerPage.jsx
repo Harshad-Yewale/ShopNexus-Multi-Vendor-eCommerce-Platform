@@ -48,7 +48,6 @@ const [loader, setLoader] = useState(false);
 
    const onSubmit = (data) => {
     dispatch(applyForSeller( data, toast, reset, setLoader));
-    console.log(JSON.stringify(data, null, 2));
   };
 
   const hasPendingApplication = applications?.some(

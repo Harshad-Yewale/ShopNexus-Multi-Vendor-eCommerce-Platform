@@ -19,7 +19,6 @@ const ChangePasswordModal = ({ open, setOpen,loader,setLoader }) => {
     const newPassword = watch("newPassword");
 
     const submitHandler = (data) => {
-        console.log(data);
 
 
         dispatch(updatePassword(data,toast,reset,setLoader,setOpen));

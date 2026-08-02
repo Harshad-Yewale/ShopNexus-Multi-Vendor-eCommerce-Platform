@@ -42,8 +42,6 @@ function SellerForm( {setOpen, loader,setLoader, selectedId, selectedItem, updat
                 ...data,
                 role: selectedRole.name,
             };
-            console.log(sendData)
-            console.log(selectedId)
              dispatch(updateUserFromDashboard(selectedId,sendData,toast,reset,setLoader,setOpen));
         }
     };

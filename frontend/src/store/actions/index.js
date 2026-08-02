@@ -233,7 +233,7 @@ export const removeFromCart =  (data, toast) => (dispatch, getState) => {
 export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
         try {
             setLoader(true);
-            const { data } = await api.post("/auth/signin", sendData);
+            const { data } = await api.post("/public/auth/signin", sendData);
             dispatch({ type: "LOGIN_USER", payload: data });
             localStorage.setItem("auth", JSON.stringify(data));
             reset();
@@ -249,7 +249,7 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
 export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
         try {
             setLoader(true);
-            const { data } = await api.post("/auth/signup", sendData);
+            const { data } = await api.post("/public/auth/signup", sendData);
             reset();
             toast.success(data?.message || "User Registered Successfully");
             navigate("/login");
@@ -262,9 +262,8 @@ export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => 
 
 export const sendRegistrationOtp = (data,setLoader,toast,setRegistrationData,setStep) => async () => {
     try{
-        console.log("hit");
         setLoader(true);
-        const response = await api.post(`/auth/send-registration-otp`,data);
+        const response = await api.post(`/public/send-registration-otp`,data);
         toast.success("otp sent successfully");
         setRegistrationData(data);
         setStep("VERIFY");
@@ -280,7 +279,7 @@ export const sendRegistrationOtp = (data,setLoader,toast,setRegistrationData,set
 export const verifyRegistrationOtp = ( data, setLoader, toast, navigate) => async () => {
     try {
         setLoader(true);
-        await api.post("/auth/verify-registration-otp", data);
+        await api.post("/public/verify-registration-otp", data);
         toast.success("Registration completed successfully.");
         navigate("/login");
     } catch (error) {
@@ -302,15 +301,14 @@ export const addUpdateUserAddress =
     dispatch({ type:"IS_FETCHING" });
     try {
        if (!addressId) {
-            const { data } = await api.post("/addresses", sendData);
+            const { data } = await api.post("/user/addresses/create", sendData);
         } else {
-            await api.put(`/addresses/${addressId}`, sendData);
+            await api.put(`/user/addresses/${addressId}`, sendData);
         }
         dispatch(getUserAddresses());
         toast.success("Address saved successfully");
         dispatch({type:"IS_SUCCESS"});
     } catch (error) {
-        console.log(error);
         toast.error(getErrorMessage(error) || "Internal Server Error");
         dispatch({ type:"IS_ERROR", payload: null });
     } finally {
@@ -321,11 +319,10 @@ export const addUpdateUserAddress =
 export const getUserAddresses = () => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get(`/users/addresses`);
+        const { data } = await api.get(`/user/addresses`);
         dispatch({type: "USER_ADDRESS", payload: data});
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Failed to fetch user addresses",
@@ -345,13 +342,12 @@ export const deleteUserAddress =
     (toast, addressId, setOpenDeleteModal) => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_LOADING" });
-        await api.delete(`/addresses/${addressId}`);
+        await api.delete(`/user/addresses/${addressId}`);
         dispatch({ type: "IS_SUCCESS" });
         dispatch(getUserAddresses());
         dispatch(clearCheckoutAddress());
         toast.success("Address deleted successfully");
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Some Error Occured",
@@ -377,10 +373,9 @@ export const addPaymentMethod = (method) => {
 export const createUserCart = (sendCartItems) => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        await api.post('carts/cart/create', sendCartItems);
+        await api.post('/user/cart/create', sendCartItems);
         await dispatch(getUserCart());
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Failed to create cart items",
@@ -391,7 +386,7 @@ export const createUserCart = (sendCartItems) => async (dispatch, getState) => {
 export const getUserCart = () => async (dispatch, getState) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get('/carts/users/cart');
+        const { data } = await api.get('/user/cart');
         dispatch({
             type: "GET_USER_CART_PRODUCTS",
             payload: data.productDTOs,
@@ -401,7 +396,6 @@ export const getUserCart = () => async (dispatch, getState) => {
         localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart));
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Failed to fetch cart items",
@@ -419,7 +413,7 @@ export const createPendingOrder = (addressId, toast) => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
 
-        const { data } = await api.post("/orders/create", { addressId,});
+        const { data } = await api.post("/user/orders/create", { addressId,});
         dispatch({ type: "IS_SUCCESS" });
         return data;
     } catch (error) {
@@ -503,7 +497,6 @@ export const getOrdersForDashboard = (queryString) => async (dispatch) => {
         });
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Failed to fetch orders data",
@@ -584,7 +577,6 @@ export const deleteProduct = (setLoader, productId, toast, setOpenDeleteModal,is
         dispatch(fetchProductsForAdminAndSeller("",!isOnlySeller));
         setOpenDeleteModal(false)
     } catch (error) {
-        console.log(error);
         toast.error(getErrorMessage(error) || "Some Error Occured" )
         setLoader(false)
     }
@@ -651,7 +643,6 @@ export const deleteCategory = (setLoader, categoryId, toast, setOpenDeleteModal)
         await dispatch(fetchCategories());
         setOpenDeleteModal(false)
     } catch (error) {
-        console.log(error);
         toast.error( getErrorMessage(error) || "Some Error Occured")
         setLoader(false)
     }
@@ -661,7 +652,7 @@ export const deleteCategory = (setLoader, categoryId, toast, setOpenDeleteModal)
 export const getSellersForDashboard = (queryString) => async (dispatch) => {
     try {
         dispatch({ type: "IS_ADMIN_FETCHING" });
-        const { data } = await api.get("/auth/admin/sellers");
+        const { data } = await api.get("/admin/sellers");
         dispatch({
             type: "FETCH_ADMIN_SELLERS",
             payload: data.content,
@@ -685,7 +676,7 @@ export const addUserFromDashboard =
         const isSeller = sendData.role=="ROLE_SELLER"?"seller":"user";
     try {
         setLoader(true);
-        await api.post("/auth/admin/add", sendData);
+        await api.post("/admin/add", sendData);
         toast.success(`${isSeller} added Successfully`);
         reset();
         setLoader(false);
@@ -703,14 +694,13 @@ export const updateUserFromDashboard =
         const isSeller = sendData.role=="ROLE_SELLER"?"seller":"user";
     try {
         setLoader(true);
-        await api.put(`/auth/admin/update/${userId}`, sendData);
+        await api.put(`/admin/update/${userId}`, sendData);
         toast.success(`${isSeller}updated Successfully`);
         reset();
         setLoader(false);
         await dispatch(getSellersForDashboard());
         setOpen(false);
     } catch (error) {
-        console.log(error)
         toast.error(getErrorMessage(error) || `${isSeller} update failed`);
         setLoader(false);
      
@@ -733,7 +723,6 @@ export const getOrdersBySellerForDashboard = (queryString) => async (dispatch) =
         });
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Failed to fetch orders data",
@@ -758,7 +747,7 @@ export const updateOrderStatusBySellerFromDashboard =
 export const getUserOrders = (queryString) => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get(`/public/orders?${queryString}`);
+        const { data } = await api.get(`/user/orders?${queryString}`);
         dispatch({
             type: "GET_USER_ORDERS",
             payload: data.content,
@@ -770,7 +759,6 @@ export const getUserOrders = (queryString) => async (dispatch) => {
         });
         dispatch({ type: "IS_SUCCESS" });
     } catch (error) {
-        console.log(error);
         dispatch({ 
             type: "IS_ERROR",
             payload: getErrorMessage(error) || "Failed to fetch orders data",
@@ -782,7 +770,7 @@ export const getUserOrders = (queryString) => async (dispatch) => {
 export const updateUsername = (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
     try {
         setLoader(true);
-        await api.put(`/auth/public/update/username`, sendData);
+        await api.put(`/user/update/username`, sendData);
         reset();
         setLoader(false);
         dispatch({
@@ -807,7 +795,7 @@ export const updateUsername = (sendData, toast, reset, setLoader, setOpen) => as
 export const updatePassword = (sendData, toast, reset, setLoader, setOpen) => async (dispatch) => {
     try {
         setLoader(true);
-        await api.put(`/auth/public/update/password`, sendData);
+        await api.put(`/user/update/password`, sendData);
         reset();
         setLoader(false);
         dispatch({
@@ -819,7 +807,6 @@ export const updatePassword = (sendData, toast, reset, setLoader, setOpen) => as
         toast.success(`password updated Successfully`);
         setOpen(false);
     } catch (error) {
-        console.log(error)
         toast.error(getErrorMessage(error));
         setLoader(false);
     }
@@ -863,7 +850,7 @@ export const modifyApplication = (sendData,toast, setLoader, setOpenAddModal) =>
 export const getMySellerApplications = () => async (dispatch) => {
     try {
         dispatch({ type: "IS_FETCHING" });
-        const { data } = await api.get("/public/get_my_application");
+        const { data } = await api.get("/user/get_my_application");
         dispatch({type:"FETCH_MY_SELLER_APPLICATION",
             payload:data.content,
         });
@@ -879,7 +866,7 @@ export const getMySellerApplications = () => async (dispatch) => {
 export const applyForSeller =(data, toast, reset, setLoader) => async (dispatch) => {
     try {
       setLoader(true);
-      const response = await api.post("/public/apply-seller", data);
+      const response = await api.post("/user/apply-seller", data);
       dispatch(getMySellerApplications());
       reset();
       toast.success(response.data || "Application submitted successfully.");

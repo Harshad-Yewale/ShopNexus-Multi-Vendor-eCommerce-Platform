@@ -53,8 +53,6 @@ const ImageUploadForm = ({ setOpen, product, isOnlySeller }) => {
     useEffect(() => {
 
         const handlePaste = (e) => {
-
-                console.log("Paste event fired");
                 const items = e.clipboardData.items;
                 for (const item of items) {
                     if (item.type.startsWith("image")) {

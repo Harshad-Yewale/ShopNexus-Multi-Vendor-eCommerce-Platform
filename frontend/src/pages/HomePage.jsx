@@ -8,6 +8,7 @@ import { fetchCategories, fetchProducts } from '../store/actions';
 import CategoryCardSlider from '../components/Home/CategoryCardSlider';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { Link } from 'react-router-dom';
 
 
 const HomePage=()=> {
@@ -60,17 +61,26 @@ const HomePage=()=> {
                     </p>
                 </div>
                 ) : (
+
             <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
                        {products && 
                        products?.slice(0,6)
                                 .map((item, i) => <ProductCard key={i} {...item} />
                         )}
-                    </div>
-                    )}
+                <div className="col-span-full flex justify-center mt-8">
+                    <Link
+                        to="/products"
+                        className="px-8 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300"
+                    >
+                        View All Products →
+                    </Link>
+                </div>
             </div>
-            
-      
-    </div>
+                    )}
+                        
+            </div>
+        </div>
+
   )
 }
 
