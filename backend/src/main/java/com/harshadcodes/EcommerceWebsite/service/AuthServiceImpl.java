@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService{
                 .collect(Collectors.toList());
 
         return new  UserInfoResponse(userDetails.getId(),
-                userDetails.getUsername(),userDetails.getEmail(),userDetails.getCreatedAt(), roles,cookie.toString());
+                userDetails.getUsername(),userDetails.getEmail(),userDetails.getCreatedAt(), roles, null);
     }
 
     @Override
