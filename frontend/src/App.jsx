@@ -16,7 +16,8 @@ import LogInPage from './pages/LogInPage'
 import PrivateRoute from './components/shared/PrivateRoute'
 import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { checkAuth } from './store/actions'
 import OrderPlacedPage from './pages/orderPlacedPage'
 import AdminPanel from './pages/AdminPanel'
 import Dashboard from './components/admin/dashboard/Dashboard'
@@ -29,11 +30,13 @@ import MyOrdersPage from './pages/myOrdersPage'
 import ProfilePage from './pages/ProfilePage'
 import SellerApplications from './components/admin/sellers/SellerApplications'
 import ApplyForSellerPage from './pages/ApplyForSellerPage'
+import LoadingScreen from './components/loaders/LoadingScreen'
 
 function App() {
 
-  const navigate = useNavigate();
-  const {user} = useSelector((state)=>state.auth)
+const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {user, authChecked} = useSelector((state)=>state.auth)
   const cart = useSelector((state)=>state.cart.cart);
   const isAdmin = user?.roles?.includes("ROLE_ADMIN");
 
@@ -41,6 +44,14 @@ function App() {
   useEffect(() => {
         setupInterceptors(navigate);
     }, [navigate]);
+
+  useEffect(() => {
+        dispatch(checkAuth());
+    }, [dispatch]);
+
+  if (!authChecked) {
+    return <LoadingScreen />;
+  }
 
   return (
       <React.Fragment>

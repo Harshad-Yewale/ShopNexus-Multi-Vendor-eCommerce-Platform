@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { FaUserCircle, FaUser, FaEnvelope, FaLock, FaCalendarAlt, FaIdBadge, FaShoppingBag, FaEdit, FaTrash,} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import EditUsernameModal from "../components/userProfile/EditUsernameModal";
-// import EditEmailModal from "./EditEmailModal";
 import ChangePasswordModal from "../components/userProfile/ChangePasswordModal";
 
 const ProfilePage = () => {
@@ -12,7 +11,6 @@ const ProfilePage = () => {
   const {user} = useSelector((state) => state.auth);
 
   const [openUsernameModal, setOpenUsernameModal] = useState(false);
-  const [openEmailModal, setOpenEmailModal] = useState(false);
   const [openPasswordModal, setOpenPasswordModal] = useState(false);
   const [loader, setLoader] = useState(false);
 
@@ -93,14 +91,6 @@ const ProfilePage = () => {
                     <h3 className="font-semibold text-lg">{user.email}</h3>
                   </div>
                 </div>
-
-                <button
-                  onClick={() => setOpenEmailModal(true)}
-                  className="mt-4 md:mt-0 flex items-center gap-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <FaEdit />
-                  Edit
-                </button>
               </div>
 
               <hr />
@@ -212,11 +202,6 @@ const ProfilePage = () => {
         loader={loader}
         setLoader={setLoader}
       />
-
-      {/* <EditEmailModal
-        open={openEmailModal}
-        setOpen={setOpenEmailModal}
-      />*/}
 
       <ChangePasswordModal
         open={openPasswordModal}

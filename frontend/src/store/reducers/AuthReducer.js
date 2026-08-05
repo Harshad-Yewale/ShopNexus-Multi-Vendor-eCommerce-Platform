@@ -4,19 +4,25 @@ const initialState = {
     applications:[],
     selectedUserCheckoutAddress: null,
     isLoading:false,
-    errorMessage:null
+    errorMessage:null,
+    authChecked:false
 }
 
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_USER":
-            return { ...state, user: action.payload };
+            return { ...state, user: action.payload, authChecked: true };
         
         case "LOG_OUT":
           return { 
+              ...state,
               user: null,
               address: null,
+              authChecked: true,
             };
+
+        case "AUTH_CHECK_COMPLETE":
+            return { ...state, authChecked: true };
         case "USER_ADDRESS":
             return { ...state, address: action.payload };
         

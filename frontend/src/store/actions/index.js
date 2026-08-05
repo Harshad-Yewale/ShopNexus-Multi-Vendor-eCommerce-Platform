@@ -295,6 +295,17 @@ export const logOutUser = (navigate) => (dispatch) => {
     navigate("/login");
 };
 
+export const checkAuth = () => async (dispatch) => {
+    try {
+        const { data } = await api.get("/user/me", { skipAuthRedirect: true });
+        dispatch({ type: "LOGIN_USER", payload: data });
+        localStorage.setItem("auth", JSON.stringify(data));
+    } catch (error) {
+        dispatch({ type: "LOG_OUT" });
+        localStorage.removeItem("auth");
+    }
+};
+
 
 export const addUpdateUserAddress =
      (sendData, toast, addressId, setOpenAddressModal) => async (dispatch, getState) => {

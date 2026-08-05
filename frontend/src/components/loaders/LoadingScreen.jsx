@@ -12,11 +12,11 @@ function LoadingScreen() {
       />
 
       <h2 className="mt-3 text-xl font-semibold text-gray-900">
-        Loading your workspace
+         Verifying your session
       </h2>
 
       <p className="mt-2 text-sm text-gray-500">
-        Please wait while we verify your session.
+         Just a moment while we get things ready for you.
       </p>
 
       <div className="mt-8 h-1 w-56 overflow-hidden rounded-full bg-gray-200">
