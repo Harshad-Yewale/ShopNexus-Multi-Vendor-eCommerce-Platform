@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,11 +17,17 @@ const VerifyRegistrationOtp = ({ registrationData, setStep }) => {
     const [timer, setTimer] = useState(30);
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
+    const inputRefs = useRef([]);
+
+    useEffect(() => {
+        inputRefs.current[0]?.focus();
+    }, []);
+
     useEffect(() => {
         if (timer <= 0) return;
 
         const interval = setInterval(() => {
-            setTimer(prev => prev - 1);
+            setTimer((prev) => prev - 1);
         }, 1000);
 
         return () => clearInterval(interval);
@@ -33,9 +39,31 @@ const VerifyRegistrationOtp = ({ registrationData, setStep }) => {
         const updatedOtp = [...otp];
         updatedOtp[index] = value;
         setOtp(updatedOtp);
+
+        // Move to next input automatically
+        if (value && index < otp.length - 1) {
+            inputRefs.current[index + 1]?.focus();
+        }
     };
 
-   const verifyHandler = async () => {
+    const handleKeyDown = (index, e) => {
+        if (e.key !== "Backspace") return;
+
+        // If current box has a value, clear it
+        if (otp[index]) {
+            const updatedOtp = [...otp];
+            updatedOtp[index] = "";
+            setOtp(updatedOtp);
+            return;
+        }
+
+        // Move to previous input if current box is empty
+        if (index > 0) {
+            inputRefs.current[index - 1]?.focus();
+        }
+    };
+
+    const verifyHandler = async () => {
         const enteredOtp = otp.join("");
 
         if (enteredOtp.length !== 6) {
@@ -60,18 +88,14 @@ const VerifyRegistrationOtp = ({ registrationData, setStep }) => {
         if (timer > 0) return;
 
         await dispatch(
-            sendRegistrationOtp(
-                registrationData,
-                setLoader,
-                toast,
-                () => {},
-                () => {}
-            )
+            sendRegistrationOtp(registrationData,setLoader,toast,() => {},() => {} )
         );
 
         setOtp(["", "", "", "", "", ""]);
         setTimer(30);
+        inputRefs.current[0]?.focus();
     };
+
     return (
         <div className="mt-8">
             <p className="text-center text-slate-500">
@@ -86,13 +110,17 @@ const VerifyRegistrationOtp = ({ registrationData, setStep }) => {
                 {otp.map((digit, index) => (
                     <input
                         key={index}
+                        ref={(el) => (inputRefs.current[index] = el)}
                         type="text"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
                         maxLength={1}
                         value={digit}
                         onChange={(e) =>
                             handleOtpChange(index, e.target.value)
                         }
-                        className="h-12 w-12 rounded-xl border border-slate-300 text-center text-xl font-bold outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        className="h-12 w-12 rounded-xl border border-slate-300 text-center text-xl font-bold outline-none transition-all duration-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
                     />
                 ))}
             </div>
@@ -121,7 +149,7 @@ const VerifyRegistrationOtp = ({ registrationData, setStep }) => {
 
             <button
                 onClick={() => setStep("REGISTER")}
-                className="mt-4 flex w-full items-center justify-center gap-2 text-slate-600 hover:text-blue-600"
+                className="mt-4 flex w-full items-center justify-center gap-2 text-slate-600 transition-colors hover:text-blue-600"
             >
                 <FaArrowLeft />
                 Change Details
