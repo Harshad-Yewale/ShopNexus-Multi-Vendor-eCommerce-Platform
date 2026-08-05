@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService{
     private final EmailService emailService;
 
     @Override
-    public UserInfoResponse SignIn(LoginRequest loginRequest) {
+    public UserLoginResponse SignIn(LoginRequest loginRequest) {
 
         Authentication authentication;
 
@@ -64,10 +64,19 @@ public class AuthServiceImpl implements AuthService{
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .toList();
 
-        return new  UserInfoResponse(userDetails.getId(),
-                userDetails.getUsername(),userDetails.getEmail(),userDetails.getCreatedAt(), roles, null);
+        UserInfoResponse response = new UserInfoResponse(
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
+                userDetails.getCreatedAt(),
+                roles,
+                null
+        );
+
+        return new UserLoginResponse(response, cookie);
+
     }
 
     @Override

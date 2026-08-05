@@ -24,8 +24,8 @@ public class AuthController {
 
     @PostMapping("/public/auth/signin")
     public ResponseEntity<?>authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
-        UserInfoResponse response=authService.SignIn(loginRequest);
-        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,response.token()).body(response);
+        UserLoginResponse loginResponse = authService.SignIn(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,loginResponse.token().toString()).body(loginResponse.response());
     }
 
     @PostMapping("/public/auth/signup")

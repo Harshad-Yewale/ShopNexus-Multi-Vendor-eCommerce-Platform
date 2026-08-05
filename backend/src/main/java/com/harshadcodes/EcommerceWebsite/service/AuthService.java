@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 
 public interface AuthService {
 
-    public UserInfoResponse SignIn(@Valid LoginRequest request);
+    public UserLoginResponse SignIn(@Valid LoginRequest request);
 
     SignupResponse signUp(@Valid SignupRequest signupRequest);
 
