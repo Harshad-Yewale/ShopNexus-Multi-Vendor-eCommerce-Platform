@@ -1,166 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShopNexus — Multi-Vendor E-Commerce Platform</title>
-</head>
-<body>
+<div align="center">
 
-<h1>🛍️ ShopNexus — Multi-Vendor E-Commerce Platform</h1>
-<p class="subtitle">A full-stack multi-vendor e-commerce platform where users can shop as customers, apply to become sellers, list and manage their own products, and complete purchases through an integrated Razorpay checkout — all secured with JWT-based authentication.</p>
+# 🛍️ ShopNexus — Multi-Vendor E-Commerce Platform
 
-<a class="live-link" href="https://shopnexus-ecommerce.vercel.app" target="_blank">🔗 View Live Demo</a>
+A full-stack multi-vendor e-commerce platform where users can shop as customers, apply to become sellers, list and manage their own products, and complete purchases through an integrated Razorpay checkout — all secured with JWT-based authentication.
 
-<h2>How to Use the Live Demo</h2>
-<div class="steps-box">
-<ol>
-    <li><strong>Sign up</strong> — use a real email address, since a verification OTP is sent to it</li>
-    <li><strong>Log in</strong> with your new account</li>
-    <li><strong>Browse products</strong>, add a few to your cart</li>
-    <li>Go to <strong>Cart → Checkout</strong></li>
-    <li><strong>Add a shipping address</strong> (any dummy details work)</li>
-    <li>Select <strong>Razorpay</strong> as the payment method and continue</li>
-    <li>Razorpay's <strong>test-mode checkout</strong> will open:
-        <ul>
-            <li>Enter any mobile number</li>
-            <li>Choose <strong>Card</strong> as the payment method:
-                <ul>
-                    <li>Card number: <code>5555 5100 0008 1006</code></li>
-                    <li>Expiry: <code>12/29</code></li>
-                    <li>CVV: <code>123</code></li>
-                </ul>
-            </li>
-            <li>Enter OTP: <code>1234</code></li>
-            <li>Wait a few seconds for the payment to process</li>
-        </ul>
-    </li>
-    <li>Check <strong>My Orders</strong> to see your completed order</li>
-    <li>Try the <strong>"Apply to become a Seller"</strong> flow to see the seller onboarding process</li>
-</ol>
-</div>
-<div class="note">⚠️ This is a test-mode payment integration — no real money is charged.</div>
+### [🔗 View Live Demo](https://shopnexus-ecommerce.vercel.app)
 
-<h2>Features</h2>
-<ul>
-    <li>🔐 <strong>JWT-based authentication</strong> with httpOnly cookies, email OTP verification on signup, and session validation on app load</li>
-    <li>🛍️ <strong>Product catalog</strong> with categories, search, and detailed product pages</li>
-    <li>🛒 <strong>Cart & checkout flow</strong> with address management and order summary</li>
-    <li>💳 <strong>Razorpay payment integration</strong> (test mode supported)</li>
-    <li>📦 <strong>Order tracking</strong> — view past orders and order status</li>
-    <li>🏪 <strong>Seller application system</strong> — any user can apply to become a seller</li>
-    <li>📊 <strong>Seller dashboard</strong> — sellers can add, edit, and manage their own product listings</li>
-    <li>🛠️ <strong>Admin panel</strong> — review and approve/reject seller applications, view platform analytics</li>
-    <li>📈 <strong>Analytics dashboard</strong> for sales and platform insights</li>
-    <li>📱 <strong>Responsive UI</strong> built with Tailwind CSS</li>
-</ul>
-
-<h2>Tech Stack</h2>
-
-<h3>Frontend</h3>
-<div class="badge-row">
-    <span class="badge">React 19</span>
-    <span class="badge">Vite</span>
-    <span class="badge">Redux Toolkit</span>
-    <span class="badge">React Router v7</span>
-    <span class="badge">Tailwind CSS v4</span>
-    <span class="badge">Axios</span>
-    <span class="badge">React Hook Form</span>
-    <span class="badge">Recharts</span>
-    <span class="badge">MUI</span>
-    <span class="badge">React Hot Toast</span>
 </div>
 
-<h3>Backend</h3>
-<div class="badge-row">
-    <span class="badge">Java 21</span>
-    <span class="badge">Spring Boot 4</span>
-    <span class="badge">Spring Security + JWT</span>
-    <span class="badge">Spring Data JPA / Hibernate</span>
-    <span class="badge">PostgreSQL (Neon)</span>
-    <span class="badge">Razorpay Java SDK</span>
-    <span class="badge">Cloudinary</span>
-    <span class="badge">ModelMapper</span>
-    <span class="badge">Lombok</span>
-    <span class="badge">springdoc-openapi</span>
-</div>
+---
 
-<h3>Infrastructure / Deployment</h3>
-<div class="badge-row">
-    <span class="badge">Vercel (Frontend)</span>
-    <span class="badge">Render + Docker (Backend)</span>
-    <span class="badge">Neon (Database)</span>
-    <span class="badge">UptimeRobot</span>
-</div>
+## 🚀 How to Use the Live Demo
 
-<h2>Getting Started Locally</h2>
+1. **Sign up** — use a real email address, since a verification OTP is sent to it
+2. **Log in** with your new account
+3. **Browse products**, add a few to your cart
+4. Go to **Cart → Checkout**
+5. **Add a shipping address** (any dummy details work)
+6. Select **Razorpay** as the payment method and continue
+7. Razorpay's **test-mode checkout** will open:
+   - Enter any mobile number
+   - Choose **Card** as the payment method:
+     - Card number: `5555 5100 0008 1006`
+     - Expiry: `12/29`
+     - CVV: `123`
+   - Enter OTP: `1234`
+   - Wait a few seconds for the payment to process
+8. Check **My Orders** to see your completed order
+9. Try the **"Apply to become a Seller"** flow to see the seller onboarding process
 
-<h3>Prerequisites</h3>
-<ul>
-    <li><strong>Node.js</strong> 18+ and npm</li>
-    <li><strong>Java</strong> 21 (JDK)</li>
-    <li><strong>Maven</strong> (or use the included <code>mvnw</code> wrapper — no separate install needed)</li>
-    <li>A <strong>PostgreSQL</strong> database (local, or a free instance on <a href="https://neon.tech" target="_blank">Neon</a>)</li>
-    <li>A <strong>Razorpay</strong> account (test/sandbox keys are free)</li>
-    <li>A <strong>Cloudinary</strong> account (free tier, for image uploads)</li>
-    <li>An <strong>SMTP/Brevo</strong> account for sending OTP emails</li>
-</ul>
+> ⚠️ This is a test-mode payment integration — no real money is charged.
 
-<h3>1. Clone the repository</h3>
-<pre><code>git clone https://github.com/&lt;your-username&gt;/E-commerceWebsite.git
-cd E-commerceWebsite</code></pre>
+---
 
-<h3>2. Backend setup</h3>
-<pre><code>cd backend</code></pre>
-<p>Create/update <code>src/main/resources/application.properties</code> with your own values (see Environment Variables below), or export them as environment variables — the project reads them via <code>${...}</code> placeholders either way.</p>
-<p>Build and run:</p>
-<pre><code>./mvnw clean package -DskipTests
-java -jar target/EcommerceWebsite-0.0.1-SNAPSHOT.jar</code></pre>
-<p>Or run directly without packaging:</p>
-<pre><code>./mvnw spring-boot:run</code></pre>
-<p>The backend starts on <code>http://localhost:8080</code> by default.</p>
+## ✨ Features
 
-<h3>3. Frontend setup</h3>
-<pre><code>cd frontend
-npm install</code></pre>
-<p>Create a <code>.env</code> file in <code>frontend/</code>:</p>
-<pre><code>VITE_BACK_END_URL=http://localhost:8080</code></pre>
-<p>Run the dev server:</p>
-<pre><code>npm run dev</code></pre>
-<p>The frontend starts on <code>http://localhost:5173</code> by default.</p>
+- 🔐 **JWT-based authentication** with httpOnly cookies, email OTP verification on signup, and session validation on app load
+- 🛍️ **Product catalog** with categories, search, and detailed product pages
+- 🛒 **Cart & checkout flow** with address management and order summary
+- 💳 **Razorpay payment integration** (test mode supported)
+- 📦 **Order tracking** — view past orders and order status
+- 🏪 **Seller application system** — any user can apply to become a seller
+- 📊 **Seller dashboard** — sellers can add, edit, and manage their own product listings
+- 🛠️ **Admin panel** — review and approve/reject seller applications, view platform analytics
+- 📈 **Analytics dashboard** for sales and platform insights
+- 📱 **Responsive UI** built with Tailwind CSS
 
-<h3>4. Open the app</h3>
-<p>Visit <code>http://localhost:5173</code> in your browser. You should be able to sign up, log in, and use the app end-to-end against your local backend.</p>
+---
 
-<h2>Environment Variables</h2>
+## 🛠️ Tech Stack
 
-<h3>Backend</h3>
-<table>
-<tr><th>Variable</th><th>Description</th></tr>
-<tr><td><code>DB_URL</code></td><td>JDBC connection string, e.g. <code>jdbc:postgresql://&lt;host&gt;/&lt;db&gt;?sslmode=require</code></td></tr>
-<tr><td><code>DB_USERNAME</code></td><td>Database username</td></tr>
-<tr><td><code>DB_PASSWORD</code></td><td>Database password</td></tr>
-<tr><td><code>DB_DIALECT</code></td><td><code>org.hibernate.dialect.PostgreSQLDialect</code></td></tr>
-<tr><td><code>JWT_SECRET_KEY</code></td><td>Secret key used to sign JWTs</td></tr>
-<tr><td><code>JWT_EXP_TIME</code></td><td>JWT expiry time (ms)</td></tr>
-<tr><td><code>JWT_COOKIE</code></td><td>Name of the auth cookie</td></tr>
-<tr><td><code>RAZORPAY_KEY</code></td><td>Razorpay API key (test or live)</td></tr>
-<tr><td><code>RAZORPAY_SECRET</code></td><td>Razorpay API secret</td></tr>
-<tr><td><code>CLOUDINARY_URL</code></td><td>Cloudinary connection URL for image uploads</td></tr>
-<tr><td><code>BREVO_API_KEY</code></td><td>Brevo (Sendinblue) API key for sending OTP emails</td></tr>
-<tr><td><code>BREVO_SENDER_EMAIL</code></td><td>Verified sender email for outgoing mail</td></tr>
-<tr><td><code>FRONTEND_URL</code></td><td>Allowed frontend origin for CORS (no trailing slash)</td></tr>
-<tr><td><code>PORT</code></td><td>Server port (Render sets this automatically; defaults to 8080 locally)</td></tr>
-</table>
+**Frontend**
 
-<h3>Frontend</h3>
-<table>
-<tr><th>Variable</th><th>Description</th></tr>
-<tr><td><code>VITE_BACK_END_URL</code></td><td>Base URL of the backend API (no trailing slash)</td></tr>
-</table>
+![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?style=for-the-badge&logo=redux&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router_v7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+![MUI](https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white)
 
-<h2>Project Structure</h2>
-<pre><code>E-commerceWebsite/
+**Backend**
+
+![Java](https://img.shields.io/badge/Java_21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot_4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
+![Hibernate](https://img.shields.io/badge/Hibernate_JPA-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+
+**Infrastructure**
+
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase_Postgres-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+![Razorpay](https://img.shields.io/badge/Razorpay-0C2451?style=for-the-badge&logo=razorpay&logoColor=white)
+
+---
+
+## 🧑‍💻 Getting Started Locally
+
+### Prerequisites
+
+- **Node.js** 18+ and npm
+- **Java** 21 (JDK)
+- **Maven** (or use the included `mvnw` wrapper — no separate install needed)
+- A **PostgreSQL** database (local, or a free instance on [Supabase](https://supabase.com))
+- A **Razorpay** account (test/sandbox keys are free)
+- A **Cloudinary** account (free tier, for image uploads)
+- An **SMTP/Brevo** account for sending OTP emails
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/<your-username>/E-commerceWebsite.git
+cd E-commerceWebsite
+```
+
+### 2. Backend setup
+
+```bash
+cd backend
+```
+
+Create/update `src/main/resources/application.properties` with your own values (see [Environment Variables](#-environment-variables) below), or export them as environment variables — the project reads them via `${...}` placeholders either way.
+
+Build and run:
+
+```bash
+./mvnw clean package -DskipTests
+java -jar target/EcommerceWebsite-0.0.1-SNAPSHOT.jar
+```
+
+Or run directly without packaging:
+
+```bash
+./mvnw spring-boot:run
+```
+
+The backend starts on `http://localhost:8080` by default.
+
+### 3. Frontend setup
+
+```bash
+cd frontend
+npm install
+```
+
+Create a `.env` file in `frontend/`:
+
+```env
+VITE_BACK_END_URL=http://localhost:8080
+```
+
+Run the dev server:
+
+```bash
+npm run dev
+```
+
+The frontend starts on `http://localhost:5173` by default.
+
+### 4. Open the app
+
+Visit `http://localhost:5173` in your browser. You should be able to sign up, log in, and use the app end-to-end against your local backend.
+
+---
+
+## 🔑 Environment Variables
+
+### Backend
+
+| Variable | Description |
+|---|---|
+| `DB_URL` | JDBC connection string, e.g. `jdbc:postgresql://<host>/<db>?sslmode=require` |
+| `DB_USERNAME` | Database username |
+| `DB_PASSWORD` | Database password |
+| `DB_DIALECT` | `org.hibernate.dialect.PostgreSQLDialect` |
+| `JWT_SECRET_KEY` | Secret key used to sign JWTs |
+| `JWT_EXP_TIME` | JWT expiry time (ms) |
+| `JWT_COOKIE` | Name of the auth cookie |
+| `RAZORPAY_KEY` | Razorpay API key (test or live) |
+| `RAZORPAY_SECRET` | Razorpay API secret |
+| `CLOUDINARY_URL` | Cloudinary connection URL for image uploads |
+| `BREVO_API_KEY` | Brevo (Sendinblue) API key for sending OTP emails |
+| `BREVO_SENDER_EMAIL` | Verified sender email for outgoing mail |
+| `FRONTEND_URL` | Allowed frontend origin for CORS (no trailing slash) |
+| `PORT` | Server port (Render sets this automatically; defaults to 8080 locally) |
+
+### Frontend
+
+| Variable | Description |
+|---|---|
+| `VITE_BACK_END_URL` | Base URL of the backend API (no trailing slash) |
+
+---
+
+## 📁 Project Structure
+
+```
+E-commerceWebsite/
 ├── backend/                 # Spring Boot REST API
 │   ├── src/main/java/com/harshadcodes/EcommerceWebsite/
 │   │   ├── controller/       # REST controllers (Auth, Product, Cart, Order, Payment, etc.)
@@ -178,17 +199,21 @@ npm install</code></pre>
     │   ├── pages/             # Route-level pages
     │   ├── store/             # Redux Toolkit slices/reducers/actions
     │   └── api/                # Axios instance & interceptors
-    └── package.json</code></pre>
+    └── package.json
+```
 
-<h2>Deployment Notes</h2>
-<ul>
-    <li>The backend is containerized with a multi-stage <code>Dockerfile</code> and deployed on <strong>Render</strong>.</li>
-    <li>The frontend is deployed on <strong>Vercel</strong>, pointing <code>VITE_BACK_END_URL</code> at the Render backend URL.</li>
-    <li>Since Render's free tier spins down after inactivity and Neon's free tier pauses idle databases, a lightweight <code>GET /api/public/health</code> endpoint is pinged periodically via <strong>UptimeRobot</strong> to keep both warm.</li>
-</ul>
+---
 
-<hr>
-<p style="color:#6b7280; font-size:0.85em;">Made with 💝 By Harshad Yewale.</p>
+## 🚢 Deployment Notes
 
-</body>
-</html>
+- The backend is containerized with a multi-stage `Dockerfile` and deployed on **Render**.
+- The frontend is deployed on **Vercel**, pointing `VITE_BACK_END_URL` at the Render backend URL.
+- Since Render's free tier spins down after inactivity and Supabase's free tier pauses idle databases, a lightweight `GET /api/public/health` endpoint is pinged periodically via **UptimeRobot** to keep both warm.
+
+---
+
+<div align="center">
+
+Made with 💝 By Harshad Yewale.
+
+</div>
