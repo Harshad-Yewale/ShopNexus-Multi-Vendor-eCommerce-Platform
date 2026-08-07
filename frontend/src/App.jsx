@@ -31,7 +31,7 @@ import ProfilePage from './pages/ProfilePage'
 import SellerApplications from './components/admin/sellers/SellerApplications'
 import ApplyForSellerPage from './pages/ApplyForSellerPage'
 import LoadingScreen from './components/loaders/LoadingScreen'
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
 
