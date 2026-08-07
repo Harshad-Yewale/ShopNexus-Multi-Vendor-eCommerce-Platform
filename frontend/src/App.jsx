@@ -31,6 +31,7 @@ import ProfilePage from './pages/ProfilePage'
 import SellerApplications from './components/admin/sellers/SellerApplications'
 import ApplyForSellerPage from './pages/ApplyForSellerPage'
 import LoadingScreen from './components/loaders/LoadingScreen'
+import { Analytics } from '@vercel/analytics/next';
 
 function App() {
 
@@ -102,6 +103,7 @@ const navigate = useNavigate();
 
         </Routes>
       <Toaster position='bottom-center'/>
+      <Analytiics />
     </React.Fragment>
   )
 }
