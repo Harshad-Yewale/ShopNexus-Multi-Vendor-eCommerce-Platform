@@ -103,7 +103,7 @@ const navigate = useNavigate();
 
         </Routes>
       <Toaster position='bottom-center'/>
-      <Analytiics />
+      <Analytics />
     </React.Fragment>
   )
 }
