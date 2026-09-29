@@ -20,12 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtils jwtUtils;
 
     @PostMapping("/public/auth/signin")
     public ResponseEntity<?>authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
-        UserLoginResponse loginResponse = authService.SignIn(loginRequest);
-        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,loginResponse.token().toString()).body(loginResponse.response());
+        UserInfoResponse loginResponse = authService.SignIn(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
     @PostMapping("/public/auth/signup")
@@ -98,9 +97,7 @@ public class AuthController {
 
     @GetMapping("/user/me")
     public ResponseEntity<UserInfoResponse> me(Authentication authentication) throws Exception {
-
       UserInfoResponse response = authService.getCurrentUser(authentication);
-
         return ResponseEntity.ok(response);
     }
 

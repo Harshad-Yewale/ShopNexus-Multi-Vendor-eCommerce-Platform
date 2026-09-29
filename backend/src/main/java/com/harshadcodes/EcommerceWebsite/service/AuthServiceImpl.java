@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService{
     private final EmailService emailService;
 
     @Override
-    public UserLoginResponse SignIn(LoginRequest loginRequest) {
+    public UserInfoResponse SignIn(LoginRequest loginRequest) {
 
         Authentication authentication;
 
@@ -60,22 +60,20 @@ public class AuthServiceImpl implements AuthService{
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        ResponseCookie cookie = jwtUtils.generateJwtFromCookie(userDetails);
+        String token = jwtUtils.generateToken(userDetails);
 
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .toList();
 
-        UserInfoResponse response = new UserInfoResponse(
+        return new UserInfoResponse(
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 userDetails.getCreatedAt(),
                 roles,
-                null
+                token
         );
-
-        return new UserLoginResponse(response, cookie);
 
     }
 

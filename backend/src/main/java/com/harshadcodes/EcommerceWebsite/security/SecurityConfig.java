@@ -1,16 +1,8 @@
 package com.harshadcodes.EcommerceWebsite.security;
-import com.harshadcodes.EcommerceWebsite.constants.AppRole;
-import com.harshadcodes.EcommerceWebsite.model.Role;
-import com.harshadcodes.EcommerceWebsite.model.User;
-import com.harshadcodes.EcommerceWebsite.repositories.RoleRepository;
-import com.harshadcodes.EcommerceWebsite.repositories.UserRepository;
-import com.harshadcodes.EcommerceWebsite.security.csrf.CsrfCookieFilter;
 import com.harshadcodes.EcommerceWebsite.security.jwt.AuthEntryPointJwt;
 import com.harshadcodes.EcommerceWebsite.security.jwt.JwtAuthFilter;
 import com.harshadcodes.EcommerceWebsite.security.services.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,16 +12,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-
-import java.util.Set;
 
 
 @Configuration
@@ -68,18 +56,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        csrfTokenRepository.setCookieCustomizer(cookie -> cookie
-                .sameSite("None")
-                .secure(true)
-                .path("/")
-        );
-        http
-         .csrf(csrf -> csrf
-                .csrfTokenRepository(csrfTokenRepository)
-                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                .ignoringRequestMatchers("/api/public/**", "/h2-console/**") // login/signup/OTP don't need it
-        )
+        http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -111,7 +88,6 @@ public class SecurityConfig {
                 )
                 .headers(headerConfig-> headerConfig.frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin()))
                 .authenticationProvider(authenticationProvider())
-                .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
