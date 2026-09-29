@@ -25,7 +25,6 @@ import Sellers from './components/admin/sellers/Sellers'
 import AdminOrders from './components/admin/orders/AdminOrders'
 import AdminProducts from './components/admin/products/AdminProducts'
 import Category from './components/admin/category/Category'
-import { primeCsrfCookie, setupInterceptors } from './api/api'
 import MyOrdersPage from './pages/myOrdersPage'
 import ProfilePage from './pages/ProfilePage'
 import SellerApplications from './components/admin/sellers/SellerApplications'
@@ -35,21 +34,15 @@ import { Analytics } from "@vercel/analytics/react"
 
 function App() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {user, authChecked} = useSelector((state)=>state.auth)
   const cart = useSelector((state)=>state.cart.cart);
   const isAdmin = user?.roles?.includes("ROLE_ADMIN");
 
-
- useEffect(() => {
-      setupInterceptors(navigate);
-      primeCsrfCookie();
-  }, [navigate]);
-
   useEffect(() => {
-        dispatch(checkAuth());
-    }, [dispatch]);
+      dispatch(checkAuth());
+  }, [navigate, dispatch]);
 
   if (!authChecked) {
     return <LoadingScreen />;

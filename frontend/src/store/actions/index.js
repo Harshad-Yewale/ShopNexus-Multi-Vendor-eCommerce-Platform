@@ -237,6 +237,7 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
             dispatch({ type: "LOGIN_USER", payload: data });
             localStorage.setItem("auth", JSON.stringify(data));
             reset();
+            await primeCsrfCookie();
             toast.success("Login Success");
             navigate("/");
         } catch (error) {
@@ -297,9 +298,12 @@ export const logOutUser = (navigate) => (dispatch) => {
 
 export const checkAuth = () => async (dispatch) => {
     try {
+        const stored = localStorage.getItem("auth");
+        const { token } = stored ? JSON.parse(stored) : {};
         const { data } = await api.get("/user/me", { skipAuthRedirect: true });
-        dispatch({ type: "LOGIN_USER", payload: data });
-        localStorage.setItem("auth", JSON.stringify(data));
+        const merged = { ...data, token };
+        dispatch({ type: "LOGIN_USER", payload: merged });
+        localStorage.setItem("auth", JSON.stringify(merged));
     } catch (error) {
         dispatch({ type: "LOG_OUT" });
         localStorage.removeItem("auth");
